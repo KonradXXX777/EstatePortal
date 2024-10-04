@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pfj+y6Ej+tc=",
+  "dgSpecHash": "VDb1F1MBbOA=",
   "success": true,
-  "projectFilePath": "D:\\EstatePortal Inżynierka\\EstatePortal - Git\\EstatePortal\\EstatePortal.csproj",
+  "projectFilePath": "D:\\EstatePortal Inżynierka\\EstatePortal\\EstatePortal\\EstatePortal.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\konra\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\konra\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
