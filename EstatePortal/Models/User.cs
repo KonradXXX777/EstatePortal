@@ -7,38 +7,38 @@ namespace EstatePortal.Models
     {
         [Key]
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required, EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
-        public string PasswordHash { get; set; }
+        [Required, DataType(DataType.Password)]
+        public byte[] PassowrdHash { get; set; } = new byte[64];
 
         [Required]
         public UserRole Role { get; set; }
-        public DateTime DateRegistered { get; set; } 
-    }
 
-    public class EstateAgency : User
-    {
-        public string AgencyName { get; set; }
-        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
-    }
+        [Required]
+        public bool AcceptTerms { get; set; }
 
-    public class Developer : User
-    {
-        public string DeveloperName { get; set; }
-        public ICollection<Employee> Employees { get; set; } = new List<Employee>();
-    }
+        public string FirstName { get; set; }
 
-    public class Employee : User
-    {
-        public int EmployerId { get; set; } // Foreign key to either EstateAgency or Developer
-        public User Employer { get; set; }
+        public string LastName { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string CompanyName { get; set; }
+
+        public string NIP { get; set; }
+
+        public string Address { get; set; }
+
+        public DateTime DateRegistered { get; set; }
+
+        public int? EmployerId { get; set; }
+
+        [ForeignKey("EmployerId")]
+        public virtual User Employer { get; set; }
+
+        public virtual ICollection<User> Employees { get; set; } = new List<User>();
     }
 }
-

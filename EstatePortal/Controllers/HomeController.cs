@@ -26,7 +26,7 @@ namespace EstatePortal.Controllers
         {
             return View();
         }
-        public IActionResult Registration()
+        public IActionResult Register()
         {
             return View();
         }
