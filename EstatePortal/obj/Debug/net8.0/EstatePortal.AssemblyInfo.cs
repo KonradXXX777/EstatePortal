@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EstatePortal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1466c455ca061323578416eae18aa22da4b654b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("EstatePortal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EstatePortal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
