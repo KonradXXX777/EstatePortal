@@ -4,7 +4,8 @@ using EstatePortal;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Text;
-/*
+using Microsoft.EntityFrameworkCore;
+
 namespace EstatePortal.Controllers
 {
     public class AccountController : Controller
@@ -19,55 +20,111 @@ namespace EstatePortal.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            //return View();
+            return View("~/Views/Home/Register.cshtml");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserRegister model)
+        public async Task<IActionResult> Register(string role, UserRegister model)
         {
             if (ModelState.IsValid)
             {
-                var existingUser = await _context.Users.FindAsync(model.Email);
+                // Sprawdzenie, czy użytkownik o takim samym adresie email już istnieje
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (existingUser != null)
                 {
                     ModelState.AddModelError("", "Użytkownik o podanym adresie email już istnieje.");
-                    return View(model);
-                    
+                    //return View(model);
+                    return View("~/Views/Home/Register.cshtml");
                 }
 
-                var newUser = new User
+                // Zmienna do przechowywania nowo utworzonego użytkownika
+                User newUser = null;
+
+                // Wybór odpowiedniego modelu w zależności od wybranej roli
+                switch (role)
                 {
-                    Email = model.Email,
-                    Name = model.Username,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    PhoneNumber = model.PhoneNumber,
-                    
-                };
+                    case "PrivatePerson":
+                        newUser = new User
+                        {
+                            Email = model.Email,
+                            PasswordHash = HashPassword(model.PasswordHash), // Używamy funkcji do hashowania
+                            Role = UserRole.PrivatePerson,
+                            AcceptTerms = model.AcceptTerms
+                        };
+                        break;
+                   /*
+                    case "EstateAgency":
+                        if (model is EstateAgencyRegister estateAgencyRegister)
+                        {
+                            newUser = new User
+                            {
+                                Email = estateAgencyRegister.Email,
+                                PasswordHash = HashPassword(estateAgencyRegister.PasswordHash),
+                                Role = UserRole.EstateAgency,
+                                AcceptTerms = estateAgencyRegister.AcceptTerms,
+                                CompanyName = estateAgencyRegister.CompanyName,
+                                NIP = estateAgencyRegister.NIP,
+                                Address = estateAgencyRegister.Address
+                            };
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Nie udało się poprawnie przesłać danych dla biura nieruchomości.");
+                            //return View(model);
+                            return View("~/Views/Home/Register.cshtml");
+                        }
+                        break;
 
-                newUser.PasswordHash = HashPassword(model.Password);
+                    case "Developer":
+                        if (model is DeveloperRegister developerRegister)
+                        {
+                            newUser = new User
+                            {
+                                Email = developerRegister.Email,
+                                PasswordHash = HashPassword(developerRegister.PasswordHash),
+                                Role = UserRole.Developer,
+                                AcceptTerms = developerRegister.AcceptTerms,
+                                CompanyName = developerRegister.CompanyName,
+                                NIP = developerRegister.NIP,
+                                Address = developerRegister.Address
+                            };
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Nie udało się poprawnie przesłać danych dla dewelopera.");
+                            //return View(model);
+                            return View("~/Views/Home/Register.cshtml");
+                        }
+                        break;
+                   */
+                    default:
+                        ModelState.AddModelError("", "Nieprawidłowa rola użytkownika.");
+                        //return View(model);
+                        return View("~/Views/Home/Register.cshtml");
+                }
+
+                // Zapis użytkownika do bazy danych
                 _context.Users.Add(newUser);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // Asynchroniczny zapis
 
-                return RedirectToAction("Login", "Account");
+                // Po rejestracji przekierowanie na stronę główną lub logowania
+                return RedirectToAction("Index", "Home");
             }
 
-            return View(model);
+            // Jeśli model nie jest prawidłowy, wróć do widoku formularza z walidacją
+            //return View(model);
+            return View("~/Views/Home/Register.cshtml");
         }
 
-        private string HashPassword(string password)
+        // Funkcja do hashowania hasła z użyciem algorytmu SHA256
+        private byte[] HashPassword(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
+            using (var sha256 = SHA256.Create())
             {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
+                return sha256.ComputeHash(Encoding.UTF8.GetBytes(password)); // Zwraca tablicę bajtów (byte[])
             }
         }
     }
 }
-*/
+

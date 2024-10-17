@@ -12,7 +12,7 @@ namespace EstatePortal.Models
         public string Email { get; set; }
 
         [Required, DataType(DataType.Password)]
-        public byte[] PassowrdHash { get; set; } = new byte[64];
+        public byte[] PasswordHash { get; set; } = new byte[64];
 
         [Required]
         public UserRole Role { get; set; }
@@ -20,17 +20,17 @@ namespace EstatePortal.Models
         [Required]
         public bool AcceptTerms { get; set; }
 
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
-        public string CompanyName { get; set; }
+        public string? CompanyName { get; set; }
 
-        public string NIP { get; set; }
+        public string? NIP { get; set; }
 
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         public DateTime DateRegistered { get; set; }
 

@@ -11,11 +11,11 @@ namespace EstatePortal.Models
         [Required, DataType(DataType.Password), MinLength(8)]
         public string PasswordHash { get; set; } = string.Empty;
 
-        [Required, DataType(DataType.Password), Compare("Password")]
+        [Required, DataType(DataType.Password), Compare("PasswordHash")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
         [Required]
-        public bool AcceptTermsAndConditions { get; set; }
+        public bool AcceptTerms { get; set; }
     }
 
     public class EstateAgencyRegister : UserRegister
@@ -25,7 +25,7 @@ namespace EstatePortal.Models
         public string Address { get; set; } = string.Empty;
     }
 
-    public class DeveloperRegister : UserRegister
+    public class DeveloperRegister : EstateAgencyRegister
     {
     }
 
