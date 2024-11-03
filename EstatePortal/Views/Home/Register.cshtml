@@ -268,7 +268,6 @@
                         color: #185ee0;
                         font-weight: bold;
                     }
-
         /* Stylizacja kontenera */
         .container {
             margin: 20px auto;
@@ -292,7 +291,7 @@
             align-items: center;
             justify-content: center;
             height: 30px;
-            width: 150px; /* Zmienione na większą szerokość */
+            width: 150px;
             font-size: .8rem;
             color: black;
             font-weight: 500;
@@ -301,10 +300,9 @@
             transition: color 0.15s ease-in;
         }
 
-        /* Kolor dla zaznaczonej zakładki */
         .container input[type="radio"]:checked + label {
-            color: white; /* Kolor tekstu po wybraniu */
-            background-color: #185ee0; /* Kolor tła po wybraniu */
+            color: white;
+            background-color: #185ee0;
         }
 
         .container input[id="radio-1"]:checked ~ .glider {
@@ -324,7 +322,7 @@
             display: flex;
             height: 30px;
             width: 150px;
-            background-color: #185ee0; /* Kolor tła dla glidera */
+            background-color: #185ee0;
             z-index: -1;
             border-radius: 99px;
             transition: 0.25s ease-out;
@@ -333,7 +331,6 @@
         .hidden-input {
             display: none;
         }
-
         /* Styl ukrywania i pokazywania sekcji */
         .form-section {
             display: none;
@@ -351,9 +348,7 @@
 <body>
     <!-- Dodanie menu nawigacyjnego z logo i linkami -->
     <nav>
-        <div class="logo">
-            <a href="#">Logo</a>
-        </div>
+        <div class="logo"><a href="#">Logo</a></div>
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">About</a></li>
@@ -366,20 +361,16 @@
         <div class="tabs">
             <input type="radio" id="radio-1" name="tabs" checked onclick="selectRole('PrivatePerson')">
             <label class="tab" for="radio-1">Osoba fizyczna</label>
-
             <input type="radio" id="radio-2" name="tabs" onclick="selectRole('EstateAgency')">
             <label class="tab" for="radio-2">Biuro nieruchomości</label>
-
             <input type="radio" id="radio-3" name="tabs" onclick="selectRole('Developer')">
             <label class="tab" for="radio-3">Deweloper</label>
-
             <span class="glider"></span>
         </div>
 
         <!-- Formularz -->
         <form action="/Account/Register" method="POST">
-
-            <!--Sprawdzanie walidacji formularza-->
+            <!-- Sprawdzanie walidacji formularza -->
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="validation-summary-errors">
@@ -414,10 +405,71 @@
                         Akceptuję regulamin i politykę prywatności
                     </label>
                 </div>
-
             </div>
 
-       
+            <!-- Pola dla biur nieruchomości -->
+            <div id="estateAgencyFields" class="form-section">
+                <div class="input">
+                    <label> <input type="text" placeholder="Nazwa firmy" name="CompanyName" disabled></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="NIP" name="NIP" required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="Adres" name="Address" disabled></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="Numer telefonu" name="PhoneNumber" required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" disabled required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
+                </div>
+                <div class="input">
+                    <label>
+                        <input type="hidden" name="AcceptTerms" value="false" />
+                        <input type="checkbox" name="AcceptTerms" value="true" required />
+                        Akceptuję regulamin i politykę prywatności
+                    </label>
+                </div>
+            </div>
+
+            <!-- Pola dla deweloperów -->
+            <div id="developerFields" class="form-section">
+                <div class="input">
+                    <label> <input type="text" placeholder="Nazwa firmy" name="CompanyName" disabled></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="NIP" name="NIP" required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="Adres" name="Address" disabled></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="Numer telefonu" name="PhoneNumber" required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" disabled required></label>
+                </div>
+                <div class="input">
+                    <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
+                </div>
+                <div class="input">
+                    <label>
+                        <input type="hidden" name="AcceptTerms" value="false" />
+                        <input type="checkbox" name="AcceptTerms" value="true" required />
+                        Akceptuję regulamin i politykę prywatności
+                    </label>
+                </div>
+            </div>
 
             <input type="submit" value="Zarejestruj się">
         </form>
@@ -428,19 +480,28 @@
             // Zmieniamy wartość ukrytego inputa na wybraną rolę
             document.getElementById('selectedRole').value = role;
 
-            // Ukrywamy wszystkie sekcje
+            // Ukrywamy wszystkie sekcje i wyłączamy pola formularza
             var sections = document.getElementsByClassName('form-section');
             for (var i = 0; i < sections.length; i++) {
                 sections[i].classList.remove('active');
+                // Wyłączanie pól wewnątrz sekcji
+                var inputs = sections[i].querySelectorAll('input');
+                inputs.forEach(input => input.disabled = true);
             }
 
-            // Pokazujemy odpowiednią sekcję na podstawie wybranej roli
+            // Pokazujemy odpowiednią sekcję na podstawie wybranej roli i aktywujemy jej pola
+            let activeSection;
             if (role === 'PrivatePerson') {
-                document.getElementById('privateFields').classList.add('active');
+                activeSection = document.getElementById('privateFields');
             } else if (role === 'EstateAgency') {
-                document.getElementById('estateAgencyFields').classList.add('active');
+                activeSection = document.getElementById('estateAgencyFields');
             } else if (role === 'Developer') {
-                document.getElementById('developerFields').classList.add('active');
+                activeSection = document.getElementById('developerFields');
+            }
+
+            if (activeSection) {
+                activeSection.classList.add('active');
+                activeSection.querySelectorAll('input').forEach(input => input.disabled = false);
             }
         }
     </script>

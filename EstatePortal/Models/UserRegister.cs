@@ -23,6 +23,9 @@ namespace EstatePortal.Models
         public string CompanyName { get; set; } = string.Empty;
         public string NIP { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+
+        [Required]
+        public string PhoneNumber { get; set; } = string.Empty;
     }
 
     public class DeveloperRegister : EstateAgencyRegister

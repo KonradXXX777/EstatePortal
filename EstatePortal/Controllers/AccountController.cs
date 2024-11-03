@@ -25,7 +25,7 @@ namespace EstatePortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(string role, UserRegister model)
+        public async Task<IActionResult> Register(string role, UserRegister model, UserRegister userRegister, EstateAgencyRegister estateAgencyRegister, DeveloperRegister developerRegister)
         {
             if (ModelState.IsValid)
             {
@@ -47,38 +47,36 @@ namespace EstatePortal.Controllers
                     case "PrivatePerson":
                         newUser = new User
                         {
-                            Email = model.Email,
-                            PasswordHash = HashPassword(model.PasswordHash), // Używamy funkcji do hashowania
+                            Email = userRegister.Email,
+                            PasswordHash = HashPassword(userRegister.PasswordHash), // Używamy funkcji do hashowania
                             Role = UserRole.PrivatePerson,
-                            AcceptTerms = model.AcceptTerms
+                            AcceptTerms = userRegister.AcceptTerms
                         };
                         break;
-                   /*
+                   
                     case "EstateAgency":
-                        if (model is EstateAgencyRegister estateAgencyRegister)
-                        {
                             newUser = new User
                             {
+                                //Email = estateAgencyModel.Email,
+                                //PasswordHash = HashPassword(estateAgencyModel.PasswordHash),
+                                //Role = UserRole.EstateAgency,
+                                //AcceptTerms = estateAgencyModel.AcceptTerms,
+                                //CompanyName = estateAgencyModel.CompanyName,
+                                //NIP = estateAgencyModel.NIP,
+                                //Address = estateAgencyModel.Address,
+                                //PhoneNumber = estateAgencyModel.PhoneNumber
                                 Email = estateAgencyRegister.Email,
                                 PasswordHash = HashPassword(estateAgencyRegister.PasswordHash),
                                 Role = UserRole.EstateAgency,
                                 AcceptTerms = estateAgencyRegister.AcceptTerms,
                                 CompanyName = estateAgencyRegister.CompanyName,
                                 NIP = estateAgencyRegister.NIP,
-                                Address = estateAgencyRegister.Address
+                                Address = estateAgencyRegister.Address,
+                                PhoneNumber = estateAgencyRegister.PhoneNumber
                             };
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "Nie udało się poprawnie przesłać danych dla biura nieruchomości.");
-                            //return View(model);
-                            return View("~/Views/Home/Register.cshtml");
-                        }
                         break;
 
                     case "Developer":
-                        if (model is DeveloperRegister developerRegister)
-                        {
                             newUser = new User
                             {
                                 Email = developerRegister.Email,
@@ -87,17 +85,11 @@ namespace EstatePortal.Controllers
                                 AcceptTerms = developerRegister.AcceptTerms,
                                 CompanyName = developerRegister.CompanyName,
                                 NIP = developerRegister.NIP,
-                                Address = developerRegister.Address
+                                Address = developerRegister.Address,
+                                PhoneNumber = developerRegister.PhoneNumber
                             };
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "Nie udało się poprawnie przesłać danych dla dewelopera.");
-                            //return View(model);
-                            return View("~/Views/Home/Register.cshtml");
-                        }
                         break;
-                   */
+                   
                     default:
                         ModelState.AddModelError("", "Nieprawidłowa rola użytkownika.");
                         //return View(model);
