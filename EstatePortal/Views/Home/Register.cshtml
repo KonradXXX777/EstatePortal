@@ -1,349 +1,36 @@
-﻿@*
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rejestracja - Portal Nieruchomościowy</title>
-    <style>
-        /* Stylizacja menu nawigacyjnego z logo */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #f1f1f1;
-        }
+	<style>
+		/* Stylizacja menu nawigacyjnego z logo */
+		nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px;
+			background-color: #f1f1f1;
+		}
 
-            nav ul {
-                display: flex;
-                list-style: none;
-                padding: 0;
-            }
+			nav ul {
+				display: flex;
+				list-style: none;
+				padding: 0;
+			}
 
-                nav ul li {
-                    margin-left: 20px;
-                }
+				nav ul li {
+					margin-left: 20px;
+				}
 
-                    nav ul li a {
-                        text-decoration: none;
-                        color: #185ee0;
-                        font-weight: bold;
-                    }
-
-        /* Stylizacja kontenera */
-        .container {
-            margin: 20px auto;
-        }
-
-        .tabs {
-            display: flex;
-            position: relative;
-            background-color: #fff;
-            box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
-            padding: 0.75rem;
-            border-radius: 99px;
-        }
-
-        .container input[type="radio"] {
-            display: none;
-        }
-
-        .tab {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 30px;
-            width: 150px; /* Zmienione na większą szerokość */
-            font-size: .8rem;
-            color: black;
-            font-weight: 500;
-            border-radius: 99px;
-            cursor: pointer;
-            transition: color 0.15s ease-in;
-        }
-
-        /* Kolor dla zaznaczonej zakładki */
-        .container input[type="radio"]:checked + label {
-            color: white; /* Kolor tekstu po wybraniu */
-            background-color: #185ee0; /* Kolor tła po wybraniu */
-        }
-
-        .container input[id="radio-1"]:checked ~ .glider {
-            transform: translateX(0);
-        }
-
-        .container input[id="radio-2"]:checked ~ .glider {
-            transform: translateX(100%);
-        }
-
-        .container input[id="radio-3"]:checked ~ .glider {
-            transform: translateX(200%);
-        }
-
-        .glider {
-            position: absolute;
-            display: flex;
-            height: 30px;
-            width: 150px;
-            background-color: #185ee0; /* Kolor tła dla glidera */
-            z-index: -1;
-            border-radius: 99px;
-            transition: 0.25s ease-out;
-        }
-
-        .hidden-input {
-            display: none;
-        }
-
-        /* Styl ukrywania i pokazywania sekcji */
-        .form-section {
-            display: none;
-        }
-
-            .form-section.active {
-                display: block;
-            }
-
-        .input {
-            margin: 10px 0;
-        }
-    </style>
-</head>
-<body>
-    <!-- Dodanie menu nawigacyjnego z logo i linkami -->
-    <nav>
-        <div class="logo">
-            <a href="#">Logo</a>
-        </div>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Kontakt</a></li>
-        </ul>
-    </nav>
-
-    <div class="container">
-        <!-- Sekcja z zakładkami -->
-        <div class="tabs">
-            <input type="radio" id="radio-1" name="tabs" checked onclick="selectRole('PrivatePerson')">
-            <label class="tab" for="radio-1">Osoba fizyczna</label>
-
-            <input type="radio" id="radio-2" name="tabs" onclick="selectRole('EstateAgency')">
-            <label class="tab" for="radio-2">Biuro nieruchomości</label>
-
-            <input type="radio" id="radio-3" name="tabs" onclick="selectRole('Developer')">
-            <label class="tab" for="radio-3">Deweloper</label>
-
-            <span class="glider"></span>
-        </div>
-
-        <!-- Formularz -->
-        <form action="/Account/Register" method="POST">
-
-            <!--Sprawdzanie walidacji formularza-->
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="validation-summary-errors">
-                    <ul>
-                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                        {
-                            <li>@error.ErrorMessage</li>
-                        }
-                    </ul>
-                </div>
-            }
-
-            <!-- Ukryte pole, aby przechować wybraną wartość -->
-            <input type="hidden" name="Role" id="selectedRole" value="PrivatePerson" class="hidden-input" />
-
-            <!-- Pola formularza dla wybranych ról -->
-            <!-- Pola dla osób fizycznych -->
-            <div id="privateFields" class="form-section active">
-                <div class="input">
-                    <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" required></label>
-                </div>
-                <div class="input">
-                <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
-                </div>
-                <div class="input">
-                    <label>
-                        <input type="checkbox" name="AcceptTerms" required />
-                        Akceptuję regulamin i politykę prywatności
-                    </label>
-                </div>
-
-            </div>
-
-            <!-- Pola dla biur nieruchomości -->
-            <div id="estateAgencyFields" class="form-section">
-                <div class="input">
-                    <label> <input type="text" placeholder="Nazwa firmy" name="CompanyName"></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Adres" name="Address"></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Podaj hasło" name="Password" required></label>
-                </div>
-            </div>
-
-            <!-- Pola dla deweloperów -->
-            <div id="developerFields" class="form-section">
-                <div class="input">
-                    <label> <input type="text" placeholder="Nazwa dewelopera" name="DeveloperName"></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="tel" placeholder="Numer telefonu" name="PhoneNumber"></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Podaj hasło" name="Password" required></label>
-                </div>
-            </div>
-
-            <input type="submit" value="Zarejestruj się">
-        </form>
-    </div>
-
-    <script>
-        function selectRole(role) {
-            // Zmieniamy wartość ukrytego inputa na wybraną rolę
-            document.getElementById('selectedRole').value = role;
-
-            // Ukrywamy wszystkie sekcje
-            var sections = document.getElementsByClassName('form-section');
-            for (var i = 0; i < sections.length; i++) {
-                sections[i].classList.remove('active');
-            }
-
-            // Pokazujemy odpowiednią sekcję na podstawie wybranej roli
-            if (role === 'PrivatePerson') {
-                document.getElementById('privateFields').classList.add('active');
-            } else if (role === 'EstateAgency') {
-                document.getElementById('estateAgencyFields').classList.add('active');
-            } else if (role === 'Developer') {
-                document.getElementById('developerFields').classList.add('active');
-            }
-        }
-    </script>
-</body>
-</html>
-*@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rejestracja - Portal Nieruchomościowy</title>
-    <style>
-        /* Stylizacja menu nawigacyjnego z logo */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #f1f1f1;
-        }
-
-            nav ul {
-                display: flex;
-                list-style: none;
-                padding: 0;
-            }
-
-                nav ul li {
-                    margin-left: 20px;
-                }
-
-                    nav ul li a {
-                        text-decoration: none;
-                        color: #185ee0;
-                        font-weight: bold;
-                    }
-        /* Stylizacja kontenera */
-        .container {
-            margin: 20px auto;
-        }
-
-        .tabs {
-            display: flex;
-            position: relative;
-            background-color: #fff;
-            box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
-            padding: 0.75rem;
-            border-radius: 99px;
-        }
-
-        .container input[type="radio"] {
-            display: none;
-        }
-
-        .tab {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 30px;
-            width: 150px;
-            font-size: .8rem;
-            color: black;
-            font-weight: 500;
-            border-radius: 99px;
-            cursor: pointer;
-            transition: color 0.15s ease-in;
-        }
-
-        .container input[type="radio"]:checked + label {
-            color: white;
-            background-color: #185ee0;
-        }
-
-        .container input[id="radio-1"]:checked ~ .glider {
-            transform: translateX(0);
-        }
-
-        .container input[id="radio-2"]:checked ~ .glider {
-            transform: translateX(100%);
-        }
-
-        .container input[id="radio-3"]:checked ~ .glider {
-            transform: translateX(200%);
-        }
-
-        .glider {
-            position: absolute;
-            display: flex;
-            height: 30px;
-            width: 150px;
-            background-color: #185ee0;
-            z-index: -1;
-            border-radius: 99px;
-            transition: 0.25s ease-out;
-        }
-
-        .hidden-input {
-            display: none;
-        }
-        /* Styl ukrywania i pokazywania sekcji */
-        .form-section {
-            display: none;
-        }
-
-            .form-section.active {
-                display: block;
-            }
-
-        .input {
-            margin: 10px 0;
-        }
-    </style>
+					nav ul li a {
+						text-decoration: none;
+						color: #185ee0;
+						font-weight: bold;
+					}
+	</style>
 </head>
 <body>
     <!-- Dodanie menu nawigacyjnego z logo i linkami -->
@@ -356,37 +43,20 @@
         </ul>
     </nav>
 
-    <div class="container">
-        <!-- Sekcja z zakładkami -->
-        <div class="tabs">
-            <input type="radio" id="radio-1" name="tabs" checked onclick="selectRole('PrivatePerson')">
-            <label class="tab" for="radio-1">Osoba fizyczna</label>
-            <input type="radio" id="radio-2" name="tabs" onclick="selectRole('EstateAgency')">
-            <label class="tab" for="radio-2">Biuro nieruchomości</label>
-            <input type="radio" id="radio-3" name="tabs" onclick="selectRole('Developer')">
-            <label class="tab" for="radio-3">Deweloper</label>
-            <span class="glider"></span>
-        </div>
-
-        <!-- Formularz -->
-        <form action="/Account/Register" method="POST">
-            <!-- Sprawdzanie walidacji formularza -->
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="validation-summary-errors">
-                    <ul>
-                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                        {
-                            <li>@error.ErrorMessage</li>
-                        }
-                    </ul>
-                </div>
-            }
-
-            <!-- Ukryte pole, aby przechować wybraną wartość -->
-            <input type="hidden" name="Role" id="selectedRole" value="PrivatePerson" class="hidden-input" />
-
-            <!-- Pola formularza dla wybranych ról -->
+	<!-- Formularz -->
+	<form action="/Account/Register" method="POST">
+		<!-- Sprawdzanie walidacji formularza -->
+		@if (!ViewData.ModelState.IsValid)
+		{
+			<div class="validation-summary-errors">
+				<ul>
+					@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+					{
+						<li>@error.ErrorMessage</li>
+					}
+				</ul>
+			</div>
+		}
             <!-- Pola dla osób fizycznych -->
             <div id="privateFields" class="form-section active">
                 <div class="input">
@@ -406,104 +76,11 @@
                     </label>
                 </div>
             </div>
+        <input type="submit" value="Zarejestruj się">
 
-            <!-- Pola dla biur nieruchomości -->
-            <div id="estateAgencyFields" class="form-section">
-                <div class="input">
-                    <label> <input type="text" placeholder="Nazwa firmy" name="CompanyName" disabled></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="NIP" name="NIP" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Adres" name="Address" disabled></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Numer telefonu" name="PhoneNumber" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" disabled required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
-                </div>
-                <div class="input">
-                    <label>
-                        <input type="hidden" name="AcceptTerms" value="false" />
-                        <input type="checkbox" name="AcceptTerms" value="true" required />
-                        Akceptuję regulamin i politykę prywatności
-                    </label>
-                </div>
-            </div>
-
-            <!-- Pola dla deweloperów -->
-            <div id="developerFields" class="form-section">
-                <div class="input">
-                    <label> <input type="text" placeholder="Nazwa firmy" name="CompanyName" disabled></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="NIP" name="NIP" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Adres" name="Address" disabled></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Numer telefonu" name="PhoneNumber" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" disabled required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
-                </div>
-                <div class="input">
-                    <label>
-                        <input type="hidden" name="AcceptTerms" value="false" />
-                        <input type="checkbox" name="AcceptTerms" value="true" required />
-                        Akceptuję regulamin i politykę prywatności
-                    </label>
-                </div>
-            </div>
-
-            <input type="submit" value="Zarejestruj się">
+        <p>Biura nieruchomości <a href="@Url.Action("EstateAgencyRegister", "Home")">Zarejestruj sie!</a> </p>
+        <p>Deweloperzy <a href="@Url.Action("DeveloperRegister", "Home")">Zarejestruj sie!</a> </p>
         </form>
-    </div>
-
-    <script>
-        function selectRole(role) {
-            // Zmieniamy wartość ukrytego inputa na wybraną rolę
-            document.getElementById('selectedRole').value = role;
-
-            // Ukrywamy wszystkie sekcje i wyłączamy pola formularza
-            var sections = document.getElementsByClassName('form-section');
-            for (var i = 0; i < sections.length; i++) {
-                sections[i].classList.remove('active');
-                // Wyłączanie pól wewnątrz sekcji
-                var inputs = sections[i].querySelectorAll('input');
-                inputs.forEach(input => input.disabled = true);
-            }
-
-            // Pokazujemy odpowiednią sekcję na podstawie wybranej roli i aktywujemy jej pola
-            let activeSection;
-            if (role === 'PrivatePerson') {
-                activeSection = document.getElementById('privateFields');
-            } else if (role === 'EstateAgency') {
-                activeSection = document.getElementById('estateAgencyFields');
-            } else if (role === 'Developer') {
-                activeSection = document.getElementById('developerFields');
-            }
-
-            if (activeSection) {
-                activeSection.classList.add('active');
-                activeSection.querySelectorAll('input').forEach(input => input.disabled = false);
-            }
-        }
-    </script>
+    
 </body>
 </html>

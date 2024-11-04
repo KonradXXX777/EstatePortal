@@ -30,6 +30,15 @@ namespace EstatePortal.Controllers
         {
             return View();
         }
+        public IActionResult EstateAgencyRegister()
+        {
+            return View();
+        }
+        public IActionResult DeveloperRegister()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

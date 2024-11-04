@@ -15,6 +15,9 @@ namespace EstatePortal.Models
         public byte[] PasswordHash { get; set; } = new byte[64];
 
         [Required]
+        public byte[] PasswordSalt { get; set; }
+
+        [Required]
         public UserRole Role { get; set; }
 
         [Required]
