@@ -36,6 +36,8 @@ namespace EstatePortal.Models
         public string? Address { get; set; }
 
         public DateTime DateRegistered { get; set; }
+        public string? VerificationToken { get; set; }
+        public DateTime? VerifiedAt { get; set; }
 
         public int? EmployerId { get; set; }
 

@@ -38,6 +38,10 @@ namespace EstatePortal.Controllers
         {
             return View();
         }
+        public IActionResult VerificationSuccess()
+        {
+            return View();
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
