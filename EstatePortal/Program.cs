@@ -11,8 +11,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
                      ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
-//builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("EmailSettings"));
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

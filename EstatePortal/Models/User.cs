@@ -35,9 +35,15 @@ namespace EstatePortal.Models
 
         public string? Address { get; set; }
 
+        // Registration Email Verification
         public DateTime DateRegistered { get; set; }
         public string? VerificationToken { get; set; }
         public DateTime? VerifiedAt { get; set; }
+
+        // Password Reset (button "Zapomnialem hasla)
+        public string? PasswordResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
+        public DateTime? PasswordLastReset { get; set; }
 
         public int? EmployerId { get; set; }
 

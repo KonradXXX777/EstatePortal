@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel użytkownika</title>
+</head>
+<body>
+    <h2>Panel użytkownika</h2>
+
+    <h3>Aktualizacja danych osobowych</h3>
+    <form asp-action="UpdateUser" method="post">
+        <div>
+            <label>Imię:</label>
+            <input type="text" name="FirstName" value="@Model.FirstName" required />
+        </div>
+
+        <div>
+            <label>Nazwisko:</label>
+            <input type="text" name="LastName" value="@Model.LastName" required />
+        </div>
+
+        <div>
+            <label>Email:</label>
+            <input type="email" name="Email" value="@Model.Email" required />
+        </div>
+
+        <div>
+            <label>Numer telefonu:</label>
+            <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" required />
+        </div>
+
+        <button type="submit">Zaktualizuj dane</button>
+    </form>
+
+    <h3>Zmiana hasła</h3>
+    <form asp-action="ChangePassword" method="post">
+        <div>
+            <label>Obecne hasło:</label>
+            <input type="password" name="currentPassword" required />
+        </div>
+
+        <div>
+            <label>Nowe hasło:</label>
+            <input type="password" name="newPassword" required />
+        </div>
+
+        <div>
+            <label>Potwierdź nowe hasło:</label>
+            <input type="password" name="confirmNewPassword" required />
+        </div>
+
+        <button type="submit">Zmień hasło</button>
+    </form>
+
+    <a href="/Account/Logout">Wyloguj się</a>
+</body>
+</html>
