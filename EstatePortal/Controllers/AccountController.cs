@@ -9,11 +9,13 @@ using System.Configuration;
 using System.Net.Mail;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 
 namespace EstatePortal.Controllers
 {
-    [Authorize]
+
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,9 +32,9 @@ namespace EstatePortal.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-			return View("~/Views/Home/Register.cshtml");
-		}
-        
+            return View("~/Views/Home/Register.cshtml");
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register(UserRegister model)
@@ -58,7 +60,7 @@ namespace EstatePortal.Controllers
                 await _context.SaveChangesAsync();
                 SendVerificationEmail(newUser.Email, verificationToken);
                 return RedirectToAction("Index", "Home");
-			}
+            }
             return View("~/Views/Home/Register.cshtml");
         }
 
@@ -67,8 +69,8 @@ namespace EstatePortal.Controllers
         [HttpGet]
         public IActionResult EstateAgencyRegister()
         {
-			return View("~/Views/Home/EstateAgencyRegister.cshtml");
-		}
+            return View("~/Views/Home/EstateAgencyRegister.cshtml");
+        }
 
         [AllowAnonymous]
         [HttpPost]
@@ -95,18 +97,18 @@ namespace EstatePortal.Controllers
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
-				return RedirectToAction("Index", "Home");
-			}
-			return View("~/Views/Home/Register.cshtml");
-		}
+                return RedirectToAction("Index", "Home");
+            }
+            return View("~/Views/Home/Register.cshtml");
+        }
 
         //Developers
         [AllowAnonymous]
         [HttpGet]
         public IActionResult DeveloperRegister()
         {
-			return View("~/Views/Home/DeveloperRegister.cshtml");
-		}
+            return View("~/Views/Home/DeveloperRegister.cshtml");
+        }
 
         [AllowAnonymous]
         [HttpPost]
@@ -133,8 +135,8 @@ namespace EstatePortal.Controllers
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
-				return RedirectToAction("Index", "Home");
-			}
+                return RedirectToAction("Index", "Home");
+            }
             return View("~/Views/Home/Register.cshtml", model);
         }
 
@@ -247,6 +249,7 @@ namespace EstatePortal.Controllers
             //return View("~/Views/Home/Login.cshtml");
             return RedirectToAction("Login", "Home");
         } */
+
         [HttpGet]
         public IActionResult ResetPassword(string token)
         {
@@ -267,7 +270,7 @@ namespace EstatePortal.Controllers
                 ModelState.AddModelError("", "Hasła się nie zgadzają.");
                 ViewData["Token"] = token;
                 return View("~/Views/Home/ResetPassword.cshtml");
-               // return View();
+                // return View();
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token && u.ResetTokenExpiry > DateTime.Now);
@@ -289,7 +292,7 @@ namespace EstatePortal.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Login", "Home");
-           // return View();
+            // return View();
         }
 
 
@@ -395,17 +398,23 @@ namespace EstatePortal.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(UserLogin model)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null || !VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Nieprawidłowy e-mail lub hasło.");
-                return View("~/Views/Home/Login.cshtml");
+                return View("~/Views/Home/Login.cshtml", model);
             }
 
-            // Logika logowania użytkownika (np. generowanie sesji/cookies)
-            HttpContext.Session.SetString("UserId", user.Id.ToString());
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user == null || !VerifyPassword(model.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                ModelState.AddModelError("", "Nieprawidłowy e-mail lub hasło.");
+                return View("~/Views/Home/Login.cshtml", model);
+            }
+
+            // Logika logowania użytkownika: zapisujemy ID użytkownika w sesji
+            HttpContext.Session.SetString("UserId", user.Id.ToString()); // Dodać sesje w Program.cs
+
             return RedirectToAction("UserPanel");
         }
 
@@ -422,8 +431,13 @@ namespace EstatePortal.Controllers
         [HttpGet]
         public IActionResult UserPanel()
         {
+            if (HttpContext.Session.GetString("UserId") == null)
+            {
+                return RedirectToAction("Login");
+            }
             return View("UserPanel");
         }
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> UserDashboard()
