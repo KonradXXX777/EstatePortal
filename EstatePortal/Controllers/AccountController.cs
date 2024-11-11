@@ -207,49 +207,6 @@ namespace EstatePortal.Controllers
         }
 
         // GET displays the form, POST saves new password
-        /*
-        [HttpGet]
-        public IActionResult ResetPassword(string token)
-        {
-            if (string.IsNullOrEmpty(token))
-            {
-                return BadRequest("Token resetujący jest wymagany.");
-            }
-
-            var model = new ResetPassword { Token = token };
-            return View("~/Views/Home/ResetPassword.cshtml", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult>ResetPassword(ResetPassword model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("~/Views/Home/ResetPassword.cshtml", model);
-            }
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == model.Token && u.ResetTokenExpiry > DateTime.Now);
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Token resetujący jest nieważny lub wygasł.");
-                return View("~/Views/Home/ResetPassword.cshtml", model);
-            }
-
-            var salt = GenerateSalt();
-            user.PasswordHash = HashPassword(model.NewPassword, salt);
-            user.PasswordSalt = salt;
-            user.PasswordResetToken = null;
-            user.ResetTokenExpiry = null;
-            user.PasswordLastReset = DateTime.Now;
-
-            await _context.SaveChangesAsync();
-
-            //return RedirectToAction("~/Views/Home/Register.cshtml");
-
-            //return View("~/Views/Home/Login.cshtml");
-            return RedirectToAction("Login", "Home");
-        } */
-
         [HttpGet]
         public IActionResult ResetPassword(string token)
         {
@@ -406,80 +363,159 @@ namespace EstatePortal.Controllers
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-            if (user == null || !VerifyPassword(model.Password, user.PasswordHash, user.PasswordSalt))
+            if (user == null || !VerifyPassword(model.Password, user.PasswordHash, user.PasswordSalt) || user.VerifiedAt == null)
             {
                 ModelState.AddModelError("", "Nieprawidłowy e-mail lub hasło.");
                 return View("~/Views/Home/Login.cshtml", model);
             }
 
-            // Logika logowania użytkownika: zapisujemy ID użytkownika w sesji
-            HttpContext.Session.SetString("UserId", user.Id.ToString()); // Dodać sesje w Program.cs
+            // Tworzenie tożsamości użytkownika
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim("UserId", user.Id.ToString()), // Możesz dodać więcej potrzebnych roszczeń
+                new Claim(ClaimTypes.Role, user.Role.ToString())
+            };
 
-            return RedirectToAction("UserPanel");
+            var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            await HttpContext.SignInAsync("Cookies", claimsPrincipal);
+            //return View("UserPanel");
+            return View("TestWidok");
         }
 
         // Logout user
         [Authorize]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Remove("UserId");
+            HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync("Cookies");
             return RedirectToAction("Login");
         }
 
-        // User Dashboard
+        // Widok testowy do USUNIECIA
         [Authorize]
-        [HttpGet]
-        public IActionResult UserPanel()
+        public IActionResult TestWidok()
         {
-            if (HttpContext.Session.GetString("UserId") == null)
+            var userId = User.FindFirst("UserId")?.Value; // Pobranie UserId z roszczenia
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login");
             }
-            return View("UserPanel");
+            // Kontynuuj obsługę użytkownika zgodnie z potrzebą...
+            return View("TestWidok");
         }
 
         [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> UserDashboard()
+        public IActionResult TestWidok2()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
+            var userId = User.FindFirst("UserId")?.Value; // Pobranie UserId z roszczenia
+            if (string.IsNullOrEmpty(userId))
+            {
                 return RedirectToAction("Login");
-
-            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null)
-                return RedirectToAction("Login");
-
-            return View("UserPanel", user);
+            }
+            // Kontynuuj obsługę użytkownika zgodnie z potrzebą...
+            return View("TestWidok2");
         }
 
-        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> UserPanel()
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var model = new UserUpdate
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            };
+
+            return View(model);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> UpdateUserData(User model)
+        public async Task<IActionResult> UpdateUser(UserUpdate model)
         {
-            if (!ModelState.IsValid)
+            //if (!ModelState.IsValid)
+            //{
+            //    //return View("UserPanel", model);
+            //    return View("TestWidok2");
+            //}
+
+            var userId = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userId))
             {
-                return View("~/Views/Home/UserPanel.cshtml", model);
+                return RedirectToAction("Login");
             }
 
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId")))
-                return RedirectToAction("Login");
-
-            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _context.Users.FindAsync(int.Parse(userId));
             if (user == null)
+            {
                 return RedirectToAction("Login");
+            }
 
             // Aktualizacja danych
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
+
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            ViewBag.Message = "Dane zaktualizowane pomyślnie.";
-            return View("~/Views/Home/UserPanel.cshtml", user);
+            ViewBag.Message = "Dane zostały zaktualizowane.";
+            return View("UserPanel", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(UserUpdate model)
+        {
+            //if (!ModelState.IsValid || string.IsNullOrEmpty(model.CurrentPassword) || string.IsNullOrEmpty(model.NewPassword))
+            //{
+            //    ModelState.AddModelError("", "Wszystkie pola muszą być wypełnione.");
+            //    return View("UserPanel", model);
+            //}
+
+            var userId = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Weryfikacja obecnego hasła
+            if (!VerifyPassword(model.CurrentPassword, user.PasswordHash, user.PasswordSalt))
+            {
+                ModelState.AddModelError("", "Obecne hasło jest nieprawidłowe.");
+                return View("UserPanel", model);
+            }
+
+            // Aktualizacja hasła
+            var salt = GenerateSalt();
+            user.PasswordHash = HashPassword(model.NewPassword, salt);
+            user.PasswordSalt = salt;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Message = "Hasło zostało zmienione.";
+            return View("UserPanel", model);
         }
     }
 }

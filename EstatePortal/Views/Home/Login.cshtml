@@ -30,6 +30,19 @@
             <div id="Menu">
                 <h2>Zaloguj się</h2>
                 <form action="/Account/Login" method="post">
+                    @if (!ViewData.ModelState.IsValid)
+
+                    {
+                        <div class="validation-summary-errors">
+                            <ul>
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
 
                     <div class="input">
                         <i class="icon-mail-alt"></i>
@@ -44,9 +57,7 @@
                     <input type="submit" value="zaloguj sie"> <br><br><br><br><br><br><br>
                     <p>Nie masz jeszcze konta? <a href="@Url.Action("Register", "Home")">Zaejestruj się!</a></p>
                 </form>
-
             </div>
-
         </div>
     </div>
 </body>
