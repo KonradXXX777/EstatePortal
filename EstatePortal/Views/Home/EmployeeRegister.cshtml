@@ -1,0 +1,30 @@
+﻿@model EstatePortal.Models.EmployeeRegister
+
+<h2>Rejestracja Pracownika</h2>
+<form asp-action="RegisterEmployee" method="post">
+    <input type="hidden" asp-for="Email" />
+    <input type="hidden" asp-for="InvitationToken" />
+
+    <div>
+        <label>Imię:</label>
+        <input asp-for="FirstName" />
+    </div>
+    <div>
+        <label>Nazwisko:</label>
+        <input asp-for="LastName" />
+    </div>
+    <div>
+        <label>Telefon:</label>
+        <input asp-for="PhoneNumber" />
+    </div>
+    <div>
+        <label>Hasło:</label>
+        <input asp-for="PasswordHash" type="password" />
+    </div>
+    <div>
+        <label>Potwierdź Hasło:</label>
+        <input asp-for="ConfirmPassword" type="password" />
+    </div>
+
+    <button type="submit">Zarejestruj</button>
+</form>

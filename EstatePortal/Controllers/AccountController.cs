@@ -11,6 +11,8 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using System.Diagnostics;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace EstatePortal.Controllers
@@ -25,6 +27,13 @@ namespace EstatePortal.Controllers
         {
             _context = context;
             _configuration = configuration;
+        }
+
+        // Error handling
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         // Private persons
@@ -138,6 +147,173 @@ namespace EstatePortal.Controllers
                 return RedirectToAction("Index", "Home");
             }
             return View("~/Views/Home/Register.cshtml", model);
+        }
+
+        // Add Employee
+        [HttpPost]
+        public async Task<IActionResult> InviteEmployee(string email)
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var employer = await _context.Users.FindAsync(int.Parse(userId));
+            if (employer == null || (employer.Role != UserRole.EstateAgency && employer.Role != UserRole.Developer))
+            {
+                ModelState.AddModelError("", "Brak uprawnień do zapraszania pracowników.");
+                return View("UserPanel");
+            }
+
+            // Generowanie tokena
+            var token = Guid.NewGuid().ToString();
+
+            // Zapisanie tokena do użytkownika (jeśli model `User` zawiera miejsce na przechowywanie tokena)
+            employer.InvitationToken = token; // Zmieniono na InvitationToken
+            await _context.SaveChangesAsync();
+
+            // Tworzenie linku z tokenem
+            var registrationLink = Url.Action("EmployeeRegister", "Account", new { token = employer.InvitationToken, employerId = employer.Id }, Request.Scheme);
+
+            // Wysłanie wiadomości e-mail
+            await SendInvitationEmail(email, registrationLink);
+
+            ViewBag.Message = "Zaproszenie zostało wysłane.";
+            return View("UserPanel");
+        }
+
+
+        // Employee register
+        [HttpGet]
+        public IActionResult EmployeeRegister(string InvitationToken, int employerId)
+        {
+            if (string.IsNullOrEmpty(InvitationToken) || employerId <= 0)
+            {
+                return BadRequest("Nieprawidłowe dane rejestracji.");
+            }
+
+            var model = new EmployeeRegister
+            {
+                Email = "", // Prewencyjnie puste pole, można dodać email, jeśli masz logikę
+                AcceptTerms = true // Wartość domyślna (lub zmień według potrzeby)
+            };
+
+            ViewBag.InvitationToken = InvitationToken;
+            ViewBag.EmployerId = employerId;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EmployeeRegister(EmployeeRegister model, string InvitationToken, int employerId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var employer = await _context.Users.FindAsync(employerId);
+            if (employer == null || employer.VerificationToken != InvitationToken)
+            {
+                ModelState.AddModelError("", "Nieprawidłowe lub wygasłe zaproszenie.");
+                return View(model);
+            }
+
+            // Tworzenie nowego użytkownika (pracownika)
+            var salt = GenerateSalt();
+            var newUser = new User
+            {
+                Email = model.Email,
+                PasswordHash = HashPassword(model.PasswordHash, salt),
+                PasswordSalt = salt,
+                Role = UserRole.Employee,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                EmployerId = employer.Id,
+                DateRegistered = DateTime.Now,
+                AcceptTerms = model.AcceptTerms,
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            employer.VerificationToken = null; // Reset tokena po użyciu
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Login");
+        }
+
+        // Invitation Email Sending
+        private async Task SendInvitationEmail(string email, string link)
+        {
+            // Pobranie ustawień SMTP z pliku appsettings.json
+            var emailSettings = _configuration.GetSection("SmtpSettings");
+            var host = emailSettings["Host"];
+            var port = int.Parse(emailSettings["Port"]);
+            var senderName = emailSettings["SenderName"];
+            var senderEmail = emailSettings["SenderEmail"];
+            var username = emailSettings["Username"];
+            var password = emailSettings["Password"];
+
+            // Tworzenie wiadomości e-mail z zaproszeniem
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(senderEmail, senderName),
+                Subject = "Zaproszenie do rejestracji w EstatePortal",
+                Body = $"Witaj! Aby zarejestrować się, kliknij poniższy link:\n{link}",
+                IsBodyHtml = false
+            };
+
+            mailMessage.To.Add(email);
+
+            using (var client = new SmtpClient(host, port))
+            {
+                client.Credentials = new NetworkCredential(username, password);
+                client.EnableSsl = true;
+
+                try
+                {
+                    await client.SendMailAsync(mailMessage);
+                    Console.WriteLine($"Wysłano zaproszenie do: {email}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Błąd podczas wysyłania zaproszenia e-mail: {ex.Message}");
+                }
+            }
+        }
+
+        // Invitation Employee Token Generating
+        private async Task<string> GenerateAndSaveTokenForEmployee(string email, int employerId)
+        {
+            // Generowanie unikalnego tokenu
+            var token = Guid.NewGuid().ToString();
+
+            // Zapis tokenu do bazy danych dla danego pracownika (zakładam, że User zawiera pola na token)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user != null)
+            {
+                user.VerificationToken = token;
+                user.EmployerId = employerId;
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // Dodajemy nowego użytkownika, jeśli nie istnieje
+                var newUser = new User
+                {
+                    Email = email,
+                    VerificationToken = token,
+                    EmployerId = employerId,
+                    Role = UserRole.Employee // Zakładamy, że nowy użytkownik to pracownik
+                };
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+            }
+            return token;
         }
 
         // Read SMTP configuration
@@ -448,6 +624,7 @@ namespace EstatePortal.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UserUpdate model)
         {
+            // Do naprawy - sprawdzic dlaczego dane nie sa prawidlowo walidowane
             //if (!ModelState.IsValid)
             //{
             //    //return View("UserPanel", model);
@@ -481,10 +658,11 @@ namespace EstatePortal.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(UserUpdate model)
         {
+            // Do naprawy - sprawdzic dlaczego dane nie sa prawidlowo walidowane
             //if (!ModelState.IsValid || string.IsNullOrEmpty(model.CurrentPassword) || string.IsNullOrEmpty(model.NewPassword))
             //{
             //    ModelState.AddModelError("", "Wszystkie pola muszą być wypełnione.");
-            //    return View("UserPanel", model);
+            //    return View("TestWidok2");
             //}
 
             var userId = User.FindFirst("UserId")?.Value;

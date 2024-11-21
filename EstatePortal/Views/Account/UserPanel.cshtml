@@ -62,6 +62,8 @@
 </body>
 </html> *@
 
+@model EstatePortal.Models.UserUpdate
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -124,6 +126,16 @@
 
         <button type="submit">Zmień hasło</button>
     </form>
+
+    <h3>Dodaj nowego pracownika</h3>
+    <form asp-action="InviteEmployee" method="post">
+        <div>
+            <label>Adres e-mail pracownika:</label>
+            <input type="email" name="email" required />
+        </div>
+        <button type="submit">Wyślij zaproszenie</button>
+    </form>
+
 
     <a href="/Account/Logout">Wyloguj się</a>
 </body>

@@ -37,6 +37,8 @@ namespace EstatePortal.Models
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
+        //Invitation Token
+        public string InvitationToken { get; set; } = string.Empty;
     }
 }
 

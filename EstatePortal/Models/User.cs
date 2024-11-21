@@ -49,7 +49,9 @@ namespace EstatePortal.Models
 
         [ForeignKey("EmployerId")]
         public virtual User Employer { get; set; }
+        public string InvitationToken { get; set; } = string.Empty;
 
         public virtual ICollection<User> Employees { get; set; } = new List<User>();
+        
     }
 }

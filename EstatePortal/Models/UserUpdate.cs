@@ -17,7 +17,7 @@ namespace EstatePortal.Models
         [DataType(DataType.Password)]
         public string CurrentPassword { get; set; }
 
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password), MinLength(8)]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
