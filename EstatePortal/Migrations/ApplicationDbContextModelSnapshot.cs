@@ -22,6 +22,38 @@ namespace EstatePortal.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("EstatePortal.Models.EmployeeInvitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("EmployerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployerId");
+
+                    b.ToTable("EmployeeInvitations");
+                });
+
             modelBuilder.Entity("EstatePortal.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -50,10 +82,6 @@ namespace EstatePortal.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("InvitationToken")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
@@ -98,10 +126,21 @@ namespace EstatePortal.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("EstatePortal.Models.EmployeeInvitation", b =>
+                {
+                    b.HasOne("EstatePortal.Models.User", "Employer")
+                        .WithMany("EmployeeInvitations")
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employer");
+                });
+
             modelBuilder.Entity("EstatePortal.Models.User", b =>
                 {
                     b.HasOne("EstatePortal.Models.User", "Employer")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("EmployerId");
 
                     b.Navigation("Employer");
@@ -109,7 +148,7 @@ namespace EstatePortal.Migrations
 
             modelBuilder.Entity("EstatePortal.Models.User", b =>
                 {
-                    b.Navigation("Employees");
+                    b.Navigation("EmployeeInvitations");
                 });
 #pragma warning restore 612, 618
         }

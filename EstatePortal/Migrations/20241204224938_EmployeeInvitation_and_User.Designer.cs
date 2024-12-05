@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstatePortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241010235251_RepairModels")]
-    partial class RepairModels
+    [Migration("20241204224938_EmployeeInvitation_and_User")]
+    partial class EmployeeInvitation_and_User
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,38 @@ namespace EstatePortal.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("EstatePortal.Models.EmployeeInvitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("EmployerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployerId");
+
+                    b.ToTable("EmployeeInvitations");
+                });
 
             modelBuilder.Entity("EstatePortal.Models.User", b =>
                 {
@@ -37,11 +69,9 @@ namespace EstatePortal.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("CompanyName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("DateRegistered")
@@ -55,27 +85,46 @@ namespace EstatePortal.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("InvitationToken")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("NIP")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<byte[]>("PassowrdHash")
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<DateTime?>("PasswordLastReset")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("longblob");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("ResetTokenExpiry")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
+
+                    b.Property<string>("VerificationToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("VerifiedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -84,10 +133,21 @@ namespace EstatePortal.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("EstatePortal.Models.EmployeeInvitation", b =>
+                {
+                    b.HasOne("EstatePortal.Models.User", "Employer")
+                        .WithMany("EmployeeInvitations")
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employer");
+                });
+
             modelBuilder.Entity("EstatePortal.Models.User", b =>
                 {
                     b.HasOne("EstatePortal.Models.User", "Employer")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("EmployerId");
 
                     b.Navigation("Employer");
@@ -95,7 +155,7 @@ namespace EstatePortal.Migrations
 
             modelBuilder.Entity("EstatePortal.Models.User", b =>
                 {
-                    b.Navigation("Employees");
+                    b.Navigation("EmployeeInvitations");
                 });
 #pragma warning restore 612, 618
         }

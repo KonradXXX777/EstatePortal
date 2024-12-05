@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Diagnostics;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 
 
 namespace EstatePortal.Controllers
@@ -62,7 +64,7 @@ namespace EstatePortal.Controllers
                     Role = UserRole.PrivatePerson,
                     AcceptTerms = model.AcceptTerms,
                     DateRegistered = DateTime.Now,
-                    VerificationToken = verificationToken
+                    VerificationToken = verificationToken,
                 };
 
                 _context.Users.Add(newUser);
@@ -89,6 +91,7 @@ namespace EstatePortal.Controllers
             {
                 var salt = GenerateSalt();
                 var hashedPassword = HashPassword(model.PasswordHash, salt);
+                var verificationToken = Guid.NewGuid().ToString(); // Token generation
 
                 var newUser = new User
                 {
@@ -101,11 +104,13 @@ namespace EstatePortal.Controllers
                     Address = model.Address,
                     PhoneNumber = model.PhoneNumber,
                     AcceptTerms = model.AcceptTerms,
-                    DateRegistered = DateTime.Now
+                    DateRegistered = DateTime.Now,
+                    VerificationToken = verificationToken,
                 };
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
+                SendVerificationEmail(newUser.Email, verificationToken);
                 return RedirectToAction("Index", "Home");
             }
             return View("~/Views/Home/Register.cshtml");
@@ -127,6 +132,7 @@ namespace EstatePortal.Controllers
             {
                 var salt = GenerateSalt();
                 var hashedPassword = HashPassword(model.PasswordHash, salt);
+                var verificationToken = Guid.NewGuid().ToString(); // Token generation
 
                 var newUser = new User
                 {
@@ -139,18 +145,77 @@ namespace EstatePortal.Controllers
                     Address = model.Address,
                     PhoneNumber = model.PhoneNumber,
                     AcceptTerms = model.AcceptTerms,
-                    DateRegistered = DateTime.Now
+                    DateRegistered = DateTime.Now,
+                    VerificationToken = verificationToken,
                 };
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
+                SendVerificationEmail(newUser.Email, verificationToken);
                 return RedirectToAction("Index", "Home");
             }
             return View("~/Views/Home/Register.cshtml", model);
         }
 
-        // Add Employee
-        [HttpPost]
+		// Google Register
+		[HttpGet]
+		public IActionResult LoginWithGoogle()
+		{
+			var redirectUrl = Url.Action("GoogleResponse", "Account");
+			var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+			return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GoogleResponse()
+		{
+			var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+			if (result?.Principal == null)
+			{
+				return RedirectToAction("Login");
+			}
+
+			// Pobieranie danych z Google
+			var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
+			var name = result.Principal.FindFirst(ClaimTypes.Name)?.Value;
+
+			// Dodaj logikę: np. znajdź użytkownika w bazie lub utwórz nowe konto
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+			if (user == null)
+			{
+				// Utwórz nowego użytkownika
+				user = new User
+				{
+					Email = email,
+					FirstName = name?.Split(' ')[0],
+					LastName = name?.Split(' ').Skip(1).FirstOrDefault(),
+					Role = UserRole.PrivatePerson,
+					DateRegistered = DateTime.Now
+				};
+
+				_context.Users.Add(user);
+				await _context.SaveChangesAsync();
+			}
+
+			// Zalogowanie użytkownika
+			var claims = new List<Claim>
+	        {
+		        new Claim(ClaimTypes.Name, user.FirstName ?? ""),
+		        new Claim(ClaimTypes.Email, user.Email),
+		        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+		        new Claim(ClaimTypes.Role, user.Role.ToString())
+	        };
+
+			var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+			return RedirectToAction("UserPanel");
+		}
+
+
+		// Add Employee
+		[HttpPost]
         public async Task<IActionResult> InviteEmployee(string email)
         {
             var userId = User.FindFirst("UserId")?.Value;
@@ -166,61 +231,68 @@ namespace EstatePortal.Controllers
                 return View("UserPanel");
             }
 
-            // Generowanie tokena
-            var token = Guid.NewGuid().ToString();
+            // Tworzenie nowego zaproszenia
+            var invitation = new EmployeeInvitation
+            {
+                Email = email,
+                EmployerId = employer.Id,
+                Token = Guid.NewGuid().ToString(),
+                ExpiryDate = DateTime.UtcNow.AddDays(7) // Token wygasa po 7 dniach
+            };
 
-            // Zapisanie tokena do użytkownika (jeśli model `User` zawiera miejsce na przechowywanie tokena)
-            employer.InvitationToken = token; // Zmieniono na InvitationToken
+            _context.EmployeeInvitations.Add(invitation);
             await _context.SaveChangesAsync();
 
-            // Tworzenie linku z tokenem
-            var registrationLink = Url.Action("EmployeeRegister", "Account", new { token = employer.InvitationToken, employerId = employer.Id }, Request.Scheme);
+            // Tworzenie linku rejestracyjnego
+            var registrationLink = Url.Action("EmployeeRegister", "Account", new { token = invitation.Token }, Request.Scheme);
 
-            // Wysłanie wiadomości e-mail
+            // Wysłanie e-maila z zaproszeniem
             await SendInvitationEmail(email, registrationLink);
 
             ViewBag.Message = "Zaproszenie zostało wysłane.";
             return View("UserPanel");
         }
 
-
         // Employee register
         [HttpGet]
-        public IActionResult EmployeeRegister(string InvitationToken, int employerId)
+        public async Task<IActionResult> EmployeeRegister(string token)
         {
-            if (string.IsNullOrEmpty(InvitationToken) || employerId <= 0)
+            if (string.IsNullOrEmpty(token))
             {
-                return BadRequest("Nieprawidłowe dane rejestracji.");
+                return BadRequest("Token zaproszenia jest nieprawidłowy.");
+            }
+
+            var invitation = await _context.EmployeeInvitations.FirstOrDefaultAsync(i => i.Token == token);
+            if (invitation == null || (invitation.ExpiryDate.HasValue && invitation.ExpiryDate.Value < DateTime.UtcNow))
+            {
+                return BadRequest("Zaproszenie wygasło lub jest nieprawidłowe.");
             }
 
             var model = new EmployeeRegister
             {
-                Email = "", // Prewencyjnie puste pole, można dodać email, jeśli masz logikę
-                AcceptTerms = true // Wartość domyślna (lub zmień według potrzeby)
+                Email = invitation.Email, // Preuzupełnienie e-maila z zaproszenia
+                InvitationToken = invitation.Token
             };
 
-            ViewBag.InvitationToken = InvitationToken;
-            ViewBag.EmployerId = employerId;
-
-            return View(model);
+            return View("~/Views/Home/EmployeeRegister.cshtml", model);
         }
 
+        // Save employee user in DB
         [HttpPost]
-        public async Task<IActionResult> EmployeeRegister(EmployeeRegister model, string InvitationToken, int employerId)
+        public async Task<IActionResult> EmployeeRegister(EmployeeRegister model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("~/Views/Home/EmployeeRegister.cshtml", model);
             }
 
-            var employer = await _context.Users.FindAsync(employerId);
-            if (employer == null || employer.VerificationToken != InvitationToken)
+            var invitation = await _context.EmployeeInvitations.FirstOrDefaultAsync(i => i.Token == model.InvitationToken);
+            if (invitation == null || (invitation.ExpiryDate.HasValue && invitation.ExpiryDate.Value < DateTime.UtcNow))
             {
-                ModelState.AddModelError("", "Nieprawidłowe lub wygasłe zaproszenie.");
-                return View(model);
+                ModelState.AddModelError("", "Zaproszenie wygasło lub jest nieprawidłowe.");
+                return View("~/Views/Home/EmployeeRegister.cshtml", model);
             }
 
-            // Tworzenie nowego użytkownika (pracownika)
             var salt = GenerateSalt();
             var newUser = new User
             {
@@ -231,17 +303,18 @@ namespace EstatePortal.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
-                EmployerId = employer.Id,
+                EmployerId = invitation.EmployerId, // Powiązanie z pracodawcą
                 DateRegistered = DateTime.Now,
-                AcceptTerms = model.AcceptTerms,
+                VerifiedAt = DateTime.Now,
+                AcceptTerms = model.AcceptTerms
             };
 
             _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
 
-            employer.VerificationToken = null; // Reset tokena po użyciu
-            await _context.SaveChangesAsync();
+            // Usunięcie zaproszenia po rejestracji
+            _context.EmployeeInvitations.Remove(invitation);
 
+            await _context.SaveChangesAsync();
             return RedirectToAction("Login");
         }
 

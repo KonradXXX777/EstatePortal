@@ -1,5 +1,6 @@
 using EstatePortal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Google;
 using EstatePortal.Models;
 using Microsoft.Extensions.Options;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
@@ -31,7 +32,13 @@ builder.Services.AddAuthentication("Cookies")
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Czas wa¿noœci cookie
         options.SlidingExpiration = true;
-    });
+    })
+	.AddGoogle(options =>
+	{
+		options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+		options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+		options.CallbackPath = "/signin-google"; // Œcie¿ka przekierowania
+	});
 
 
 var app = builder.Build();
