@@ -47,7 +47,7 @@ namespace EstatePortal.Controllers
 
         // POST: AddApartment
         [HttpPost]
-        public IActionResult AddApartment(Property property, List<IFormFile> MultimediaFiles)
+        public IActionResult AddApartment(Announcement announcement, List<IFormFile> MultimediaFiles)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +57,7 @@ namespace EstatePortal.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(property);
+            return View();
         }
     }
 }

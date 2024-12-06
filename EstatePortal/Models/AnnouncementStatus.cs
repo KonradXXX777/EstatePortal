@@ -1,14 +1,11 @@
 ﻿namespace EstatePortal.Models
 {
-    public class AnnouncementStatus
+    public enum AnnouncementStatus
     {
-        public enum AdvertisementStatus
-        {
-            Active,
-            Inactive,
-            PendingApproval,
-            Rejected,
-            Sold
-        }
+        Active,
+        Inactive,
+        PendingApproval,
+        Rejected,
+        Sold
     }
 }

@@ -9,18 +9,18 @@ namespace EstatePortal.Models
         public int Id { get; set; }
 
         [Required, EmailAddress]
-        public string Email { get; set; } = string.Empty; // Adres e-mail zaproszonego pracownika
+        public string Email { get; set; } = string.Empty; 
 
         [Required]
-        public string Token { get; set; } = Guid.NewGuid().ToString(); // Unikalny token zaproszenia
+        public string Token { get; set; } = Guid.NewGuid().ToString(); 
 
         [Required]
-        public int EmployerId { get; set; } // Id pracodawcy, który wysyła zaproszenie
+        public int EmployerId { get; set; } 
 
         [ForeignKey("EmployerId")]
-        public virtual User Employer { get; set; } // Relacja z pracodawcą
+        public virtual User Employer { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Data utworzenia zaproszenia
-        public DateTime? ExpiryDate { get; set; } // Opcjonalnie: data wygaśnięcia tokena
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? ExpiryDate { get; set; }
     }
 }

@@ -173,6 +173,7 @@ namespace EstatePortal.Controllers
 
 			if (result?.Principal == null)
 			{
+				TempData["Error"] = "Nie udało się zalogować za pomocą Google.";
 				return RedirectToAction("Login");
 			}
 
@@ -180,11 +181,16 @@ namespace EstatePortal.Controllers
 			var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
 			var name = result.Principal.FindFirst(ClaimTypes.Name)?.Value;
 
+			if (string.IsNullOrEmpty(email))
+			{
+				TempData["Error"] = "Nie udało się pobrać adresu e-mail.";
+				return RedirectToAction("Login");
+			}
+
 			// Dodaj logikę: np. znajdź użytkownika w bazie lub utwórz nowe konto
 			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 			if (user == null)
 			{
-				// Utwórz nowego użytkownika
 				user = new User
 				{
 					Email = email,
@@ -212,7 +218,6 @@ namespace EstatePortal.Controllers
 
 			return RedirectToAction("UserPanel");
 		}
-
 
 		// Add Employee
 		[HttpPost]
