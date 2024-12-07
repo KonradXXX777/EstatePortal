@@ -8,122 +8,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dodaj Ogłoszenie - Sprzedaż</title>
-    <link rel="stylesheet" href="~/css/SellOrRent/Sell/SellHouse.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places"></script>
+    <link rel="stylesheet" href="~/css/AddApartment.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv_iuStXOtfssDcTMwz4YaMtGGiUXFeXY&libraries=places"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Sprzedaż mieszkania</h1>
+            <h1>Sprzedaż domu</h1>
         </header>
 
         <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" enctype="multipart/form-data">
             <!-- Informacje podstawowe -->
             <fieldset>
                 <legend>Informacje podstawowe</legend>
-                <label>Tytuł ogłoszenia <span class="required">*</span>
-                    <input type="text" name="title" required>
+                <label>
+                    Tytuł ogłoszenia <span class="required">*</span>
+                    <input type="text" name="Title" required>
                 </label>
-                <label>Powierzchnia użytkowa (m²)
-                    <input type="number" name="usableArea">
+                <label>
+                    Powierzchnia użytkowa (m²) <span class="required">*</span>
+                    <input type="number" name="Area" step="0.1" required>
                 </label>
-                <label>Cena <span class="required">*</span>
-                    <input type="number" name="price" required>
+                <label>
+                    Cena <span class="required">*</span>
+                    <input type="number" name="Price" step="0.01" required>
                 </label>
-                <label>Cena za m² <span class="required">*</span>
-                    <input type="number" name="pricePerMeter" required>
+                <label>
+                    Miejscowość <span class="required">*</span>
+                    <input type="text" id="searchInput" name="Location" required>
                 </label>
-                <label>Miejscowość <span class="required">*</span>
-                    <input type="text" id="searchInput" name="location" required>
+                <label>
+                    Ulica <span class="required">*</span>
+                    <input type="text" name="Street" required>
                 </label>
-                <label>Opis <span class="required">*</span>
-                    <textarea name="description" rows="4" required></textarea>
+                <label>
+                    Opis <span class="required">*</span>
+                    <textarea name="Description" rows="4" required></textarea>
                 </label>
-            </fieldset>
-
-            <!-- Mapka -->
-            <fieldset>
-                <legend>Mapa</legend>
                 <div id="map"></div>
             </fieldset>
 
-            <!-- Parametry mieszkania -->
+            <!-- Parametry domu -->
             <fieldset>
-                <legend>Parametry mieszkania</legend>
-                <label>Liczba pokoi
-                    <input type="number" name="rooms">
+                <legend>Parametry domu</legend>
+                <label>
+                    Liczba pokoi
+                    <input type="number" name="Features.Rooms">
                 </label>
-                <label>Piętro
-                    <input type="number" name="floor">
+                <label>
+                    Piętro
+                    <input type="number" name="Features.Floor">
                 </label>
-                <label>Liczba pięter w budynku
-                    <input type="number" name="totalFloors">
+                <label>
+                    Liczba pięter w budynku
+                    <input type="number" name="Features.TotalFloors">
                 </label>
-                <label>Winda
-                    <select name="elevator">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
+                <label>
+                    Winda
+                    <select name="Features.Elevator">
+                        <option value="true">Tak</option>
+                        <option value="false">Nie</option>
                     </select>
                 </label>
-                <label>Rok budowy
-                    <input type="number" name="yearBuilt">
+                <label>
+                    Rok budowy
+                    <input type="number" name="Features.YearBuilt">
                 </label>
-                <label>Stan mieszkania
-                    <select name="condition">
-                        <option value="">Wybierz</option>
-                        <option value="new">Nowe</option>
-                        <option value="good">Dobry</option>
-                        <option value="toRenovate">Do remontu</option>
+                <label>
+                    Stan nieruchomości
+                    <input type="text" name="Features.PropertyCondition">
+                </label>
+                <label>
+                    Miejsce parkingowe
+                    <input type="text" name="Features.Parking">
+                </label>
+                <label>
+                    Świadectwo energetyczne
+                    <input type="text" name="Features.EnergyCertificate">
+                </label>
+                <label>
+                    Balkon
+                    <select name="Features.Garden">
+                        <option value="true">Tak</option>
+                        <option value="false">Nie</option>
                     </select>
                 </label>
-                <label>Miejsce parkingowe
-                    <select name="parking">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
+                <label>
+                    Wyposażenie AGD
+                    <select name="Features.KitchenAppliances">
+                        <option value="true">Tak</option>
+                        <option value="false">Nie</option>
                     </select>
                 </label>
-                <label>Świadectwo energetyczne
-                    <select name="energyCertificate">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
-                    </select>
-                </label>
-                <label>Balkon
-                    <select name="balcony">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
-                    </select>
-                </label>
-                <label>Piwnica
-                    <select name="basement">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
-                    </select>
-                </label>
-                <label>Ogródek
-                    <select name="garden">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
-                    </select>
-                </label>
-                <label>Wyposażenie AGD
-                    <select name="appliances">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
-                    </select>
-                </label>
-                <label>Umeblowane
-                    <select name="furnished">
-                        <option value="">Wybierz</option>
-                        <option value="yes">Tak</option>
-                        <option value="no">Nie</option>
+                <label>
+                    Umeblowane
+                    <select name="Features.Furnished">
+                        <option value="true">Tak</option>
+                        <option value="false">Nie</option>
                     </select>
                 </label>
             </fieldset>
@@ -133,7 +114,7 @@
                 <legend>Zdjęcia</legend>
                 <div class="image-upload-grid">
                     <label class="upload-box">
-                        <input type="file" name="images[]" multiple>
+                        <input type="file" name="Photos" multiple>
                         <span>Dodaj zdjęcie</span>
                     </label>
                 </div>
@@ -147,11 +128,15 @@
         function initMap() {
             const map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 52.409538, lng: 16.931992 },
-                zoom: 13
+                zoom: 13,
+                disableDefaultUI: true,
             });
 
             const input = document.getElementById("searchInput");
-            const autocomplete = new google.maps.places.Autocomplete(input);
+            const autocomplete = new google.maps.places.Autocomplete(input, {
+                componentRestrictions: { country: "pl" },
+                fields: ["address_components", "geometry", "name"]
+            });
             autocomplete.bindTo("bounds", map);
 
             const marker = new google.maps.Marker({
@@ -169,6 +154,17 @@
 
                 map.setCenter(place.geometry.location);
                 marker.setPosition(place.geometry.location);
+
+                const addressComponents = place.address_components;
+                let city = "";
+
+                addressComponents.forEach((component) => {
+                    if (component.types.includes("locality")) {
+                        city = component.long_name;
+                    }
+                });
+
+                input.value = `${city}`;
             });
         }
 

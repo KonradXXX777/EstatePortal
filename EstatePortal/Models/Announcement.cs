@@ -12,37 +12,40 @@ namespace EstatePortal.Models
 		public string Title { get; set; } = string.Empty;
 
 		[Required]
-		public double Area { get; set; } // Powierzchnia użytkowa w m²
+		public float Area { get; set; }
 
 		[Required]
-		public decimal Price { get; set; } // Cena
-
-		public decimal? PricePerSquareMeter { get; set; } // Cena za m² (opcjonalna)
+		public decimal Price { get; set; }
 
 		[Required]
 		public string Location { get; set; } = string.Empty;
 
-		public string Description { get; set; } = string.Empty;
+		public string Street { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
 
 		[Required]
-		public SaleOrRent SaleOrRent { get; set; } // Na sprzedaż lub wynajem
+		public SaleOrRent SaleOrRent { get; set; }
 
 		[Required]
-		public PropertyType PropertyType { get; set; } // Typ nieruchomości
+		public PropertyType PropertyType { get; set; } 
 
 		[Required]
-		public AnnouncementStatus Status { get; set; } = AnnouncementStatus.PendingApproval; // Status ogłoszenia
+		public AnnouncementStatus Status { get; set; } = AnnouncementStatus.PendingApproval; 
 
-		public DateTime DateCreated { get; set; } = DateTime.UtcNow; // Data dodania ogłoszenia
-		public DateTime? DateUpdated { get; set; } // Data ostatniej aktualizacji ogłoszenia
+		public DateTime DateCreated { get; set; } = DateTime.UtcNow; 
+		public DateTime? DateUpdated { get; set; } 
 
-		public string? VideoUrls { get; set; } // Adresy URL do filmów (np. YouTube), przechowywane jako JSON
+		public string? VideoUrls { get; set; }
 
-		public virtual AnnouncementFeature Features { get; set; } = new AnnouncementFeature(); // Cechy ogłoszenia
-		public virtual ICollection<AnnouncementPhoto> Photos { get; set; } = new List<AnnouncementPhoto>(); // Zdjęcia
+		public virtual AnnouncementFeature Features { get; set; } = new AnnouncementFeature();
+		public virtual ICollection<AnnouncementPhoto> Photos { get; set; } = new List<AnnouncementPhoto>();
 
 		[ForeignKey("UserId")]
 		public int UserId { get; set; }
-		public virtual User User { get; set; } // Powiązanie z użytkownikiem
-	}
+		public virtual User User { get; set; } 
+
+        [NotMapped] // Do not save in db
+        public string? MainPhotoUrl => Photos.FirstOrDefault()?.Url;
+    }
 }

@@ -4,6 +4,7 @@ using EstatePortal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstatePortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241206235346_07.12.24")]
+    partial class _071224
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +33,8 @@ namespace EstatePortal.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("Area")
-                        .HasColumnType("float");
+                    b.Property<double>("Area")
+                        .HasColumnType("double");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
@@ -58,10 +61,6 @@ namespace EstatePortal.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -207,9 +206,6 @@ namespace EstatePortal.Migrations
                     b.Property<int>("AnnouncementId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BuyerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("LastMessage")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -220,9 +216,6 @@ namespace EstatePortal.Migrations
                     b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SellerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SenderId")
                         .HasColumnType("int");
 
@@ -230,11 +223,7 @@ namespace EstatePortal.Migrations
 
                     b.HasIndex("AnnouncementId");
 
-                    b.HasIndex("BuyerId");
-
                     b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SellerId");
 
                     b.HasIndex("SenderId");
 
@@ -416,21 +405,9 @@ namespace EstatePortal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EstatePortal.Models.User", "Buyer")
-                        .WithMany()
-                        .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EstatePortal.Models.User", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EstatePortal.Models.User", "Seller")
-                        .WithMany()
-                        .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -442,11 +419,7 @@ namespace EstatePortal.Migrations
 
                     b.Navigation("Announcement");
 
-                    b.Navigation("Buyer");
-
                     b.Navigation("Receiver");
-
-                    b.Navigation("Seller");
 
                     b.Navigation("Sender");
                 });
@@ -465,7 +438,7 @@ namespace EstatePortal.Migrations
             modelBuilder.Entity("EstatePortal.Models.Message", b =>
                 {
                     b.HasOne("EstatePortal.Models.Chat", "Chat")
-                        .WithMany("Messages")
+                        .WithMany()
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -496,11 +469,6 @@ namespace EstatePortal.Migrations
                         .IsRequired();
 
                     b.Navigation("Photos");
-                });
-
-            modelBuilder.Entity("EstatePortal.Models.Chat", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("EstatePortal.Models.User", b =>

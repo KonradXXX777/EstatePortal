@@ -45,19 +45,102 @@ namespace EstatePortal.Controllers
             return View();
         }
 
-        // POST: AddApartment
+        // Obsługa formularza dodawania ogłoszenia
         [HttpPost]
-        public IActionResult AddApartment(Announcement announcement, List<IFormFile> MultimediaFiles)
+        public async Task<IActionResult> AddAnnouncement(
+            Announcement model,
+            AnnouncementFeature features,
+            List<IFormFile> Photos)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Tutaj możesz dodać logikę do zapisania pliku do bazy danych lub systemu plików
-
-                // Przekieruj do innej strony po zapisaniu
-                return RedirectToAction("Index");
+                Console.WriteLine("Model state is not valid");
+                ModelState.AddModelError("", "Nieprawidłowe dane formularza.");
+                return View(model);
             }
 
-            return View();
+            // Ustawienia użytkownika i czasu
+            var userId = User.FindFirst("UserId")?.Value; // Zakładam, że UserId jest przechowywane w sesji lub tokenie
+            if (userId == null)
+            {
+                ModelState.AddModelError("", "Błąd autoryzacji. Spróbuj ponownie.");
+                return View(model);
+            }
+
+            model.UserId = int.Parse(userId);
+            model.DateCreated = DateTime.UtcNow;
+
+            // Dodanie ogłoszenia
+            _context.Announcements.Add(model);
+            await _context.SaveChangesAsync();
+
+            // Dodanie cech ogłoszenia
+            features.AnnouncementId = model.Id;
+            _context.AnnouncementFeatures.Add(features);
+
+            // Dodanie zdjęć
+            foreach (var photo in Photos)
+            {
+                if (photo.Length > 0)
+                {
+                    // Przetwarzanie i zapisywanie zdjęcia
+                    var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/announcements", fileName);
+
+                    using (var stream = new FileStream(uploadPath, FileMode.Create))
+                    {
+                        await photo.CopyToAsync(stream);
+                    }
+
+                    _context.AnnouncementPhotos.Add(new AnnouncementPhoto
+                    {
+                        AnnouncementId = model.Id,
+                        Url = $"/images/announcements/{fileName}"
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Ogłoszenie zostało dodane pomyślnie.";
+            return RedirectToAction("Index", "Home");
+        }
+    
+
+
+// Wyświetlenie listy ogłoszeń użytkownika
+[HttpGet]
+        public async Task<IActionResult> MyAnnouncements()
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var announcements = await _context.Announcements
+                .Where(a => a.UserId == int.Parse(userId))
+                .Include(a => a.Photos)
+                .ToListAsync();
+
+            return View(announcements);
+        }
+
+        // Szczegóły ogłoszenia
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var announcement = await _context.Announcements
+                .Include(a => a.Features)
+                .Include(a => a.Photos)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (announcement == null)
+            {
+                return NotFound("Nie znaleziono ogłoszenia.");
+            }
+
+            return View(announcement);
         }
     }
 }

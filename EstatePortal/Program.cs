@@ -40,6 +40,8 @@ builder.Services.AddAuthentication("Cookies")
 		options.CallbackPath = "/signin-google"; // Œcie¿ka przekierowania
 	});
 
+// SignalR
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -80,7 +82,7 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+app.MapHub<EstatePortal.Hubs.ChatHub>("/chathub");
 
 app.MapControllerRoute(
     name: "default",

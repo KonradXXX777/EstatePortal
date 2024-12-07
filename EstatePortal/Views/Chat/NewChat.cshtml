@@ -1,0 +1,17 @@
+﻿@model EstatePortal.Models.Chat
+
+<h2>Rozpocznij czat z ogłoszeniodawcą</h2>
+<h3>@Model.Announcement.Title</h3>
+
+<form asp-action="StartChat" method="post">
+    <input type="hidden" asp-for="AnnouncementId" />
+    <input type="hidden" asp-for="ReceiverId" />
+
+    <div>
+        <label for="LastMessage">Wiadomość:</label>
+        <textarea asp-for="LastMessage" rows="5"></textarea>
+        <span asp-validation-for="LastMessage" class="text-danger"></span>
+    </div>
+
+    <button type="submit">Wyślij</button>
+</form>
