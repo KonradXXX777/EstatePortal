@@ -1,8 +1,4 @@
-﻿@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
@@ -15,9 +11,12 @@
     <div class="container">
         <header>
             <h1>Sprzedaż domu</h1>
+            @*<h1> Sprzedajesz: @ViewData["PropertyType"]</h1>*@
+            <h1> Sprzedajesz: @ViewBag.PropertyType</h1>
+
         </header>
 
-        <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" enctype="multipart/form-data">
+        <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
             <!-- Informacje podstawowe -->
             <fieldset>
                 <legend>Informacje podstawowe</legend>

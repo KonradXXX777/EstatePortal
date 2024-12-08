@@ -24,7 +24,7 @@ namespace EstatePortal.Models
 
         public string Description { get; set; } = string.Empty;
 
-		[Required]
+		//[Required]
 		public SaleOrRent SaleOrRent { get; set; }
 
 		[Required]

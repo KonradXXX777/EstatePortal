@@ -38,11 +38,40 @@ namespace EstatePortal.Controllers
             return View();
         }
 
-        // GET: AddApartment
-        [HttpGet]
+        public IActionResult SellOrRent()
+        {
+            return View();
+        }
+
         public IActionResult AddApartment()
         {
             return View();
+        } 
+
+        // GET: AddApartment
+        [HttpGet]
+        public IActionResult AddAnnouncement()
+        {
+            return View();
+        }
+
+        // Odbieranie wartości `propertyType` z URL i renderowanie widoku formularza
+        [HttpGet]
+        public IActionResult SelectSellOrRent(string propertyType)
+        {
+            Console.WriteLine($"PropertyType: {propertyType}"); // Debugowanie
+            if (string.IsNullOrEmpty(propertyType))
+            {
+                TempData["ErrorMessage"] = "Nie wybrano typu nieruchomości.";
+                return RedirectToAction("SellOrRent");
+            }
+
+            // Przekazanie wartości `propertyType` do widoku
+           // ViewData["PropertyType"] = propertyType;
+            ViewBag.PropertyType = propertyType;
+            //ViewBag.SaleOrRent = SaleOrRent; //dodac string SaleOrRent
+
+            return View("Announcement");
         }
 
         // Obsługa formularza dodawania ogłoszenia
@@ -52,12 +81,12 @@ namespace EstatePortal.Controllers
             AnnouncementFeature features,
             List<IFormFile> Photos)
         {
-            if (!ModelState.IsValid)
-            {
-                Console.WriteLine("Model state is not valid");
-                ModelState.AddModelError("", "Nieprawidłowe dane formularza.");
-                return View(model);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    Console.WriteLine("Model state is not valid");
+            //    ModelState.AddModelError("", "Nieprawidłowe dane formularza.");
+            //    return View(model);
+            //}
 
             // Ustawienia użytkownika i czasu
             var userId = User.FindFirst("UserId")?.Value; // Zakładam, że UserId jest przechowywane w sesji lub tokenie
@@ -85,7 +114,7 @@ namespace EstatePortal.Controllers
                 {
                     // Przetwarzanie i zapisywanie zdjęcia
                     var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/announcements", fileName);
+                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
 
                     using (var stream = new FileStream(uploadPath, FileMode.Create))
                     {
@@ -95,7 +124,7 @@ namespace EstatePortal.Controllers
                     _context.AnnouncementPhotos.Add(new AnnouncementPhoto
                     {
                         AnnouncementId = model.Id,
-                        Url = $"/images/announcements/{fileName}"
+                        Url = $"/uploads/{fileName}"
                     });
                 }
             }
@@ -105,8 +134,6 @@ namespace EstatePortal.Controllers
             TempData["SuccessMessage"] = "Ogłoszenie zostało dodane pomyślnie.";
             return RedirectToAction("Index", "Home");
         }
-    
-
 
 // Wyświetlenie listy ogłoszeń użytkownika
 [HttpGet]
