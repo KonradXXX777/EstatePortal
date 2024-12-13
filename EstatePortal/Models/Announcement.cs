@@ -12,10 +12,12 @@ namespace EstatePortal.Models
 		public string Title { get; set; } = string.Empty;
 
 		[Required]
-		public float Area { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Area { get; set; }
 
 		[Required]
-		public decimal Price { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Price { get; set; }
 
 		[Required]
 		public string Location { get; set; } = string.Empty;
@@ -25,7 +27,7 @@ namespace EstatePortal.Models
         public string Description { get; set; } = string.Empty;
 
 		//[Required]
-		public SaleOrRent SaleOrRent { get; set; }
+		public SellOrRent SellOrRent { get; set; }
 
 		[Required]
 		public PropertyType PropertyType { get; set; } 

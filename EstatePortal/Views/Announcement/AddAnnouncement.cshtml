@@ -11,8 +11,7 @@
     <div class="container">
         <header>
             <h1>Sprzedaż domu</h1>
-            @*<h1> Sprzedajesz: @ViewData["PropertyType"]</h1>*@
-            <h1> Sprzedajesz: @ViewBag.PropertyType</h1>
+            <h1> Sprzedajesz: @ViewData["PropertyType"]</h1>
 
         </header>
 
@@ -65,6 +64,7 @@
                 <label>
                     Winda
                     <select name="Features.Elevator">
+                        <option value="">Wybierz</option>
                         <option value="true">Tak</option>
                         <option value="false">Nie</option>
                     </select>
@@ -81,32 +81,97 @@
                     Miejsce parkingowe
                     <input type="text" name="Features.Parking">
                 </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
                 <label>
-                    Świadectwo energetyczne
-                    <input type="text" name="Features.EnergyCertificate">
+                    Bezpieczeństwo
+                    <select name="Features.Security">
+                        <option value="">Wybierz</option>
+                        @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                        {
+                            <option value="@(option.Value)">
+                                @option.Text
+                            </option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    Dostosowane dla osób niepełnosprawnych
+                    <select name="Features.IsAccessible">
+                        <option value="false">Nie</option>
+                        <option value="true">Tak</option>
+                    </select>
+                </label>
+                <label>
+                    Zabudowa w okolicy
+                    <select name="Features.Neighborhood">
+                        <option value="">Wybierz</option>
+                        @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                        {
+                            <option value="@(option.Value)">
+                                @option.Text
+                            </option>
+                        }
+                    </select>
                 </label>
                 <label>
                     Balkon
                     <select name="Features.Garden">
-                        <option value="true">Tak</option>
                         <option value="false">Nie</option>
+                        <option value="true">Tak</option>
                     </select>
                 </label>
                 <label>
                     Wyposażenie AGD
                     <select name="Features.KitchenAppliances">
-                        <option value="true">Tak</option>
                         <option value="false">Nie</option>
+                        <option value="true">Tak</option>
                     </select>
                 </label>
                 <label>
                     Umeblowane
                     <select name="Features.Furnished">
-                        <option value="true">Tak</option>
                         <option value="false">Nie</option>
+                        <option value="true">Tak</option>
                     </select>
                 </label>
             </fieldset>
+
+            <fieldset>
+                <legend>Przyroda w okolicy</legend>
+                <div class="checkbox-group-grid">
+                <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Dodatkowe informacje</legend>
+                <div class="checkbox-group">
+                <label><input type="checkbox" name="Features.HasGarden" value="true"> Ogród</label>
+                <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                <label><input type="checkbox" name="Features.HasAttic" value="true"> Strych</label>
+                <label><input type="checkbox" name="Features.HasGarage" value="true"> Garaż</label>
+                <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                <label><input type="checkbox" name="Features.HasPool" value="true"> Basen</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Media</legend>
+                <div class="checkbox-group">
+                <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                </div>
+            </fieldset>
+
 
             <!-- Zdjęcia -->
             <fieldset>

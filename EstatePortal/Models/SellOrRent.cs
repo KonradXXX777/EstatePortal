@@ -1,6 +1,6 @@
 ﻿namespace EstatePortal.Models
 {
-	public enum SaleOrRent
+	public enum SellOrRent
 	{
 		ForSale,
 		ForRent,

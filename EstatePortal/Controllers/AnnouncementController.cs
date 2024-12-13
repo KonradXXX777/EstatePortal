@@ -41,45 +41,26 @@ namespace EstatePortal.Controllers
         public IActionResult SellOrRent()
         {
             return View();
-        }
-
-        public IActionResult AddApartment()
-        {
-            return View();
         } 
 
         // GET: AddApartment
         [HttpGet]
-        public IActionResult AddAnnouncement()
+        public IActionResult AddAnnouncement(string propertyType)
         {
+            // Przekazywanie info o rodzaju nieruchomosci z ViewData
+
+            //if (string.IsNullOrEmpty(propertyType))
+            //{
+            //    TempData["ErrorMessage"] = "Nie wybrano typu nieruchomości.";
+            //    return View("SellOrRent");
+            //}
+            //ViewData["PropertyType"] = propertyType;
             return View();
         }
 
-        // Odbieranie wartości `propertyType` z URL i renderowanie widoku formularza
-        [HttpGet]
-        public IActionResult SelectSellOrRent(string propertyType)
-        {
-            Console.WriteLine($"PropertyType: {propertyType}"); // Debugowanie
-            if (string.IsNullOrEmpty(propertyType))
-            {
-                TempData["ErrorMessage"] = "Nie wybrano typu nieruchomości.";
-                return RedirectToAction("SellOrRent");
-            }
-
-            // Przekazanie wartości `propertyType` do widoku
-           // ViewData["PropertyType"] = propertyType;
-            ViewBag.PropertyType = propertyType;
-            //ViewBag.SaleOrRent = SaleOrRent; //dodac string SaleOrRent
-
-            return View("Announcement");
-        }
-
-        // Obsługa formularza dodawania ogłoszenia
+        // Adding Announcement
         [HttpPost]
-        public async Task<IActionResult> AddAnnouncement(
-            Announcement model,
-            AnnouncementFeature features,
-            List<IFormFile> Photos)
+        public async Task<IActionResult> AddAnnouncement(Announcement model, AnnouncementFeature features, List<IFormFile> Photos)
         {
             //if (!ModelState.IsValid)
             //{

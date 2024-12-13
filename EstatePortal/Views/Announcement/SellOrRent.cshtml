@@ -23,11 +23,11 @@
         <h1>Dodaj ogłoszenie</h1>
         <div class="options">
             <label>
-                <input type="radio" name="transactionType" value="Sprzedam" checked onchange="togglePropertyType()">
+                <input type="radio" name="SellOrRent" value="Sprzedam" checked onchange="togglePropertyType()">
                 <span>Sprzedam</span>
             </label>
             <label>
-                <input type="radio" name="transactionType" value="Wynajmę" onchange="togglePropertyType()">
+                <input type="radio" name="SellOrRent" value="Wynajmę" onchange="togglePropertyType()">
                 <span>Wynajmę</span>
             </label>
         </div>
@@ -36,20 +36,19 @@
             <div id="sellOptions" class="options-grid active">
                 <div class="option-item" onclick="redirectToAddAnnouncement('Flat')"><p>Mieszkania</p></div>
                 <div class="option-item" onclick="redirectToAddAnnouncement('House')"><p>Domy</p></div>
-                <a href="@Url.Action("AddAnnouncement", "Announcement", new { propertyType = "House" })" class="option-item">Domy</a>
-                <div class="option-item" onclick="window.location.href='@Url.Action("SellPlots", "Home")'"><p>Działki</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("SellLocal", "Home")'"><p>Lokale użytkowe</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("SellHall", "Home")'"><p>Hale i magazyny</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("SellGarage", "Home")'"><p>Garaże</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Plot')"><p>Działki</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('CommercialPremises')"><p>Lokale użytkowe</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Warehouse')"><p>Hale i magazyny</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Garage')"><p>Garaże</p></div>
             </div>
             <div id="rentOptions" class="options-grid">
-                <div class="option-item" onclick="window.location.href='@Url.Action("RentFlat", "Home")'"><p>Mieszkania</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("RentHouse", "Home")'"><p>Domy</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("RentRoom", "Home")'"><p>Pokoje</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("SellPlots", "Home")'"><p>Działki</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("RentLocal", "Home")'"><p>Lokale użytkowe</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("RentHall", "Home")'"><p>Hale i magazyny</p></div>
-                <div class="option-item" onclick="window.location.href='@Url.Action("RentGarage", "Home")'"><p>Garaże</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Flat')"><p>Mieszkania</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Room')"><p>Pokoje</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('House')"><p>Domy</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Plot')"><p>Działki</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('CommercialPremises')"><p>Lokale użytkowe</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Warehouse')"><p>Hale i magazyny</p></div>
+                <div class="option-item" onclick="redirectToAddAnnouncement('Garage')"><p>Garaże</p></div>
             </div>
         </div>
     </div>
