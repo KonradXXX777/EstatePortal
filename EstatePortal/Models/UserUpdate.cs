@@ -5,14 +5,15 @@ namespace EstatePortal.Models
     public class UserUpdate
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         [Required(ErrorMessage = "Imię jest wymagane.")]
+=======
+>>>>>>> register
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Nazwisko jest wymagane.")]
         public string LastName { get; set; }
-
-        [Required(ErrorMessage = "Email jest wymagany.")]
         [EmailAddress(ErrorMessage = "Nieprawidłowy format adresu e-mail.")]
+
         public string Email { get; set; }
 
         [DataType(DataType.Password)]

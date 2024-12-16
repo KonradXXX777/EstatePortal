@@ -22,7 +22,7 @@ namespace EstatePortal.Models
 <<<<<<< HEAD
 
         [Required]
-        public bool AcceptTerms { get; set; }
+        public bool AcceptTerms { get; set; } = false;
 
         public string? FirstName { get; set; }
 =======

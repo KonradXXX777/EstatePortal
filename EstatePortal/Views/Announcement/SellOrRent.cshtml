@@ -23,11 +23,11 @@
         <h1>Dodaj ogłoszenie</h1>
         <div class="options">
             <label>
-                <input type="radio" name="SellOrRent" value="Sprzedam" checked onchange="togglePropertyType()">
+                <input type="radio" name="SellOrRent" value="Sell" checked onchange="togglePropertyType()">
                 <span>Sprzedam</span>
             </label>
             <label>
-                <input type="radio" name="SellOrRent" value="Wynajmę" onchange="togglePropertyType()">
+                <input type="radio" name="SellOrRent" value="Rent" onchange="togglePropertyType()">
                 <span>Wynajmę</span>
             </label>
         </div>
@@ -75,7 +75,8 @@
         function redirectToAddAnnouncement(propertyType) {
             // Dodanie parametru "propertyType" do URL
             console.log("Redirecting to AddAnnouncement with propertyType:", propertyType);
-            window.location.href = `/Announcement/AddAnnouncement?propertyType=${propertyType}`;
+            const sellOrRent = document.querySelector('input[name="SellOrRent"]:checked').value;
+            window.location.href = `/Announcement/AddAnnouncement?propertyType=${propertyType}&sellOrRent=${sellOrRent}`;
         }
     </script>
 </body>

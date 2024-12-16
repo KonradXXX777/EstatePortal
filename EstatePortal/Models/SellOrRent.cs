@@ -2,7 +2,7 @@
 {
 	public enum SellOrRent
 	{
-		ForSale,
-		ForRent,
+		Sell,
+		Rent,
 	}
 }

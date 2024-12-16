@@ -769,6 +769,7 @@ namespace EstatePortal.Controllers
 
 <<<<<<< HEAD
             // Aktualizacja danych
+<<<<<<< HEAD
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
@@ -819,6 +820,16 @@ namespace EstatePortal.Controllers
 					return View("UserPanel", model);
 			}
 >>>>>>> master
+=======
+            if (!string.IsNullOrEmpty(model.FirstName))
+                user.FirstName = model.FirstName;
+
+            if (!string.IsNullOrEmpty(model.LastName))
+                user.LastName = model.LastName;
+
+            if (!string.IsNullOrEmpty(model.Email))
+                user.Email = model.Email;
+>>>>>>> register
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
