@@ -21,7 +21,7 @@ namespace EstatePortal.Models
         public UserRole Role { get; set; }
 
         [Required]
-        public bool AcceptTerms { get; set; }
+        public bool AcceptTerms { get; set; } = false;
 
         public string? FirstName { get; set; }
 

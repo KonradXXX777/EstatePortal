@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var propertyType = ViewData["PropertyType"]?.ToString();
+    var sellOrRent = ViewData["SellOrRent"]?.ToString();
+}
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
@@ -8,11 +12,14 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv_iuStXOtfssDcTMwz4YaMtGGiUXFeXY&libraries=places"></script>
 </head>
 <body>
+
+    @if (sellOrRent == "Sell" && propertyType == "House")
+    {
     <div class="container">
         <header>
             <h1>Sprzedaż domu</h1>
+            <h1>Typ transakcji: @ViewData["SellOrRent"]</h1>
             <h1> Sprzedajesz: @ViewData["PropertyType"]</h1>
-
         </header>
 
         <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
@@ -20,6 +27,9 @@
             <fieldset>
                 <legend>Informacje podstawowe</legend>
                 <label>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
                     Tytuł ogłoszenia <span class="required">*</span>
                     <input type="text" name="Title" required>
                 </label>
@@ -187,6 +197,67 @@
             <button type="submit">Zatwierdź ogłoszenie</button>
         </form>
     </div>
+    }
+
+    @if (sellOrRent == "Rent" && propertyType == "House")
+    {
+        <div class="container">
+            <header>
+                <h1>Sprzedaż domu</h1>
+                <h1>Typ transakcji: @ViewData["SellOrRent"]</h1>
+                <h1> Sprzedajesz: @ViewData["PropertyType"]</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <label class="upload-box">
+                            <input type="file" name="Photos" multiple>
+                            <span>Dodaj zdjęcie</span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
 
     <script>
         function initMap() {

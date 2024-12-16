@@ -722,9 +722,14 @@ namespace EstatePortal.Controllers
             }
 
             // Aktualizacja danych
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Email = model.Email;
+            if (!string.IsNullOrEmpty(model.FirstName))
+                user.FirstName = model.FirstName;
+
+            if (!string.IsNullOrEmpty(model.LastName))
+                user.LastName = model.LastName;
+
+            if (!string.IsNullOrEmpty(model.Email))
+                user.Email = model.Email;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();

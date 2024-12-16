@@ -45,16 +45,18 @@ namespace EstatePortal.Controllers
 
         // GET: AddApartment
         [HttpGet]
-        public IActionResult AddAnnouncement(string propertyType)
+        public IActionResult AddAnnouncement(string propertyType, string sellOrRent)
         {
             // Przekazywanie info o rodzaju nieruchomosci z ViewData
 
-            //if (string.IsNullOrEmpty(propertyType))
-            //{
-            //    TempData["ErrorMessage"] = "Nie wybrano typu nieruchomości.";
-            //    return View("SellOrRent");
-            //}
-            //ViewData["PropertyType"] = propertyType;
+            if (string.IsNullOrEmpty(propertyType) || string.IsNullOrEmpty(sellOrRent))
+            {
+                TempData["ErrorMessage"] = "Nie wybrano typu nieruchomości.";
+                return View("SellOrRent");
+            }
+            ViewData["PropertyType"] = propertyType;
+            ViewData["SellOrRent"] = sellOrRent;
+
             return View();
         }
 
@@ -116,8 +118,8 @@ namespace EstatePortal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-// Wyświetlenie listy ogłoszeń użytkownika
-[HttpGet]
+        // Wyświetlenie listy ogłoszeń użytkownika
+        [HttpGet]
         public async Task<IActionResult> MyAnnouncements()
         {
             var userId = User.FindFirst("UserId")?.Value;
