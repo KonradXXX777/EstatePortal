@@ -1,0 +1,218 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /*dokladniej jak dziala*/
+    list-style: none;
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    color: #fff;
+}
+
+body {
+    background: #000000;
+    overflow-x: hidden;
+}
+
+#container {
+    position: absolute;
+    display: block;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+}
+
+#tlo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    box-shadow: inset 0px 90px 60px black, inset 0px -90px 60px black;
+    position: relative;
+    background-image: url('/img/ProbaPrzyciemnienie1.jpg');
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; /* Zapobiega powtarzaniu obrazu */
+    overflow: hidden;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+}
+
+    header .logo {
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    header .navlist {
+        display: flex;
+    }
+
+    header ul li {
+        margin-left: 2rem;
+    }
+
+
+
+        header ul li a {
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 10px;
+            transition: all .3s ease;
+        }
+
+            header ul li a:hover {
+                color: #ff84ff;
+            }
+
+
+#rightNavlist {
+    margin-left: 3rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 400px;
+}
+
+#mojeKonto {
+    padding: 5px 10px;
+    margin-right: 4rem;
+    white-space: nowrap;
+}
+
+    #mojeKonto:hover a, #mojeKonto:hover i {
+        color: #ff84ff;
+        text-shadow: 0px 0px 3px #ff84ff;
+        transition: all ease-in-out .3s
+    }
+
+    #mojeKonto a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    #mojeKonto i {
+        margin-right: 5px;
+        font-size: 20px;
+        line-height: 1;
+    }
+
+#WstawOgloszenie {
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 3px solid gold;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px;
+    width: auto;
+    padding: 20px 20px;
+    white-space: nowrap;
+    transition: all ease-in-out .5s;
+}
+
+    #WstawOgloszenie:hover {
+        background-color: darkgoldenrod;
+        color: black;
+    }
+
+#Menu {
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+    border: 2px solid white;
+    border-radius: 20px;
+    width: 400px;
+    height: 440px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+    #Menu h2 {
+        font-size: 2em;
+        text-align: center;
+        position: absolute;
+        top: 10px;
+    }
+
+    #Menu form {
+        position: absolute;
+        top: 100px;
+    }
+
+.input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid white;
+    margin: 30px 0px;
+    height: 30px;
+    width: 350px;
+}
+
+input::placeholder {
+    color: white;
+    font-size: 10px;
+    text-align: left;
+}
+
+.input input {
+    width: 200%;
+    height: 100%;
+    background-color: transparent;
+    outline: none;
+    text-align: center;
+    border: none;
+    padding-left: 10px;
+}
+
+.input .icon-mail-alt {
+    position: absolute;
+    right: 20px;
+    font-size: 25px;
+    line-height: 57px;
+}
+
+.input .icon-lock {
+    position: absolute;
+    right: 20px;
+    font-size: 25px;
+    line-height: 57px;
+}
+
+input[type=submit] {
+    background-color: #162938;
+    color: white;
+    border: 1px solid white;
+    height: 50px;
+    width: 100%;
+    outline: none;
+    border-radius: 6px;
+    font-size: 15px;
+    position: absolute;
+    top: 175px;
+}
+
+    input[type=submit]:hover {
+        border-color: gold;
+        background-color: #162938;
+        cursor: pointer;
+        color: gold;
+    }

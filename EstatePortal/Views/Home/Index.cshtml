@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal Nieruchomściowy</title>
+    <link rel="stylesheet" href="~/css/HomePage.css" />
+    <link rel="stylesheet" href="~/css/font/css/fontello.css" />
+</head>
+
+<body>
+    <div id="container">
+        <div id="tlo">
+             <header>
+                <a href ="#" class="logo">Logo</a>
+                <ul class="navlist">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#" >Home</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+                <div id="rightNavlist">
+                    <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
+                    <div id="mojeKonto"><a href="@Url.Action("Register", "Home")">Zarejestruj się</a></div>
+                    <div id="WstawOgloszenie"><a href="@Url.Action("AddAnnouncement", "Announcement")">Dodaj ogłoszenie</a></div>
+                </div>
+             </header>
+
+            <div id="welcomeText">
+                @if (ViewBag.UserStatus == EstatePortal.Models.UserStatus.Blocked)
+                {
+                    <h1 style="color: red; text-align: center;">Twoje konto jest zablokowane</h1>
+                }
+                else if (ViewBag.UserStatus == EstatePortal.Models.UserStatus.Inactive)
+                {
+                    <h1 style="color: orange; text-align: center;">Twoje konto jest nieaktywne</h1>
+                }
+                else if (ViewBag.UserStatus == EstatePortal.Models.UserStatus.Active)
+                {
+                    <h1 id="typingText"></h1>
+                }
+            </div>
+
+            <div class="search-container">
+                <div class="tabs">
+                    <button class="tab active">Szukaj</button>
+                    <button class="tab">Oferty deweloperów</button>
+                </div>
+
+                <div class="search-form">
+                    <div class="form-row">
+                        <div class="dropdown">
+                            <button class="dropdown-button">Mieszkania ▼</button>
+                        </div>
+                        <div class="dropdown">
+                            <button class="dropdown-button">Na sprzedaż ▼</button>
+                        </div>
+                        <input type="text" class="input-text" placeholder="Wpisz lokalizację">
+                        <div class="dropdown">
+                            <button class="dropdown-button">+ 0 km ▼</button>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="price">
+                            <span>Cena</span>
+                            <input type="text" placeholder="od" class="input-price"> zł
+                            <input type="text" placeholder="do" class="input-price"> zł
+                        </div>
+                        <div class="surface">
+                            <span>Powierzchnia</span>
+                            <input type="text" placeholder="od" class="input-surface"> m²
+                            <input type="text" placeholder="do" class="input-surface"> m²
+                        </div>
+                        <button class="search-button"><i class="fa fa-search"></i> Wyszukaj</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="drugieTlo">
+            <div class="promowane-ogloszenia">
+                <h2>Promowane ogłoszenia <a href="#">Zobacz Wszystkie</a></h2>
+                <div class="ogloszenia-container">
+                    <a href="#" style="text-decoration: none;">
+                        <div class="ogloszenie">
+                            <div class="imgClass">
+                                <img src="~/img/Dom1.webp" alt="Ogłoszenie 1">
+                            </div>
+                            <div class="opis">
+                                <h3>Zapytaj o cenę</h3>
+                                <p>ul. Spitalna, Kołobrzeg...</p>
+                            </div>
+                    </div></a>
+                    <div class="ogloszenie">
+                        <div class="imgClass">
+                            <img src="~/img/Dom1.webp" alt="Ogłoszenie 2">
+                        </div>
+                        <div class="opis">
+                            <h3>887 781 zł</h3>
+                            <p>Gdańsk, Ujeścisko-Łostowice...</p>
+                        </div>
+                    </div>
+                    <div class="ogloszenie">
+                        <div class="imgClass">
+                            <img src="~/img/Dom1.webp" alt="Ogłoszenie 3">
+                        </div>
+                        <div class="opis">
+                            <h3>120 000 zł</h3>
+                            <p>Poznań, Łazarz</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="rodzaje-nieruchomosci">
+                <h2>Rodzaje nieruchomości</h2>
+                <div class="rodzaje-container">
+                    <button class="rodzaj-tab active">Na sprzedaż</button>
+                    <button class="rodzaj-tab">Na wynajem</button>
+                </div>
+                <div class="nieruchomosci-grid">
+                    <div class="nieruchomosc">
+                        <img src="~/img/Dom1.webp" alt="Mieszkanie">
+                        <p>Mieszkania</p>
+                    </div>
+                    <div class="nieruchomosc">
+                        <img src="~/img/Dom1.webp" alt="Dom">
+                        <p>Domy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="~/js/HomePage.js"></script>
+</body>
+</html>

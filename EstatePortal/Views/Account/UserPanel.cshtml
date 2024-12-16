@@ -1,0 +1,167 @@
+﻿@model EstatePortal.Models.UserUpdate
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel użytkownika</title>
+    <link href="~/css/UserPanel.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Panel użytkownika</h2>
+
+    <h3>Aktualizacja danych osobowych</h3>
+    <form action="/Account/UserPanel" method="post">
+
+        @* @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        } *@
+
+        @* Dla PrivatePerson *@
+        @if (Model.Role == EstatePortal.Models.UserRole.PrivatePerson)
+        {
+            <div>
+                <label>Imię:</label>
+                <input type="text" name="FirstName" value="@Model.FirstName" />
+            </div>
+            <div>
+                <label>Nazwisko:</label>
+                <input type="text" name="LastName" value="@Model.LastName" />
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="email" name="Email" value="@Model.Email" />
+            </div>
+            <div>
+                <label>Numer telefonu:</label>
+                <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
+            </div>
+        }
+
+        @* Dla EstateAgency i Developer *@
+        @if (Model.Role == EstatePortal.Models.UserRole.EstateAgency || Model.Role == EstatePortal.Models.UserRole.Developer)
+        {
+            <div>
+                <label>Nazwa firmy:</label>
+                <input type="text" name="CompanyName" value="@Model.CompanyName" />
+            </div>
+            <div>
+                <label>NIP:</label>
+                <input type="text" name="NIP" value="@Model.NIP" />
+            </div>
+            <div>
+                <label>Adres:</label>
+                <input type="text" name="Address" value="@Model.Address" />
+            </div>
+            <div>
+                <label>Numer telefonu:</label>
+                <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="email" name="Email" value="@Model.Email" />
+            </div>
+        }
+
+        @* Dla Employee *@
+        @if (Model.Role == EstatePortal.Models.UserRole.Employee)
+        {
+            <div>
+                <label>Imię:</label>
+                <input type="text" name="FirstName" value="@Model.FirstName" />
+            </div>
+            <div>
+                <label>Nazwisko:</label>
+                <input type="text" name="LastName" value="@Model.LastName" />
+            </div>
+            <div>
+                <label>Numer telefonu:</label>
+                <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
+            </div>
+        }
+        @* Dla Moderatora *@
+        @if (Model.Role == EstatePortal.Models.UserRole.Moderator)
+        {
+            <div>
+                <label>Imię:</label>
+                <input type="text" name="FirstName" value="@Model.FirstName" />
+            </div>
+            <div>
+                <label>Nazwisko:</label>
+                <input type="text" name="LastName" value="@Model.LastName" />
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="email" name="Email" value="@Model.Email" />
+            </div>
+            <div>
+                <label>Numer telefonu:</label>
+                <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
+            </div>
+        }
+        @* Dla Administratora *@
+        @if (Model.Role == EstatePortal.Models.UserRole.Administrator)
+        {
+            <div>
+                <label>Imię:</label>
+                <input type="text" name="FirstName" value="@Model.FirstName" />
+            </div>
+            <div>
+                <label>Nazwisko:</label>
+                <input type="text" name="LastName" value="@Model.LastName" />
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="email" name="Email" value="@Model.Email" />
+            </div>
+            <div>
+                <label>Numer telefonu:</label>
+                <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
+            </div>
+        }
+        <button type="submit">Zaktualizuj dane</button>
+    </form>
+
+    <h3>Zmiana hasła</h3>
+    <form action="/Account/ChangePassword" method="post">
+        <div>
+            <label>Obecne hasło:</label>
+            <input type="password" name="CurrentPassword" required />
+        </div>
+
+        <div>
+            <label>Nowe hasło:</label>
+            <input type="password" name="NewPassword" required />
+        </div>
+
+        <div>
+            <label>Potwierdź nowe hasło:</label>
+            <input type="password" name="ConfirmPassword" required />
+        </div>
+
+        <button type="submit">Zmień hasło</button>
+    </form>
+    @if (Model.Role == EstatePortal.Models.UserRole.EstateAgency || Model.Role == EstatePortal.Models.UserRole.Developer)
+    {
+        <h3>Dodaj nowego pracownika</h3>
+        <form asp-action="InviteEmployee" method="post">
+            <div>
+                <label>Adres e-mail pracownika:</label>
+                <input type="email" name="email" required />
+            </div>
+            <button type="submit">Wyślij zaproszenie</button>
+        </form>
+    }
+
+    <a href="/Account/Logout">Wyloguj się</a>
+</body>
+</html>

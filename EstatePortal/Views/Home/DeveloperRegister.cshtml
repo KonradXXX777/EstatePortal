@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rejestracja - Portal Nieruchomościowy</title>
+    <style>
+        /* Stylizacja menu nawigacyjnego z logo */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+        }
+
+            nav ul {
+                display: flex;
+                list-style: none;
+                padding: 0;
+            }
+
+                nav ul li {
+                    margin-left: 20px;
+                }
+
+                    nav ul li a {
+                        text-decoration: none;
+                        color: #185ee0;
+                        font-weight: bold;
+                    }
+
+    </style>
+</head>
+<body>
+    <!-- Dodanie menu nawigacyjnego z logo i linkami -->
+    <nav>
+        <div class="logo"><a href="#">Logo</a></div>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Kontakt</a></li>
+        </ul>
+    </nav>
+
+    <!-- Formularz -->
+    <form action="/Account/DeveloperRegister" method="POST">
+        <!-- Sprawdzanie walidacji formularza -->
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <div id="developerFields" class="form-section">
+            <div class="input">
+                <label> <input type="text" placeholder="Nazwa firmy" name="CompanyName" required></label>
+            </div>
+            <div class="input">
+                <label> <input type="text" placeholder="NIP" name="NIP" required></label>
+            </div>
+            <div class="input">
+                <label> <input type="text" placeholder="Adres" name="Address" required></label>
+            </div>
+            <div class="input">
+                <label> <input type="text" placeholder="Numer telefonu" name="PhoneNumber" required></label>
+            </div>
+            <div class="input">
+                <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
+            </div>
+            <div class="input">
+                <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" required></label>
+            </div>
+            <div class="input">
+                <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
+            </div>
+            <div class="input">
+                <label>
+                    <input type="hidden" name="AcceptTerms" value="false" />
+                    <input type="checkbox" name="AcceptTerms" value="true" required />
+                    Akceptuję regulamin i politykę prywatności
+                </label>
+            </div>
+        </div>
+        <input type="submit" value="Zarejestruj się">
+    </form>
+
+</body>
+</html>

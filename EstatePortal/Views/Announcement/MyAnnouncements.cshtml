@@ -1,0 +1,21 @@
+﻿@model IEnumerable<EstatePortal.Models.Announcement>
+
+<h2>Moje ogłoszenia</h2>
+
+@if (!Model.Any())
+{
+    <p>Nie dodałeś jeszcze żadnych ogłoszeń.</p>
+}
+else
+{
+    <ul>
+        @foreach (var announcement in Model)
+        {
+            <li>
+                <img src="@(announcement.MainPhotoUrl ?? "/img/default-placeholder.png")" alt="Zdjęcie" width="100" />
+                <strong>@announcement.Title</strong> - @announcement.Price zł
+                <a href="@Url.Action("Details", "Announcement", new { id = announcement.Id })">Szczegóły</a>
+            </li>
+        }
+    </ul>
+}

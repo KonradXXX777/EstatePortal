@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lg="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal Nieruchomściowy</title>
+    <link rel="stylesheet" href="~/css/Login.css" />
+    <link rel="stylesheet" href="fontello/css/fontello.css" />
+    <link rel="stylesheet" href="~/css/font/css/fontello.css" />
+
+</head>
+<body>
+    <div id="container">
+        <div id="tlo">
+            <header>
+                <a href="#" class="logo">Logo</a>
+                <ul class="navlist">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+                <div id="rightNavlist">
+                    <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
+                    <div id="WstawOgloszenie"><a href="#">Dodaj ogłoszenie</a></div>
+                </div>
+            </header>
+
+            <div id="Menu">
+                <h2>Zaloguj się</h2>
+                <form action="/Account/Login" method="post">
+                    @if (!ViewData.ModelState.IsValid)
+
+                    {
+                        <div class="validation-summary-errors">
+                            <ul>
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <div class="input">
+                        <i class="icon-mail-alt"></i>
+                        <label> <input type="text" placeholder="Podaj email" name="Email"></label>
+                    </div>
+
+                    <div class="input">
+                        <i class="icon-lock"></i>
+                        <label> <input type="password" placeholder="Podaj hasło" name="Password"></label>
+                    </div>
+
+                    <input type="submit" value="zaloguj sie"> <br><br><br><br><br><br><br>
+                    <p>Nie masz jeszcze konta? <a href="@Url.Action("Register", "Home")">Zaejestruj się!</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

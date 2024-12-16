@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodaj Ogłoszenie - Sprzedaż</title>
+    <link rel="stylesheet" href="~/css/AddApartment.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv_iuStXOtfssDcTMwz4YaMtGGiUXFeXY&libraries=places"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sprzedaż domu</h1>
+            <h1> Sprzedajesz: @ViewData["PropertyType"]</h1>
+
+        </header>
+
+        <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+            <!-- Informacje podstawowe -->
+            <fieldset>
+                <legend>Informacje podstawowe</legend>
+                <label>
+                    Tytuł ogłoszenia <span class="required">*</span>
+                    <input type="text" name="Title" required>
+                </label>
+                <label>
+                    Powierzchnia użytkowa (m²) <span class="required">*</span>
+                    <input type="number" name="Area" step="0.1" required>
+                </label>
+                <label>
+                    Cena <span class="required">*</span>
+                    <input type="number" name="Price" step="0.01" required>
+                </label>
+                <label>
+                    Miejscowość <span class="required">*</span>
+                    <input type="text" id="searchInput" name="Location" required>
+                </label>
+                <label>
+                    Ulica <span class="required">*</span>
+                    <input type="text" name="Street" required>
+                </label>
+                <label>
+                    Opis <span class="required">*</span>
+                    <textarea name="Description" rows="4" required></textarea>
+                </label>
+                <div id="map"></div>
+            </fieldset>
+
+            <!-- Parametry domu -->
+            <fieldset>
+                <legend>Parametry domu</legend>
+                <label>
+                    Liczba pokoi
+                    <input type="number" name="Features.Rooms">
+                </label>
+                <label>
+                    Piętro
+                    <input type="number" name="Features.Floor">
+                </label>
+                <label>
+                    Liczba pięter w budynku
+                    <input type="number" name="Features.TotalFloors">
+                </label>
+                <label>
+                    Winda
+                    <select name="Features.Elevator">
+                        <option value="">Wybierz</option>
+                        <option value="true">Tak</option>
+                        <option value="false">Nie</option>
+                    </select>
+                </label>
+                <label>
+                    Rok budowy
+                    <input type="number" name="Features.YearBuilt">
+                </label>
+                <label>
+                    Stan nieruchomości
+                    <input type="text" name="Features.PropertyCondition">
+                </label>
+                <label>
+                    Miejsce parkingowe
+                    <input type="text" name="Features.Parking">
+                </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                <label>
+                    Bezpieczeństwo
+                    <select name="Features.Security">
+                        <option value="">Wybierz</option>
+                        @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                        {
+                            <option value="@(option.Value)">
+                                @option.Text
+                            </option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    Dostosowane dla osób niepełnosprawnych
+                    <select name="Features.IsAccessible">
+                        <option value="false">Nie</option>
+                        <option value="true">Tak</option>
+                    </select>
+                </label>
+                <label>
+                    Zabudowa w okolicy
+                    <select name="Features.Neighborhood">
+                        <option value="">Wybierz</option>
+                        @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                        {
+                            <option value="@(option.Value)">
+                                @option.Text
+                            </option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    Balkon
+                    <select name="Features.Garden">
+                        <option value="false">Nie</option>
+                        <option value="true">Tak</option>
+                    </select>
+                </label>
+                <label>
+                    Wyposażenie AGD
+                    <select name="Features.KitchenAppliances">
+                        <option value="false">Nie</option>
+                        <option value="true">Tak</option>
+                    </select>
+                </label>
+                <label>
+                    Umeblowane
+                    <select name="Features.Furnished">
+                        <option value="false">Nie</option>
+                        <option value="true">Tak</option>
+                    </select>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Przyroda w okolicy</legend>
+                <div class="checkbox-group-grid">
+                <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Dodatkowe informacje</legend>
+                <div class="checkbox-group">
+                <label><input type="checkbox" name="Features.HasGarden" value="true"> Ogród</label>
+                <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                <label><input type="checkbox" name="Features.HasAttic" value="true"> Strych</label>
+                <label><input type="checkbox" name="Features.HasGarage" value="true"> Garaż</label>
+                <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                <label><input type="checkbox" name="Features.HasPool" value="true"> Basen</label>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Media</legend>
+                <div class="checkbox-group">
+                <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                </div>
+            </fieldset>
+
+
+            <!-- Zdjęcia -->
+            <fieldset>
+                <legend>Zdjęcia</legend>
+                <div class="image-upload-grid">
+                    <label class="upload-box">
+                        <input type="file" name="Photos" multiple>
+                        <span>Dodaj zdjęcie</span>
+                    </label>
+                </div>
+            </fieldset>
+
+            <button type="submit">Zatwierdź ogłoszenie</button>
+        </form>
+    </div>
+
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 52.409538, lng: 16.931992 },
+                zoom: 13,
+                disableDefaultUI: true,
+            });
+
+            const input = document.getElementById("searchInput");
+            const autocomplete = new google.maps.places.Autocomplete(input, {
+                componentRestrictions: { country: "pl" },
+                fields: ["address_components", "geometry", "name"]
+            });
+            autocomplete.bindTo("bounds", map);
+
+            const marker = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29)
+            });
+
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+
+                if (!place.geometry || !place.geometry.location) {
+                    alert("Nie znaleziono lokalizacji");
+                    return;
+                }
+
+                map.setCenter(place.geometry.location);
+                marker.setPosition(place.geometry.location);
+
+                const addressComponents = place.address_components;
+                let city = "";
+
+                addressComponents.forEach((component) => {
+                    if (component.types.includes("locality")) {
+                        city = component.long_name;
+                    }
+                });
+
+                input.value = `${city}`;
+            });
+        }
+
+        window.onload = initMap;
+
+        function updateProgress() {
+            const form = document.getElementById('sellForm');
+            const inputs = Array.from(form.querySelectorAll('input, textarea, select'));
+            const filled = inputs.filter(input => input.value.trim() !== '');
+            const percentage = Math.round((filled.length / inputs.length) * 100);
+            console.log(`${percentage}% completed`);
+        }
+    </script>
+</body>
+</html>
