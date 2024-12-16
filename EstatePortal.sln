@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
+<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstatePortal", "EstatePortal\EstatePortal.csproj", "{CCAC41A1-2C0B-4A91-98CA-4F3E1EBA4BEB}"
+=======
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstatePortal", "EstatePortal\EstatePortal.csproj", "{CCAC41A1-2C0B-4A91-98CA-4F3E1EBA4BEB}"
+>>>>>>> master
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

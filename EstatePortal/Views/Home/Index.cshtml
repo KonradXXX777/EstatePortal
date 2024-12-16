@@ -28,7 +28,22 @@
              </header>
 
             <div id="welcomeText">
+<<<<<<< HEAD
                 <h1 id="typingText"></h1>
+=======
+                @if (ViewBag.UserStatus == EstatePortal.Models.UserStatus.Blocked)
+                {
+                    <h1 style="color: red; text-align: center;">Twoje konto jest zablokowane</h1>
+                }
+                else if (ViewBag.UserStatus == EstatePortal.Models.UserStatus.Inactive)
+                {
+                    <h1 style="color: orange; text-align: center;">Twoje konto jest nieaktywne</h1>
+                }
+                else if (ViewBag.UserStatus == EstatePortal.Models.UserStatus.Active)
+                {
+                    <h1 id="typingText"></h1>
+                }
+>>>>>>> master
             </div>
 
             <div class="search-container">

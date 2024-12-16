@@ -19,11 +19,21 @@ namespace EstatePortal.Models
 
         [Required]
         public UserRole Role { get; set; }
+<<<<<<< HEAD
 
         [Required]
         public bool AcceptTerms { get; set; }
 
         public string? FirstName { get; set; }
+=======
+        [Required]
+        public UserStatus Status { get; set; } = UserStatus.Active;
+
+        [Required(ErrorMessage = "Musisz zaakceptować regulamin.")]
+		public bool AcceptTerms { get; set; } = false;
+
+		public string? FirstName { get; set; }
+>>>>>>> master
 
         public string? LastName { get; set; }
 

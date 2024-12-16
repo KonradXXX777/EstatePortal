@@ -1,23 +1,87 @@
 using EstatePortal.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+<<<<<<< HEAD
+=======
+using System.Security.Claims;
+>>>>>>> master
 
 namespace EstatePortal.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+<<<<<<< HEAD
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+=======
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        {
+            _logger = logger;
+            _context = context;
+>>>>>>> master
         }
 
         public IActionResult Index()
         {
+<<<<<<< HEAD
             return View();
         }
 
+=======
+            // Pobierz email z ClaimsIdentity
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            Console.WriteLine("Email z claims: " + email);
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                // Pobierz u¿ytkownika z bazy danych na podstawie adresu e-mail
+                var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+                if (user != null)
+                {
+                    // Przeka¿ status u¿ytkownika do widoku
+                    ViewBag.UserStatus = user.Status;
+
+                    // Przeka¿ komunikat zale¿nie od statusu
+                    switch (user.Status)
+                    {
+                        case UserStatus.Blocked:
+                            ViewBag.StatusMessage = "Twoje konto jest zablokowane.";
+                            break;
+                        case UserStatus.Inactive:
+                            ViewBag.StatusMessage = "Twoje konto jest nieaktywne.";
+                            break;
+                        case UserStatus.Active:
+                            ViewBag.StatusMessage = "Twoje konto jest aktywne.";
+                            break;
+                        default:
+                            ViewBag.StatusMessage = "Nieznany status konta.";
+                            break;
+                    }
+                }
+                else
+                {
+                    // Jeœli u¿ytkownik nie istnieje w bazie, wyœwietl komunikat
+                    ViewBag.StatusMessage = "Nie znaleziono u¿ytkownika.";
+                }
+            }
+            else
+            {
+                // Jeœli u¿ytkownik nie jest zalogowany
+                ViewBag.StatusMessage = "Nie jesteœ zalogowany.";
+            }
+
+            // Zawsze zwróæ widok
+            return View();
+        }
+
+
+>>>>>>> master
         public IActionResult Privacy()
         {
             return View();

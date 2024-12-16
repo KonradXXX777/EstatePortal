@@ -62,6 +62,10 @@ namespace EstatePortal.Controllers
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt,
                     Role = UserRole.PrivatePerson,
+<<<<<<< HEAD
+=======
+                    Status = UserStatus.Active,
+>>>>>>> master
                     AcceptTerms = model.AcceptTerms,
                     DateRegistered = DateTime.Now,
                     VerificationToken = verificationToken,
@@ -99,6 +103,10 @@ namespace EstatePortal.Controllers
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt,
                     Role = UserRole.EstateAgency,
+<<<<<<< HEAD
+=======
+                    Status = UserStatus.Active,
+>>>>>>> master
                     CompanyName = model.CompanyName,
                     NIP = model.NIP,
                     Address = model.Address,
@@ -140,6 +148,10 @@ namespace EstatePortal.Controllers
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt,
                     Role = UserRole.Developer,
+<<<<<<< HEAD
+=======
+                    Status = UserStatus.Active,
+>>>>>>> master
                     CompanyName = model.CompanyName,
                     NIP = model.NIP,
                     Address = model.Address,
@@ -197,7 +209,12 @@ namespace EstatePortal.Controllers
 					FirstName = name?.Split(' ')[0],
 					LastName = name?.Split(' ').Skip(1).FirstOrDefault(),
 					Role = UserRole.PrivatePerson,
+<<<<<<< HEAD
 					DateRegistered = DateTime.Now
+=======
+                    Status = UserStatus.Active,
+                    DateRegistered = DateTime.Now
+>>>>>>> master
 				};
 
 				_context.Users.Add(user);
@@ -210,8 +227,13 @@ namespace EstatePortal.Controllers
 		        new Claim(ClaimTypes.Name, user.FirstName ?? ""),
 		        new Claim(ClaimTypes.Email, user.Email),
 		        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+<<<<<<< HEAD
 		        new Claim(ClaimTypes.Role, user.Role.ToString())
 	        };
+=======
+		        new Claim(ClaimTypes.Role, user.Role.ToString()),
+            };
+>>>>>>> master
 
 			var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
 			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -305,6 +327,10 @@ namespace EstatePortal.Controllers
                 PasswordHash = HashPassword(model.PasswordHash, salt),
                 PasswordSalt = salt,
                 Role = UserRole.Employee,
+<<<<<<< HEAD
+=======
+                Status = UserStatus.Active,
+>>>>>>> master
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
@@ -626,7 +652,11 @@ namespace EstatePortal.Controllers
             // Tworzenie tożsamości użytkownika
             var claims = new List<Claim>
             {
+<<<<<<< HEAD
                 new Claim(ClaimTypes.Name, user.Email),
+=======
+                new Claim(ClaimTypes.Email, user.Email),
+>>>>>>> master
                 new Claim("UserId", user.Id.ToString()), // Możesz dodać więcej potrzebnych roszczeń
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
@@ -691,16 +721,32 @@ namespace EstatePortal.Controllers
 
             var model = new UserUpdate
             {
+<<<<<<< HEAD
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email
             };
+=======
+				Role = user.Role,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				Email = user.Email,
+				PhoneNumber = user.PhoneNumber,
+				CompanyName = user.CompanyName,
+				NIP = user.NIP,
+				Address = user.Address
+			};
+>>>>>>> master
 
             return View(model);
         }
 
         [HttpPost]
+<<<<<<< HEAD
         public async Task<IActionResult> UpdateUser(UserUpdate model)
+=======
+        public async Task<IActionResult> UserPanel(UserUpdate model)
+>>>>>>> master
         {
             // Do naprawy - sprawdzic dlaczego dane nie sa prawidlowo walidowane
             //if (!ModelState.IsValid)
@@ -721,16 +767,68 @@ namespace EstatePortal.Controllers
                 return RedirectToAction("Login");
             }
 
+<<<<<<< HEAD
             // Aktualizacja danych
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
+=======
+			// Aktualizacja danych
+			switch (user.Role)
+			{
+				case UserRole.PrivatePerson:
+					if (!string.IsNullOrEmpty(model.FirstName))
+						user.FirstName = model.FirstName;
+
+					if (!string.IsNullOrEmpty(model.LastName))
+						user.LastName = model.LastName;
+
+					if (!string.IsNullOrEmpty(model.Email))
+						user.Email = model.Email;
+					if (!string.IsNullOrEmpty(model.PhoneNumber))
+						user.PhoneNumber = model.PhoneNumber;
+					break;
+
+				case UserRole.EstateAgency:
+				case UserRole.Developer:
+					if (!string.IsNullOrEmpty(model.CompanyName))
+						user.CompanyName = model.CompanyName;
+					if (!string.IsNullOrEmpty(model.NIP))
+						user.NIP = model.NIP;
+					if (!string.IsNullOrEmpty(model.Address))
+						user.Address = model.Address;
+					if (!string.IsNullOrEmpty(model.Email))
+						user.Email = model.Email;
+					if (!string.IsNullOrEmpty(model.PhoneNumber))
+						user.PhoneNumber = model.PhoneNumber;
+					break;
+
+				case UserRole.Employee:
+					if (!string.IsNullOrEmpty(model.Email))
+						user.Email = model.Email;
+					if (!string.IsNullOrEmpty(model.PhoneNumber))
+						user.PhoneNumber = model.PhoneNumber;
+					if (!string.IsNullOrEmpty(model.FirstName))
+						user.FirstName = model.FirstName;
+					if (!string.IsNullOrEmpty(model.LastName))
+						user.LastName = model.LastName;
+					break;
+
+				default:
+					ModelState.AddModelError("", "Brak uprawnień do edycji.");
+					return View("UserPanel", model);
+			}
+>>>>>>> master
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
             ViewBag.Message = "Dane zostały zaktualizowane.";
+<<<<<<< HEAD
             return View("UserPanel", model);
+=======
+                return RedirectToAction("UserPanel");
+>>>>>>> master
         }
 
         [HttpPost]
@@ -773,5 +871,80 @@ namespace EstatePortal.Controllers
             ViewBag.Message = "Hasło zostało zmienione.";
             return View("UserPanel", model);
         }
+<<<<<<< HEAD
     }
 }
+=======
+        //Admin Panel
+        // Admin Panel
+        [HttpGet]
+        [Authorize(Roles = "Administrator, Moderator")] // Ograniczenie dostępu
+        public IActionResult AdminPanel(int? editUserId = null)
+        {
+            // Pobranie roli zalogowanego użytkownika
+            var currentUserRole = User.IsInRole("Administrator") ? "Administrator" : "Moderator";
+
+            // Pobranie wszystkich użytkowników
+            var users = _context.Users.AsQueryable();
+
+            // Jeśli rola to "Moderator", wykluczamy użytkowników o roli "Administrator" oraz "Moderator"
+            if (currentUserRole == "Moderator")
+            {
+                users = users.Where(u => u.Role != UserRole.Administrator && u.Role != UserRole.Moderator);
+            }
+
+            // Znalezienie użytkownika do edycji (jeśli przekazano editUserId)
+            User userToEdit = null;
+            if (editUserId.HasValue)
+            {
+                userToEdit = _context.Users.FirstOrDefault(u => u.Id == editUserId.Value);
+            }
+
+            // Model widoku
+            var viewModel = new AdminPanelViewModel
+            {
+                Users = users.ToList(),
+                EditUser = userToEdit
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator, Moderator")]
+        public IActionResult UpdateUser(User model)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == model.Id);
+            if (user == null)
+                return NotFound();
+
+            // Aktualizacja danych użytkownika
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.PhoneNumber = model.PhoneNumber;
+            user.CompanyName = model.CompanyName;
+            user.NIP = model.NIP;
+            user.Address = model.Address;
+            user.Status = model.Status;
+
+            _context.SaveChanges();
+            return RedirectToAction("AdminPanel");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator, Moderator")]
+        public IActionResult ChangeUserStatus(int id, UserStatus status)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+                return NotFound();
+
+            user.Status = status;
+            _context.SaveChanges();
+            return RedirectToAction("AdminPanel");
+        }
+
+
+    }
+}
+>>>>>>> master
