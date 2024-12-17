@@ -41,7 +41,7 @@ namespace EstatePortal.Controllers
         public IActionResult SellOrRent()
         {
             return View();
-        } 
+        }
 
         // GET: AddApartment
         [HttpGet]
@@ -118,8 +118,8 @@ namespace EstatePortal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // Wyświetlenie listy ogłoszeń użytkownika
-        [HttpGet]
+// Wyświetlenie listy ogłoszeń użytkownika
+[HttpGet]
         public async Task<IActionResult> MyAnnouncements()
         {
             var userId = User.FindFirst("UserId")?.Value;

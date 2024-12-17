@@ -386,12 +386,9 @@ namespace EstatePortal.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
-=======
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
->>>>>>> master
                     b.Property<string>("VerificationToken")
                         .HasColumnType("longtext");
 

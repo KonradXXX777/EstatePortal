@@ -62,10 +62,7 @@ namespace EstatePortal.Controllers
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt,
                     Role = UserRole.PrivatePerson,
-<<<<<<< HEAD
-=======
                     Status = UserStatus.Active,
->>>>>>> master
                     AcceptTerms = model.AcceptTerms,
                     DateRegistered = DateTime.Now,
                     VerificationToken = verificationToken,
@@ -103,10 +100,7 @@ namespace EstatePortal.Controllers
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt,
                     Role = UserRole.EstateAgency,
-<<<<<<< HEAD
-=======
                     Status = UserStatus.Active,
->>>>>>> master
                     CompanyName = model.CompanyName,
                     NIP = model.NIP,
                     Address = model.Address,
@@ -148,10 +142,7 @@ namespace EstatePortal.Controllers
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt,
                     Role = UserRole.Developer,
-<<<<<<< HEAD
-=======
                     Status = UserStatus.Active,
->>>>>>> master
                     CompanyName = model.CompanyName,
                     NIP = model.NIP,
                     Address = model.Address,
@@ -209,12 +200,8 @@ namespace EstatePortal.Controllers
 					FirstName = name?.Split(' ')[0],
 					LastName = name?.Split(' ').Skip(1).FirstOrDefault(),
 					Role = UserRole.PrivatePerson,
-<<<<<<< HEAD
-					DateRegistered = DateTime.Now
-=======
                     Status = UserStatus.Active,
                     DateRegistered = DateTime.Now
->>>>>>> master
 				};
 
 				_context.Users.Add(user);
@@ -227,13 +214,8 @@ namespace EstatePortal.Controllers
 		        new Claim(ClaimTypes.Name, user.FirstName ?? ""),
 		        new Claim(ClaimTypes.Email, user.Email),
 		        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-<<<<<<< HEAD
-		        new Claim(ClaimTypes.Role, user.Role.ToString())
-	        };
-=======
 		        new Claim(ClaimTypes.Role, user.Role.ToString()),
             };
->>>>>>> master
 
 			var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
 			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -327,10 +309,7 @@ namespace EstatePortal.Controllers
                 PasswordHash = HashPassword(model.PasswordHash, salt),
                 PasswordSalt = salt,
                 Role = UserRole.Employee,
-<<<<<<< HEAD
-=======
                 Status = UserStatus.Active,
->>>>>>> master
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
@@ -652,11 +631,7 @@ namespace EstatePortal.Controllers
             // Tworzenie tożsamości użytkownika
             var claims = new List<Claim>
             {
-<<<<<<< HEAD
-                new Claim(ClaimTypes.Name, user.Email),
-=======
                 new Claim(ClaimTypes.Email, user.Email),
->>>>>>> master
                 new Claim("UserId", user.Id.ToString()), // Możesz dodać więcej potrzebnych roszczeń
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
@@ -721,12 +696,6 @@ namespace EstatePortal.Controllers
 
             var model = new UserUpdate
             {
-<<<<<<< HEAD
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email
-            };
-=======
 				Role = user.Role,
 				FirstName = user.FirstName,
 				LastName = user.LastName,
@@ -736,17 +705,12 @@ namespace EstatePortal.Controllers
 				NIP = user.NIP,
 				Address = user.Address
 			};
->>>>>>> master
 
             return View(model);
         }
 
         [HttpPost]
-<<<<<<< HEAD
-        public async Task<IActionResult> UpdateUser(UserUpdate model)
-=======
         public async Task<IActionResult> UserPanel(UserUpdate model)
->>>>>>> master
         {
             // Do naprawy - sprawdzic dlaczego dane nie sa prawidlowo walidowane
             //if (!ModelState.IsValid)
@@ -767,13 +731,6 @@ namespace EstatePortal.Controllers
                 return RedirectToAction("Login");
             }
 
-<<<<<<< HEAD
-            // Aktualizacja danych
-<<<<<<< HEAD
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.Email = model.Email;
-=======
 			// Aktualizacja danych
 			switch (user.Role)
 			{
@@ -819,27 +776,12 @@ namespace EstatePortal.Controllers
 					ModelState.AddModelError("", "Brak uprawnień do edycji.");
 					return View("UserPanel", model);
 			}
->>>>>>> master
-=======
-            if (!string.IsNullOrEmpty(model.FirstName))
-                user.FirstName = model.FirstName;
-
-            if (!string.IsNullOrEmpty(model.LastName))
-                user.LastName = model.LastName;
-
-            if (!string.IsNullOrEmpty(model.Email))
-                user.Email = model.Email;
->>>>>>> register
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
             ViewBag.Message = "Dane zostały zaktualizowane.";
-<<<<<<< HEAD
-            return View("UserPanel", model);
-=======
                 return RedirectToAction("UserPanel");
->>>>>>> master
         }
 
         [HttpPost]
@@ -882,10 +824,6 @@ namespace EstatePortal.Controllers
             ViewBag.Message = "Hasło zostało zmienione.";
             return View("UserPanel", model);
         }
-<<<<<<< HEAD
-    }
-}
-=======
         //Admin Panel
         // Admin Panel
         [HttpGet]
@@ -958,4 +896,3 @@ namespace EstatePortal.Controllers
 
     }
 }
->>>>>>> master

@@ -25,8 +25,9 @@
         <label>Potwierdź Hasło:</label>
         <input asp-for="ConfirmPassword" type="password" />
     </div>
-    <div class="input">
+    <div>
         <label>
+            <input type="hidden" name="AcceptTerms" value="false" />
             <input type="checkbox" name="AcceptTerms" value="true" required />
             Akceptuję regulamin i politykę prywatności
         </label>

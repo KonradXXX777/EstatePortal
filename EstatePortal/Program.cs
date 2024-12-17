@@ -45,6 +45,7 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+// Valuable Sh*t
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

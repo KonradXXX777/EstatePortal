@@ -1,38 +1,23 @@
 using EstatePortal.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-<<<<<<< HEAD
-=======
 using System.Security.Claims;
->>>>>>> master
 
 namespace EstatePortal.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-<<<<<<< HEAD
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-=======
         private readonly ApplicationDbContext _context;
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
             _context = context;
->>>>>>> master
         }
 
         public IActionResult Index()
         {
-<<<<<<< HEAD
-            return View();
-        }
-
-=======
             // Pobierz email z ClaimsIdentity
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             Console.WriteLine("Email z claims: " + email);
@@ -81,7 +66,6 @@ namespace EstatePortal.Controllers
         }
 
 
->>>>>>> master
         public IActionResult Privacy()
         {
             return View();

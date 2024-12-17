@@ -25,9 +25,9 @@ body {
 
 #tlo {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 20px;
     box-shadow: inset 0px 90px 60px black, inset 0px -90px 60px black;
     position: relative;

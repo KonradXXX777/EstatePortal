@@ -6,20 +6,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel użytkownika</title>
-<<<<<<< HEAD
-=======
     <link href="~/css/UserPanel.css" rel="stylesheet" />
->>>>>>> master
 </head>
 <body>
     <h2>Panel użytkownika</h2>
 
     <h3>Aktualizacja danych osobowych</h3>
-<<<<<<< HEAD
-    <form action="/Account/UpdateUser" method="post">
-=======
     <form action="/Account/UserPanel" method="post">
->>>>>>> master
 
         @* @if (!ViewData.ModelState.IsValid)
         {
@@ -33,23 +26,6 @@
             </div>
         } *@
 
-<<<<<<< HEAD
-        <div>
-            <label>Imię:</label>
-            <input type="text" name="FirstName" />
-        </div>
-
-        <div>
-            <label>Nazwisko:</label>
-            <input type="text" name="LastName" />
-        </div>
-
-        <div>
-            <label>Email:</label>
-            <input type="text" name="Email" />
-        </div>
-
-=======
         @* Dla PrivatePerson *@
         @if (Model.Role == EstatePortal.Models.UserRole.PrivatePerson)
         {
@@ -152,7 +128,6 @@
                 <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
             </div>
         }
->>>>>>> master
         <button type="submit">Zaktualizuj dane</button>
     </form>
 
@@ -175,18 +150,6 @@
 
         <button type="submit">Zmień hasło</button>
     </form>
-<<<<<<< HEAD
-
-    <h3>Dodaj nowego pracownika</h3>
-    <form asp-action="InviteEmployee" method="post">
-        <div>
-            <label>Adres e-mail pracownika:</label>
-            <input type="email" name="email" required />
-        </div>
-        <button type="submit">Wyślij zaproszenie</button>
-    </form>
-
-=======
     @if (Model.Role == EstatePortal.Models.UserRole.EstateAgency || Model.Role == EstatePortal.Models.UserRole.Developer)
     {
         <h3>Dodaj nowego pracownika</h3>
@@ -198,7 +161,6 @@
             <button type="submit">Wyślij zaproszenie</button>
         </form>
     }
->>>>>>> master
 
     <a href="/Account/Logout">Wyloguj się</a>
 </body>
