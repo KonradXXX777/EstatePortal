@@ -86,12 +86,91 @@
             <div>
                 <label>Status:</label>
                 <select name="Status">
-                    <option value="Active" )>Aktywny</option>
-                    <option value="Inactive" )>Nieaktywny</option>
-                    <option value="Blocked" )>Zablokowany</option>
+                    <option value="Active">Aktywny</option>
+                    <option value="Inactive">Nieaktywny</option>
+                    <option value="Blocked">Zablokowany</option>
                 </select>
             </div>
             <button type="submit">Zaktualizuj użytkownika</button>
+        </form>
+    }
+    <h3>Lista ogłoszeń</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tytuł</th>
+                <th>Typ</th>
+                <th>Status</th>
+                <th>Sprzedaż/Wynajem</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var announcement in Model.Announcements)
+            {
+                <tr>
+                    <td>@announcement.Id</td>
+                    <td>@announcement.Title</td>
+                    <td>@announcement.PropertyType</td>
+                    <td>@announcement.Status</td>
+                    <td>@announcement.SellOrRent</td>
+                    <td>
+                        <!-- Przyciski do edycji i zmiany statusu -->
+                        <a href="@Url.Action("AdminPanel", new { editAnnouncementId = announcement.Id })">Edytuj</a>
+                        |
+                        <form asp-action="ChangeAnnouncementStatus" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@announcement.Id" />
+                            <select name="status">
+                                <option value="Active">Aktywne</option>
+                                <option value="Inactive">Nieaktywne</option>
+                                <option value="PendingApproval">Oczekuje na zatwierdzenie</option>
+                                <option value="Rejected">Odrzucone</option>
+                                <option value="Sold">Sprzedane</option>
+                            </select>
+                            <button type="submit">Zmień status</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Formularz do edycji ogłoszenia (jeśli przekazano editAnnouncementId) -->
+    @if (Model.EditAnnouncement != null)
+    {
+        <h3>Edytuj ogłoszenie</h3>
+        <form asp-action="UpdateAnnouncement" method="post">
+            <input type="hidden" name="Id" value="@Model.EditAnnouncement.Id" />
+
+            <div>
+                <label>Tytuł:</label>
+                <input type="text" name="Title" value="@Model.EditAnnouncement.Title" />
+            </div>
+            <div>
+                <label>Opis:</label>
+                <textarea name="Description">@Model.EditAnnouncement.Description</textarea>
+            </div>
+            <div>
+                <label>Typ:</label>
+                <select name="PropertyType">
+                    <option value="Flat">Mieszkanie</option>
+                    <option value="House">Dom</option>
+                    <option value="Plot">Działka</option>
+                    <option value="Garage">Garaż</option>
+                    <option value="CommercialPremises">Lokal użytkowy</option>
+                    <option value="Warehouse">Magazyn</option>
+                    <option value="Room">Pokój</option>
+                </select>
+            </div>
+            <div>
+                <label>Sprzedaż/Wynajem:</label>
+                <select name="SellOrRent">
+                    <option value="Sell">Sprzedaż</option>
+                    <option value="Rent">Wynajem</option>
+                </select>
+            </div>
+            <button type="submit">Zaktualizuj ogłoszenie</button>
         </form>
     }
 </body>

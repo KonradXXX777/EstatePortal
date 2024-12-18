@@ -1,4 +1,4 @@
-﻿let text = "Welcome to Manufacture";
+﻿let text = "Welcome to Portal";
 let index = 0;
 let typingText = document.getElementById('typingText');
 

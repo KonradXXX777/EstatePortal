@@ -10,23 +10,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.9/signalr.min.js"></script>
     <script>
         const chatId = "@Model.Id";
-        const senderId = "@User.FindFirst("UserId").Value";
+        const senderId = "@User.FindFirst("UserId")?.Value";
         const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
 
         connection.on("ReceiveMessage", (senderId, message) => {
             const messagesDiv = document.getElementById("messages");
             const messageDiv = document.createElement("div");
-            messageDiv.innerHTML = senderId + ": " + message;
+            messageDiv.innerHTML = `<strong>${senderId}:</strong> ${message}`;
             messagesDiv.appendChild(messageDiv);
         });
 
         connection.start().then(() => {
+            console.log("SignalR connected");
             connection.invoke("JoinChat", chatId);
         });
 
-        document.getElementById("sendButton").addEventListener("click", () => {
+        document.getElementById("sendButton").addEventListener("click", async () => {
             const message = document.getElementById("messageInput").value;
-            connection.invoke("SendMessage", chatId, senderId, message);
+            if (message.trim() === "") {
+                alert("Nie można wysłać pustej wiadomości.");
+                return;
+            }
+
+            try {
+                await connection.invoke("SendMessage", chatId, senderId, message);
+                document.getElementById("messageInput").value = ""; // Wyczyść pole
+            } catch (err) {
+                console.error(err);
+                alert("Błąd podczas wysyłania wiadomości.");
+            }
         });
     </script>
 }

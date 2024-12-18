@@ -47,7 +47,7 @@ namespace EstatePortal.Models
         public bool HasWater { get; set; }
         public bool HasElectricity { get; set; }
         public bool HasGas { get; set; }
-        public bool HasSewerage { get; set; }
+        public bool HasSewerage { get; set; } // Kanalizacja
         public bool HasInternet { get; set; }
 
         public bool Garden { get; set; } // Ogródek

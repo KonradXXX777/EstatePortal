@@ -4,6 +4,7 @@ using EstatePortal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EstatePortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241218012826_fix_chat")]
+    partial class fix_chat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,9 +315,6 @@ namespace EstatePortal.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SenderId")
                         .HasColumnType("int");
 
@@ -324,8 +324,6 @@ namespace EstatePortal.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
-
-                    b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
 
@@ -498,12 +496,6 @@ namespace EstatePortal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EstatePortal.Models.User", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EstatePortal.Models.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
@@ -511,8 +503,6 @@ namespace EstatePortal.Migrations
                         .IsRequired();
 
                     b.Navigation("Chat");
-
-                    b.Navigation("Receiver");
 
                     b.Navigation("Sender");
                 });

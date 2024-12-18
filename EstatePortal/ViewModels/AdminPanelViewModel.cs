@@ -6,5 +6,7 @@ namespace EstatePortal.Models
     {
         public List<User> Users { get; set; }
         public User EditUser { get; set; }
+        public List<Announcement> Announcements { get; set; }
+        public Announcement EditAnnouncement { get; set; }
     }
 }

@@ -1,0 +1,186 @@
+﻿@model EstatePortal.Models.Announcement
+
+@{
+    ViewData["Title"] = "Edycja ogłoszenia";
+}
+<head>
+    <link href="~/css/AnnouncementDetailsEdit.css" rel="stylesheet" />
+</head>
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="AnnouncementDetailsEdit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Tytuł ogłoszenia -->
+    <div>
+        <label>Tytuł ogłoszenia:</label>
+        <input type="text" asp-for="Title" />
+    </div>
+
+    <!-- Miasto -->
+    <div>
+        <label>Miasto:</label>
+        <input type="text" asp-for="Location" />
+    </div>
+
+    <!-- Ulica -->
+    <div>
+        <label>Ulica:</label>
+        <input type="text" asp-for="Street" />
+    </div>
+
+    <!-- Powierzchnia -->
+    <div>
+        <label>Powierzchnia (m²):</label>
+        <input type="text" asp-for="Area" />
+    </div>
+
+    <!-- Cena -->
+    <div>
+        <label>Cena (zł):</label>
+        <input type="text" asp-for="Price" />
+    </div>
+
+    <!-- Opis -->
+    <div>
+        <label>Opis:</label>
+        <textarea asp-for="Description"></textarea>
+    </div>
+
+    <!-- Typ ogłoszenia -->
+    <div>
+        <label>Typ ogłoszenia:</label>
+        <select asp-for="SellOrRent">
+            <option value="0">Na sprzedaż</option>
+            <option value="1">Wynajem</option>
+        </select>
+    </div>
+
+    <!-- Typ nieruchomości -->
+    <div>
+        <label>Typ nieruchomości:</label>
+        <select asp-for="PropertyType">
+            <option value="0">Mieszkanie</option>
+            <option value="1">Dom</option>
+            <option value="2">Działka</option>
+            <option value="3">Garaż</option>
+            <option value="4">Lokal użytkowy</option>
+            <option value="5">Magazyn</option>
+            <option value="6">Pokój</option>
+        </select>
+    </div>
+
+    <!-- Cechy nieruchomości -->
+    <h4>Cechy nieruchomości</h4>
+    <div>
+        <label>Liczba pokoi:</label>
+        <input type="text" asp-for="Features.Rooms" />
+    </div>
+
+    <div>
+        <label>Piętro:</label>
+        <input type="text" asp-for="Features.Floor" />
+    </div>
+
+    <div>
+        <label>Liczba pięter w budynku:</label>
+        <input type="text" asp-for="Features.TotalFloors" />
+    </div>
+
+    <div>
+        <label>Rok budowy:</label>
+        <input type="text" asp-for="Features.YearBuilt" />
+    </div>
+
+    <!-- Winda -->
+    <div>
+        <label>Winda:</label>
+        <input type="checkbox" asp-for="Features.Elevator" />
+    </div>
+
+    <!-- Dostosowanie dla niepełnosprawnych -->
+    <div>
+        <label>Dostosowanie dla niepełnosprawnych:</label>
+        <input type="checkbox" asp-for="Features.IsAccessible" />
+    </div>
+
+    <!-- Garaż -->
+    <div>
+        <label>Garaż:</label>
+        <input type="checkbox" asp-for="Features.HasGarage" />
+    </div>
+
+    <!-- Ogród -->
+    <div>
+        <label>Ogród:</label>
+        <input type="checkbox" asp-for="Features.HasGarden" />
+    </div>
+
+    <!-- Piwnica -->
+    <div>
+        <label>Piwnica:</label>
+        <input type="checkbox" asp-for="Features.HasBasement" />
+    </div>
+
+    <!-- Balkon -->
+    <div>
+        <label>Klimatyzacja:</label>
+        <input type="checkbox" asp-for="Features.HasAirConditioning" />
+    </div>
+
+    <!-- Media -->
+    <div>
+        <label>Woda:</label>
+        <input type="checkbox" asp-for="Features.HasWater" />
+    </div>
+
+    <div>
+        <label>Prąd:</label>
+        <input type="checkbox" asp-for="Features.HasElectricity" />
+    </div>
+
+    <div>
+        <label>Gaz:</label>
+        <input type="checkbox" asp-for="Features.HasGas" />
+    </div>
+
+    <div>
+        <label>Kanalizacja:</label>
+        <input type="checkbox" asp-for="Features.HasSewerage" />
+    </div>
+
+    <div>
+        <label>Internet:</label>
+        <input type="checkbox" asp-for="Features.HasInternet" />
+    </div>
+
+    <!-- Przyroda w okolicy -->
+    <h4>Otoczenie</h4>
+    <div>
+        <label>Las:</label>
+        <input type="checkbox" asp-for="Features.HasForest" />
+    </div>
+
+    <div>
+        <label>Park:</label>
+        <input type="checkbox" asp-for="Features.HasPark" />
+    </div>
+
+    <div>
+        <label>Morze:</label>
+        <input type="checkbox" asp-for="Features.HasSea" />
+    </div>
+
+    <div>
+        <label>Góry:</label>
+        <input type="checkbox" asp-for="Features.HasMountains" />
+    </div>
+
+    <div>
+        <button type="submit">Zapisz zmiany</button>
+    </div>
+</form>
+
+<div style="text-align: center; margin-top: 20px;">
+    <a href="@Url.Action("AnnouncementDetails", "Announcement", new { id = Model.Id })">Powrót do szczegółów</a>
+</div>

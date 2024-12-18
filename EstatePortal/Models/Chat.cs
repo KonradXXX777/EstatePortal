@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EstatePortal.Models
 {
@@ -29,8 +29,14 @@ namespace EstatePortal.Models
         public DateTime LastMessageTime { get; set; }
         public string LastMessage { get; set; } = string.Empty;
 
-        public User Buyer { get; set; }
-        public User Seller { get; set; }
+        public int? BuyerId { get; set; }
+        [ForeignKey("BuyerId")]
+        public virtual User Buyer { get; set; }
+
+        public int? SellerId { get; set; }
+        [ForeignKey("SellerId")]
+        public virtual User Seller { get; set; }
+
         public ICollection<Message> Messages { get; set; } = new List<Message>();
     }
 }

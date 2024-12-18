@@ -49,5 +49,50 @@ namespace EstatePortal.Models
 
         [NotMapped] // Do not save in db
         public string? MainPhotoUrl => Photos.FirstOrDefault()?.Url;
+
+        public string SellOrRentDisplay
+        {
+            get
+            {
+                return SellOrRent switch
+                {
+                    SellOrRent.Sell => "Na sprzedaż",
+                    SellOrRent.Rent => "Wynajem",
+                    _ => "Nieznany"
+                };
+            }
+        }
+        public string PropertyTypeDisplay
+        {
+            get
+            {
+                return PropertyType switch
+                {
+                    PropertyType.Flat => "Mieszkanie",
+                    PropertyType.House => "Dom",
+                    PropertyType.Plot => "Działka",
+                    PropertyType.Garage => "Garaż",
+                    PropertyType.CommercialPremises => "Lokal użytkowy",
+                    PropertyType.Warehouse => "Magazyn",
+                    PropertyType.Room => "Pokój",
+                    _ => "Nieznany"
+                };
+            }
+        }
+        public string AnnouncementStatusDisplay
+        {
+            get
+            {
+                return Status switch
+                {
+                    AnnouncementStatus.Active => "Aktywne",
+                    AnnouncementStatus.Inactive => "Nieaktywne",
+                    AnnouncementStatus.PendingApproval => "Oczekuje na zatwierdzenie",
+                    AnnouncementStatus.Rejected => "Odrzucone",
+                    AnnouncementStatus.Sold => "Sprzedane",
+                    _ => "Nieznany"
+                };
+            }
+        }
     }
 }

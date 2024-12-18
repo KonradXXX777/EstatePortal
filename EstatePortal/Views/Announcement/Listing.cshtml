@@ -1,0 +1,35 @@
+﻿@model List<EstatePortal.Models.Announcement>
+
+@{
+    ViewData["Title"] = "Ogłoszenia";
+}
+
+<h1>Ogłoszenia</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Powierzchnia</th>
+            <th>Cena</th>
+            <th>Lokalizacja</th>
+            <th>Opcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var announcement in Model)
+        {
+            <tr>
+                <td>@announcement.Title</td>
+                <td>@announcement.Area m²</td>
+                <td>@announcement.Price zł</td>
+                <td>@announcement.Location</td>
+                <td>
+                    <a asp-action="NewChat" asp-controller="Chat" asp-route-announcementId="@announcement.Id" class="btn btn-primary">
+                        Napisz
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

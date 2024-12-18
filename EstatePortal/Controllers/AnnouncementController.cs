@@ -91,25 +91,42 @@ namespace EstatePortal.Controllers
             _context.AnnouncementFeatures.Add(features);
 
             // Dodanie zdjęć
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
             foreach (var photo in Photos)
             {
-                if (photo.Length > 0)
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".heic", ".heif" };
+                var extension = Path.GetExtension(photo.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(extension))
                 {
-                    // Przetwarzanie i zapisywanie zdjęcia
-                    var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
-                    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
-
-                    using (var stream = new FileStream(uploadPath, FileMode.Create))
-                    {
-                        await photo.CopyToAsync(stream);
-                    }
-
-                    _context.AnnouncementPhotos.Add(new AnnouncementPhoto
-                    {
-                        AnnouncementId = model.Id,
-                        Url = $"/uploads/{fileName}"
-                    });
+                    Console.WriteLine($"File {photo.FileName} rejected: Invalid format");
+                    continue;
                 }
+
+                if (photo.Length > 10 * 1024 * 1024)
+                {
+                    Console.WriteLine($"File {photo.FileName} rejected: File size exceeds 10 MB");
+                    continue;
+                }
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                _context.AnnouncementPhotos.Add(new AnnouncementPhoto
+                {
+                    AnnouncementId = model.Id,
+                    Url = $"/uploads/{fileName}"
+                });
             }
 
             await _context.SaveChangesAsync();
@@ -138,7 +155,7 @@ namespace EstatePortal.Controllers
 
         // Szczegóły ogłoszenia
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> AnnouncementDetails(int id)
         {
             var announcement = await _context.Announcements
                 .Include(a => a.Features)
@@ -152,5 +169,121 @@ namespace EstatePortal.Controllers
 
             return View(announcement);
         }
+        // Widok edycji ogłoszenia
+        public IActionResult AnnouncementDetailsEdit(int id)
+        {
+            var announcement = _context.Announcements
+                .Include(a => a.Features)
+                .FirstOrDefault(a => a.Id == id);
+
+            if (announcement == null)
+            {
+                return NotFound();
+            }
+
+            return View(announcement);
+        }
+
+        // Akcja zapisywania zmian
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AnnouncementDetailsEdit(int id, Announcement model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            //if (ModelState.IsValid)
+            //{
+            var announcement = _context.Announcements
+                .Include(a => a.Features)
+                .FirstOrDefault(a => a.Id == id);
+
+            if (announcement == null)
+            {
+                return NotFound();
+            }
+
+            // Przypisz wartości tylko wtedy, gdy są niepuste lub niezerowe
+            if (!string.IsNullOrEmpty(model.Title))
+                announcement.Title = model.Title;
+            if (!string.IsNullOrEmpty(model.Location))
+                announcement.Location = model.Location;
+            if (!string.IsNullOrEmpty(model.Street))
+                announcement.Street = model.Street;
+            if (model.Area > 0)
+                announcement.Area = model.Area;
+            if (model.Price > 0)
+                announcement.Price = model.Price;
+            if (!string.IsNullOrEmpty(model.Description))
+                announcement.Description = model.Description;
+            if (Enum.TryParse<SellOrRent>(model.SellOrRent.ToString(), out var sellOrRent))
+                announcement.SellOrRent = sellOrRent;
+            if (Enum.TryParse<PropertyType>(model.PropertyType.ToString(), out var propertyType))
+                announcement.PropertyType = propertyType;
+            if (Enum.TryParse<AnnouncementStatus>(model.Status.ToString(), out var status))
+                announcement.Status = status;
+
+            // Edytuj cechy nieruchomości (Features)
+            if (announcement.Features != null && model.Features != null)
+            {
+                if (model.Features.Rooms > 0)
+                    announcement.Features.Rooms = model.Features.Rooms;
+                if (model.Features.Floor > 0)
+                    announcement.Features.Floor = model.Features.Floor;
+                if (model.Features.TotalFloors > 0)
+                    announcement.Features.TotalFloors = model.Features.TotalFloors;
+                if (model.Features.YearBuilt > 0)
+                    announcement.Features.YearBuilt = model.Features.YearBuilt;
+                announcement.Features.Elevator = model.Features.Elevator;
+                announcement.Features.IsAccessible = model.Features.IsAccessible;
+                announcement.Features.HasGarage = model.Features.HasGarage;
+                announcement.Features.HasGarden = model.Features.HasGarden;
+                announcement.Features.HasBasement = model.Features.HasBasement;
+                announcement.Features.HasAirConditioning = model.Features.HasAirConditioning;
+                announcement.Features.HasWater = model.Features.HasWater;
+                announcement.Features.HasElectricity = model.Features.HasElectricity;
+                announcement.Features.HasGas = model.Features.HasGas;
+                announcement.Features.HasSewerage = model.Features.HasSewerage;
+                announcement.Features.HasInternet = model.Features.HasInternet;
+                announcement.Features.HasForest = model.Features.HasForest;
+                announcement.Features.HasPark = model.Features.HasPark;
+                announcement.Features.HasSea = model.Features.HasSea;
+                announcement.Features.HasMountains = model.Features.HasMountains;
+            }
+
+            try
+            {
+                _context.Update(announcement);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Announcements.Any(a => a.Id == announcement.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(AnnouncementDetails), new { id = announcement.Id });
+            //}
+        }
+
+
+        public async Task<IActionResult> Listing()
+        {
+            var announcements = await _context.Announcements
+                .Include(a => a.User) // Wczytanie relacji z właścicielem ogłoszenia
+                .ToListAsync();
+
+            return View(announcements); // Przekazanie listy ogłoszeń do widoku
+        }
+
+
     }
 }

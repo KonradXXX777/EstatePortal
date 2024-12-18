@@ -21,6 +21,12 @@ namespace EstatePortal.Models
         public virtual User Sender { get; set; }
 
         [Required]
+        public int ReceiverId { get; set; }
+
+        [ForeignKey("ReceiverId")]
+        public virtual User Receiver { get; set; }
+
+        [Required]
         public string Content { get; set; } = string.Empty;
 
         public DateTime SentAt { get; set; } = DateTime.Now;
