@@ -1,9 +1,6 @@
 ﻿@model EstatePortal.Models.Chat
 
 @if (Model != null)
-
-
-
 {
     <h2>Rozpocznij czat z ogłoszeniodawcą</h2>
     <h3>@(Model.Announcement?.Title ?? "Tytuł nieznany")</h3>
@@ -14,20 +11,14 @@
 
         <div>
             <label for="LastMessage">Wiadomość:</label>
-            <textarea asp-for="LastMessage" rows="5"></textarea>
-            <span asp-validation-for="LastMessage" class="text-danger"></span>
+          @*   <textarea asp-for="LastMessage" rows="5"></textarea>
+            <span asp-validation-for="LastMessage" class="text-danger"></span> *@
         </div>
 
         <button type="submit">Wyślij</button>
     </form>
 }
-
-
-
 else
-
-
-
 {
     <h2>Błąd: Model nie został załadowany.</h2>
 }

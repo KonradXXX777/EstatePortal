@@ -25,9 +25,17 @@
                 <td>@announcement.Price zł</td>
                 <td>@announcement.Location</td>
                 <td>
-                    <a asp-action="NewChat" asp-controller="Chat" asp-route-announcementId="@announcement.Id" class="btn btn-primary">
+                    @* <a asp-action="NewChat" asp-controller="Chat" asp-route-announcementId="@announcement.Id" class="btn btn-primary">
                         Napisz
+                    </a> *@
+                    <a asp-controller="Chat"
+                       asp-action="GoToChatRoom"
+                       asp-route-announcementId="@announcement.Id"
+                       asp-route-receiverId="@announcement.UserId"
+                       class="btn btn-primary">
+                        Przejdź do chatu
                     </a>
+
                 </td>
             </tr>
         }

@@ -31,6 +31,7 @@ namespace EstatePortal.Controllers
                 {
                     // Przeka¿ status u¿ytkownika do widoku
                     ViewBag.UserStatus = user.Status;
+                    ViewBag.UserRole = user.Role;
 
                     // Przeka¿ komunikat zale¿nie od statusu
                     switch (user.Status)

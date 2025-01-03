@@ -1,44 +1,80 @@
-﻿@model EstatePortal.Models.Chat
+﻿@using System.Security.Claims
+@model EstatePortal.Models.Chat
 
-<h2>Czat z @Model.Receiver.FirstName @Model.Receiver.LastName</h2>
-<div id="messages"></div>
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "ChatRoom";
+    var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+    var roomName = "chat_" + Model.Id;
+}
 
-<input type="text" id="messageInput" placeholder="Napisz wiadomość..." />
-<button id="sendButton">Wyślij</button>
+<h2>ChatRoom - Chat ID: @Model.Id</h2>
 
-@section Scripts {
+<div id="messagesList">
+    @foreach (var msg in Model.Messages)
+    {
+        <div>
+            <strong>@msg.SenderId -> @msg.ReceiverId</strong>: @msg.Content
+            [<small>@msg.SentAt</small>]
+        </div>
+    }
+</div>
+
+<div>
+    <input type="text" id="messageInput" placeholder="Wpisz wiadomość..." />
+    <button id="sendButton">Wyślij</button>
+</div>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.9/signalr.min.js"></script>
     <script>
-        const chatId = "@Model.Id";
-        const senderId = "@User.FindFirst("UserId")?.Value";
-        const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+        const chatId = @Model.Id;
+        const senderId = @currentUserId;
+        const roomName = "@roomName";
+        // Zakładamy, że w modelu mamy to, co trzeba do identyfikacji drugiej strony:
+        const receiverId = @Model.ReceiverId == @currentUserId ? @Model.SenderId : @Model.ReceiverId;
 
-        connection.on("ReceiveMessage", (senderId, message) => {
-            const messagesDiv = document.getElementById("messages");
-            const messageDiv = document.createElement("div");
-            messageDiv.innerHTML = `<strong>${senderId}:</strong> ${message}`;
-            messagesDiv.appendChild(messageDiv);
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        // Funkcja wywoływana, gdy dostajemy wiadomość z serwera.
+        connection.on("ReceiveMessage", (chatId, sender, receiver, content, sentAt) => {
+            // TUTAJ dodajemy wiadomość do listy w interfejsie
+            const msgList = document.getElementById("messagesList");
+            const div = document.createElement("div");
+            div.innerHTML = `<strong>${sender} -> ${receiver}</strong>: ${content} [<small>${sentAt}</small>]`;
+            msgList.appendChild(div);
         });
 
+        // Po uruchomieniu połączenia dołączamy do pokoju
         connection.start().then(() => {
-            console.log("SignalR connected");
-            connection.invoke("JoinChat", chatId);
-        });
+            connection.invoke("JoinRoom", roomName).catch(err => console.error(err));
+        }).catch(err => console.error(err));
 
-        document.getElementById("sendButton").addEventListener("click", async () => {
+        // Event kliknięcia w "Wyślij"
+        document.getElementById("sendButton").addEventListener("click", function () {
             const message = document.getElementById("messageInput").value;
-            if (message.trim() === "") {
-                alert("Nie można wysłać pustej wiadomości.");
-                return;
-            }
+            // Wysyłamy wiadomość do Huba
+            connection.invoke("SendMessage", roomName, chatId, senderId, receiverId, message)
+                .then(() => {
+                    // Po pomyślnym wywołaniu - można np. wyczyścić input
+                    document.getElementById("messageInput").value = "";
 
-            try {
-                await connection.invoke("SendMessage", chatId, senderId, message);
-                document.getElementById("messageInput").value = ""; // Wyczyść pole
-            } catch (err) {
-                console.error(err);
-                alert("Błąd podczas wysyłania wiadomości.");
-            }
+                    // Dodatkowo uderzamy do akcji kontrolera, aby zapisać w bazie:
+                    fetch('/Chat/SaveMessage', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chatId: chatId,
+                            senderId: senderId,
+                            receiverId: receiverId,
+                            content: message
+                        })
+                    });
+                })
+                .catch(err => console.error(err));
         });
     </script>
-}

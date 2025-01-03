@@ -685,6 +685,7 @@ namespace EstatePortal.Controllers
         public async Task<IActionResult> UserPanel()
         {
             var userId = User.FindFirst("UserId")?.Value;
+
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login");

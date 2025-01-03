@@ -27,15 +27,6 @@ namespace EstatePortal.Models
         public virtual Announcement Announcement { get; set; }
 
         public DateTime LastMessageTime { get; set; }
-        public string LastMessage { get; set; } = string.Empty;
-
-        public int? BuyerId { get; set; }
-        [ForeignKey("BuyerId")]
-        public virtual User Buyer { get; set; }
-
-        public int? SellerId { get; set; }
-        [ForeignKey("SellerId")]
-        public virtual User Seller { get; set; }
 
         public ICollection<Message> Messages { get; set; } = new List<Message>();
     }

@@ -45,7 +45,6 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-// Valuable Sh*t
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -65,7 +64,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("Po³¹czenie z baz¹ danych nie jest dostêpne. B³¹d: " + ex.Message);
     }
 }
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

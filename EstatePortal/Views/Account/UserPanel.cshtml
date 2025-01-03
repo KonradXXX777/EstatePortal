@@ -27,7 +27,7 @@
         } *@
 
         @* Dla PrivatePerson *@
-        @if (Model.Role == EstatePortal.Models.UserRole.PrivatePerson)
+        @if (Model?.Role == EstatePortal.Models.UserRole.PrivatePerson)
         {
             <div>
                 <label>Imię:</label>
@@ -48,7 +48,7 @@
         }
 
         @* Dla EstateAgency i Developer *@
-        @if (Model.Role == EstatePortal.Models.UserRole.EstateAgency || Model.Role == EstatePortal.Models.UserRole.Developer)
+        @if (Model?.Role == EstatePortal.Models.UserRole.EstateAgency || Model?.Role == EstatePortal.Models.UserRole.Developer)
         {
             <div>
                 <label>Nazwa firmy:</label>
@@ -73,7 +73,7 @@
         }
 
         @* Dla Employee *@
-        @if (Model.Role == EstatePortal.Models.UserRole.Employee)
+        @if (Model?.Role == EstatePortal.Models.UserRole.Employee)
         {
             <div>
                 <label>Imię:</label>
@@ -89,7 +89,7 @@
             </div>
         }
         @* Dla Moderatora *@
-        @if (Model.Role == EstatePortal.Models.UserRole.Moderator)
+        @if (Model?.Role == EstatePortal.Models.UserRole.Moderator)
         {
             <div>
                 <label>Imię:</label>
@@ -109,7 +109,7 @@
             </div>
         }
         @* Dla Administratora *@
-        @if (Model.Role == EstatePortal.Models.UserRole.Administrator)
+        @if (Model?.Role == EstatePortal.Models.UserRole.Administrator)
         {
             <div>
                 <label>Imię:</label>
@@ -150,7 +150,7 @@
 
         <button type="submit">Zmień hasło</button>
     </form>
-    @if (Model.Role == EstatePortal.Models.UserRole.EstateAgency || Model.Role == EstatePortal.Models.UserRole.Developer)
+    @if (Model?.Role == EstatePortal.Models.UserRole.EstateAgency || Model?.Role == EstatePortal.Models.UserRole.Developer)
     {
         <h3>Dodaj nowego pracownika</h3>
         <form asp-action="InviteEmployee" method="post">

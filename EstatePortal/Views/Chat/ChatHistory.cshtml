@@ -7,7 +7,7 @@
     <div>
         <img src="@chat.Announcement.MainPhotoUrl" alt="Miniatura" width="50" />
         <h4>@chat.Announcement.Title</h4>
-        <p>Ostatnia wiadomość: @chat.LastMessage</p>
+        @* <p>Ostatnia wiadomość: @chat.LastMessage</p> *@
         <p>@chat.LastMessageTime.ToString("g")</p>
         <a asp-action="ChatRoom" asp-route-chatId="@chat.Id">Przejdź do czatu</a>
     </div>
