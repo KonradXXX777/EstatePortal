@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EstatePortal</title>
+    <link rel="stylesheet" href="~/EstatePortal.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/HomePage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/font/css/fontello.css" asp-append-version="true" />
+</head>
+<body>
+    <div id="container">
+        <div id="tlo">
+            <header>
+                <a href="#" class="logo">Logo</a>
+                <ul class="navlist">
+                    <li><a href="@Url.Action("Index", "Home")" class="active">Home</a></li>
+                    <li><a href="@Url.Action("Privacy", "Home")">Privacy</a></li>
+                    <li><a href="@Url.Action("MyAnnouncements", "Announcement")">Moje ogłoszenia</a></li>
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator)
+
+                    {
+                        <li><a href="@Url.Action("AdminPanel", "Account")">AdminPanel</a></li>
+                    }
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+
+                    {
+                        <li><a href="@Url.Action("AdminPanel", "Account")">AdminPanel</a></li>
+                    }
+                </ul>
+                <div id="rightNavlist">
+                    <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
+                    <div id="mojeKonto"><a href="@Url.Action("Register", "Home")">Zarejestruj się</a></div>
+                    <div id="WstawOgloszenie"><a href="@Url.Action("AddAnnouncement", "Announcement")">Dodaj ogłoszenie</a></div>
+                </div>
+            </header>
+        </div>
+    </div>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - EstatePortal - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    @* <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script> *@
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

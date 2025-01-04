@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using EstatePortal.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EstatePortal.Controllers
 {
@@ -24,6 +25,7 @@ namespace EstatePortal.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [Authorize]
         public async Task<IActionResult> ChatHistory()
         {
             var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
@@ -36,10 +38,12 @@ namespace EstatePortal.Controllers
             return View(chats);
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult GoToChatRoom(int announcementId, int receiverId)
         {
             var senderId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             // Checks whether the chat exists
             var chat = _context.Chats
@@ -63,13 +67,22 @@ namespace EstatePortal.Controllers
                 _context.SaveChanges();
             }
 
+            // Protection against unauthorized access
+            if (chat.SenderId != currentUserId && chat.ReceiverId != currentUserId)
+            {
+                return Forbid();
+            }
+
             return RedirectToAction("ChatRoom", new { chatId = chat.Id });
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult ChatRoom(int chatId)
         {
-            // Pobieramy czat z bazy
+            var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            // Takes chat from database
             var chat = _context.Chats
                 .Include(c => c.Messages)
                 .ThenInclude(m => m.Sender)
@@ -82,12 +95,21 @@ namespace EstatePortal.Controllers
                 return NotFound();
             }
 
+            // Protection against unauthorized access
+            if (chat.SenderId != currentUserId && chat.ReceiverId != currentUserId)
+            {
+                return Forbid();
+            }
+
             return View(chat);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult SaveMessage([FromBody] MessageDto data)
         {
+            var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             var message = new Message
             {
                 ChatId = data.ChatId,
@@ -103,6 +125,16 @@ namespace EstatePortal.Controllers
             if (chat != null)
             {
                 chat.LastMessageTime = DateTime.Now;
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            // Protection against unauthorized access
+            if (chat.SenderId != currentUserId && chat.ReceiverId != currentUserId)
+            {
+                return Forbid();
             }
 
             _context.SaveChanges();

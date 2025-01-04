@@ -1,33 +1,102 @@
-﻿@model List<EstatePortal.Models.Announcement>
+﻿@model EstatePortal.ViewModels.ListingFilterViewModel
 
 @{
+    //Layout = "~/Views/Shared/_FrontLayout.cshtml";
     ViewData["Title"] = "Ogłoszenia";
 }
 
 <h1>Ogłoszenia</h1>
 
+<form method="get" asp-action="Listing" asp-controller="Announcement" id="searchForm">
+    <div id="search-section" class="content-section active">
+        <div>
+            <label for="search">Wyszukaj (tytuł / opis):</label>
+            <input asp-for="Search" id="search" />
+        </div>
+
+        <div>
+            <label for="location">Lokalizacja:</label>
+            <input asp-for="Location" id="location" />
+        </div>
+
+        <div>
+            <label for="minPrice">Minimalna cena:</label>
+            <input asp-for="MinPrice" id="minPrice" type="number" class="input-price" /> zł
+        </div>
+
+        <div>
+            <label for="maxPrice">Maksymalna cena:</label>
+            <input asp-for="MaxPrice" id="maxPrice" type="number" class="input-price" /> zł
+        </div>
+
+        <div>
+            <label for="minArea">Minimalna powierzchnia:</label>
+            <input asp-for="MinArea" id="minArea" type="number" /> 
+        </div>
+
+        <div>
+            <label for="maxArea">Maksymalna powierzchnia:</label>
+            <input asp-for="MaxArea" id="maxArea" type="number" />
+        </div>
+
+        <div>
+            <label for="propertyType">Rodzaj nieruchomości:</label>
+            <select asp-for="PropertyType">
+                <option value="">Wybierz</option>
+                <option value="Flat">Mieszkania</option>
+                <option value="House">Domy</option>
+                <option value="Plot">Działki</option>
+                <option value="CommercialPremises">Lokale użytkowe</option>
+                <option value="Garage">Garaże</option>
+                <option value="Room">Pokoje</option>
+                <option value="Warehouse">Hale i magazyny</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="sellOrRent">Rodzaj oferty:</label>
+            <select asp-for="SellOrRent">
+                <option value="">Wybierz</option>
+                <option value="Sell">Sprzedaż</option>
+                <option value="Rent">Wynajem</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="userRole">Typ użytkownika:</label>
+            <select asp-for="UserRole">
+                <option value="">Wybierz</option>
+                <option value="PrivatePerson">Osoba Prywatna</option>
+                <option value="EstateAgency">Agencja</option>
+                <option value="Developer">Deweloper</option>
+            </select>
+        </div>
+
+        <!-- itd. analogicznie z pozostałymi polami -->
+        <button type="submit" class="search-button">Filtruj</button>
+    </div>
+</form>
+
+<!-- Tabela z wynikami -->
 <table>
     <thead>
         <tr>
             <th>Tytuł</th>
-            <th>Powierzchnia</th>
             <th>Cena</th>
             <th>Lokalizacja</th>
+            <th>Rodzaj oferty</th>
             <th>Opcje</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var announcement in Model)
+        @foreach (var announcement in Model.Announcements)
         {
             <tr>
                 <td>@announcement.Title</td>
-                <td>@announcement.Area m²</td>
-                <td>@announcement.Price zł</td>
+                <td>@announcement.Price</td>
                 <td>@announcement.Location</td>
+                <td>@announcement.SellOrRent</td>
                 <td>
-                    @* <a asp-action="NewChat" asp-controller="Chat" asp-route-announcementId="@announcement.Id" class="btn btn-primary">
-                        Napisz
-                    </a> *@
                     <a asp-controller="Chat"
                        asp-action="GoToChatRoom"
                        asp-route-announcementId="@announcement.Id"
@@ -35,7 +104,6 @@
                        class="btn btn-primary">
                         Przejdź do chatu
                     </a>
-
                 </td>
             </tr>
         }

@@ -1,4 +1,5 @@
 ﻿using EstatePortal.Models;
+using EstatePortal.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Cryptography;
@@ -274,16 +275,86 @@ namespace EstatePortal.Controllers
             //}
         }
 
-
-        public async Task<IActionResult> Listing()
+        [HttpGet]
+        public async Task<IActionResult> Listing(ListingFilterViewModel model)
         {
-            var announcements = await _context.Announcements
-                .Include(a => a.User) // Wczytanie relacji z właścicielem ogłoszenia
-                .ToListAsync();
+            var query = _context.Announcements
+                .Include(a => a.User)
+                .Include(a => a.Photos)
+                .AsQueryable();
 
-            return View(announcements); // Przekazanie listy ogłoszeń do widoku
+            // Filtrowanie na podstawie wyszukiwanej frazy (tytuł lub opis)
+            if (!string.IsNullOrEmpty(model.Search))
+            {
+                query = query.Where(a => a.Title.Contains(model.Search)
+                                      || a.Description.Contains(model.Search));
+            }
+
+            // Filtrowanie na podstawie lokalizacji
+            if (!string.IsNullOrEmpty(model.Location))
+            {
+                query = query.Where(a => a.Location.Contains(model.Location));
+            }
+
+            // Filtrowanie ceny
+            if (model.MinPrice.HasValue)
+            {
+                query = query.Where(a => a.Price >= model.MinPrice.Value);
+            }
+            if (model.MaxPrice.HasValue)
+            {
+                query = query.Where(a => a.Price <= model.MaxPrice.Value);
+            }
+
+            // Filtrowanie powierzchni
+            if (model.MinArea.HasValue)
+            {
+                query = query.Where(a => a.Area >= model.MinArea.Value);
+            }
+            if (model.MaxArea.HasValue)
+            {
+                query = query.Where(a => a.Area <= model.MaxArea.Value);
+            }
+
+            // Filtrowanie rodzaju nieruchomości
+            if (model.PropertyType.HasValue)
+            {
+                query = query.Where(a => a.PropertyType == model.PropertyType.Value);
+            }
+
+            // Filtrowanie typu użytkownika
+            if (model.UserRole.HasValue)
+            {
+                query = query.Where(a => a.User.Role == model.UserRole.Value);
+            }
+
+            // Filtrowanie rodzaju oferty (Sprzedaż/Wynajem)
+            if (model.SellOrRent.HasValue)
+            {
+                query = query.Where(a => a.SellOrRent == model.SellOrRent.Value);
+            }
+
+            // Ściągamy wyniki do listy
+            model.Announcements = await query.ToListAsync();
+
+            // Zwracamy widok wraz z modelem
+            return View(model);
         }
 
+        public async Task<IActionResult> ListingDetails(int id)
+        {
+            var announcement = await _context.Announcements
+                .Include(a => a.Features) // Wczytanie powiązanych cech
+                .Include(a => a.Photos)   // Wczytanie powiązanych zdjęć
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (announcement == null)
+            {
+                return NotFound(); // Jeśli ogłoszenie nie zostanie znalezione, zwróć 404
+            }
+
+            return View(announcement); // Przekazanie pojedynczego ogłoszenia do widoku
+        }
 
     }
 }
