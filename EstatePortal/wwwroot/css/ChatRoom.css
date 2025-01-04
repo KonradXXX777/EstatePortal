@@ -1,0 +1,121 @@
+﻿/* Przykład: ~/css/ChatRoom.css */
+
+body {
+    background-color: #1A1A1A; /* ciemne tło całej strony (opcjonalnie) */
+    color: #FFFFFF;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0; /* zero marginesów */
+    padding: 0;
+}
+
+.chat-container {
+    background-color: #2A2A2A; /* ciemniejsze tło chatu */
+    width: 60%;
+    margin: 50px auto; /* centrowanie na stronie */
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Nagłówek chatu */
+.chat-header {
+    background-color: #333;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Lista wiadomości */
+.messages-list {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+/* Pojedyncza wiadomość */
+.message-item {
+    display: inline-block;
+    max-width: 70%; /* ograniczenie szerokości */
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 6px 0;
+    background-color: #3A3A3A;
+    position: relative;
+}
+
+/* Kontener tekstu i nadawcy */
+.message-content {
+    margin-bottom: 5px;
+}
+
+.message-sender {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.message-text {
+    margin-left: 5px;
+}
+
+.message-time {
+    font-size: 0.8em;
+    color: #aaa;
+    align-self: flex-end;
+}
+
+/* Stopka z input i przyciskiem */
+.chat-input {
+    background-color: #2A2A2A; /* tło, to samo co kontener */
+    padding: 10px;
+    border-top: 1px solid #444;
+    display: flex;
+    align-items: center;
+}
+
+    .chat-input input[type="text"] {
+        flex: 1;
+        background-color: #3A3A3A;
+        color: #fff;
+        border: none;
+        outline: none;
+        padding: 10px;
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+
+        .chat-input input[type="text"]::placeholder {
+            color: #ccc;
+        }
+
+    .chat-input button {
+        background-color: #6c63ff;
+        color: #ffffff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .chat-input button:hover {
+            background-color: #5a52e6;
+        }
+
+/* Styl wiadomości wysłanej przez aktualnego użytkownika */
+.my-message {
+    align-self: flex-end; /* wyrównanie do prawej w kontenerze flex */
+    margin-left: auto; /* dodatkowo pcha "dymek" na prawo */
+    background-color: #4A4A4A; /* np. inny kolor tła dla mojej wiadomości */
+    text-align: right; /* tekst też do prawej (opcjonalnie) */
+}
+
+/* Styl wiadomości wysłanej przez innego użytkownika */
+.other-message {
+    align-self: flex-start; /* wyrównanie do lewej */
+    margin-right: auto; /* pcha "dymek" na lewo */
+    background-color: #3A3A3A; /* ciemniejsze tło */
+    text-align: left; /* tekst do lewej (opcjonalnie) */
+}

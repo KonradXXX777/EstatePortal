@@ -1,0 +1,80 @@
+﻿@model EstatePortal.Models.Announcement
+
+@{
+    ViewData["Title"] = "Szczegóły ogłoszenia";
+}
+
+<div class="details-container">
+    <h1>@Model.Title</h1>
+    <div>
+        <p><strong>Miasto:</strong> @Model.Location</p>
+        <p><strong>Ulica:</strong> @Model.Street</p>
+        <p><strong>Powierzchnia:</strong> @Model.Area m²</p>
+        <p><strong>Cena:</strong> @Model.Price zł</p>
+        <p><strong>Typ ogłoszenia:</strong> @Model.SellOrRentDisplay</p>
+        <p><strong>Typ nieruchomości:</strong> @Model.PropertyTypeDisplay</p>
+        <p><strong>Status ogłoszenia:</strong> @Model.AnnouncementStatusDisplay</p>
+        <p><strong>Data utworzenia ogłoszenia:</strong> @Model.DateCreated.ToString("dd-MM-yyyy")</p>
+    </div>
+
+    @if (Model.Features != null)
+    {
+        <h2>Cechy nieruchomości</h2>
+        <ul>
+            <li><strong>Liczba pokoi:</strong> @Model.Features.Rooms</li>
+            <li><strong>Piętro:</strong> @Model.Features.Floor</li>
+            <li><strong>Liczba pięter w budynku:</strong> @Model.Features.TotalFloors</li>
+            <li><strong>Rok budowy:</strong> @Model.Features.YearBuilt</li>
+            <li><strong>Winda:</strong> @(Model.Features.Elevator ? "Tak" : "Nie")</li>
+            <li><strong>Stan nieruchomości:</strong> @Model.Features.PropertyCondition</li>
+            <li><strong>Parking:</strong> @Model.Features.Parking</li>
+            <li><strong>Świadectwo energetyczne:</strong> @Model.Features.EnergyCertificate</li>
+            <li><strong>Typ ochrony:</strong> @Model.Features.Security</li>
+            <li><strong>Dostosowanie dla niepełnosprawnych:</strong> @(Model.Features.IsAccessible ? "Tak" : "Nie")</li>
+            <li><strong>Zabudowa w okolicy:</strong> @Model.Features.Neighborhood</li>
+            <li><strong>Ogród:</strong> @(Model.Features.HasGarden ? "Tak" : "Nie")</li>
+            <li><strong>Piwnica:</strong> @(Model.Features.HasBasement ? "Tak" : "Nie")</li>
+            <li><strong>Strych:</strong> @(Model.Features.HasAttic ? "Tak" : "Nie")</li>
+            <li><strong>Garaż:</strong> @(Model.Features.HasGarage ? "Tak" : "Nie")</li>
+            <li><strong>Balkon:</strong> @(Model.Features.HasAirConditioning ? "Tak" : "Nie")</li>
+            <li><strong>Basen:</strong> @(Model.Features.HasPool ? "Tak" : "Nie")</li>
+            <li><strong>Woda:</strong> @(Model.Features.HasWater ? "Tak" : "Nie")</li>
+            <li><strong>Prąd:</strong> @(Model.Features.HasElectricity ? "Tak" : "Nie")</li>
+            <li><strong>Gaz:</strong> @(Model.Features.HasGas ? "Tak" : "Nie")</li>
+            <li><strong>Kanalizacja:</strong> @(Model.Features.HasSewerage ? "Tak" : "Nie")</li>
+            <li><strong>Internet:</strong> @(Model.Features.HasInternet ? "Tak" : "Nie")</li>
+            <li><strong>Wyposażenie AGD:</strong> @(Model.Features.KitchenAppliances ? "Tak" : "Nie")</li>
+            <li><strong>Umeblowanie:</strong> @(Model.Features.Furnished ? "Tak" : "Nie")</li>
+            <li><strong>Bezpieczeństwo:</strong> @Model.Features.SafetyFeatures</li>
+        </ul>
+    }
+
+    @if (Model.Features != null)
+    {
+        <h2>Otoczenie</h2>
+        <ul>
+            <li><strong>Las:</strong> @(Model.Features.HasForest ? "Tak" : "Nie")</li>
+            <li><strong>Plaża:</strong> @(Model.Features.HasPark ? "Tak" : "Nie")</li>
+            <li><strong>Morze:</strong> @(Model.Features.HasSea ? "Tak" : "Nie")</li>
+            <li><strong>Góry:</strong> @(Model.Features.HasMountains ? "Tak" : "Nie")</li>
+        </ul>
+    }
+
+    <h2>Opis</h2>
+    <p>@Model.Description</p>
+
+    @if (Model.Photos != null && Model.Photos.Any())
+    {
+        <h2>Zdjęcia</h2>
+        <div>
+            @foreach (var photo in Model.Photos)
+            {
+                <img src="@photo.Url" alt="Zdjęcie ogłoszenia" width="200" style="margin: 10px;" />
+            }
+        </div>
+    }
+    else
+    {
+        <p>Brak zdjęć dla tego ogłoszenia.</p>
+    }
+</div>
