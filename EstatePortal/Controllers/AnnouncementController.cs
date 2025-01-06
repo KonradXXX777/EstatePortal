@@ -82,9 +82,11 @@ namespace EstatePortal.Controllers
             model.UserId = int.Parse(userId);
             model.DateCreated = DateTime.UtcNow;
 
+            // Domyślnie dodajemy ogłoszenie do kontekstu i zapisujemy
             _context.Announcements.Add(model);
             await _context.SaveChangesAsync();
 
+            // Dodanie cech
             features.AnnouncementId = model.Id;
             _context.AnnouncementFeatures.Add(features);
 
@@ -101,10 +103,11 @@ namespace EstatePortal.Controllers
                 return View(model);
             }
 
-            model.Status = AnnouncementStatus.Active;
+            AnnouncementStatus finalStatus = AnnouncementStatus.Active;
 
             foreach (var photo in Photos)
             {
+                // Sprawdzamy rozszerzenie / rozmiar
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".heic", ".heif" };
                 var extension = Path.GetExtension(photo.FileName).ToLowerInvariant();
 
@@ -119,29 +122,31 @@ namespace EstatePortal.Controllers
                     continue;
                 }
 
+                // 1. Analiza zdjęcia modelem
                 using (var memoryStream = new MemoryStream())
                 {
                     await photo.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0; // reset na początek
+                    memoryStream.Position = 0;
 
-                    // Wywołanie serwisu z modelem
                     float detectionScore = _imageDetectionService.CheckForbiddenObjects(memoryStream);
 
-                    // Logika wyznaczania statusu zależnie od detectionScore
+                    // Zależnie od progu zmieniamy finalStatus
                     if (detectionScore >= 0.8f)
                     {
-                        model.Status = AnnouncementStatus.Rejected;
-                        await _context.SaveChangesAsync();
-                        TempData["ErrorMessage"] = "Wykryto niedozwolone treści w przesłanym zdjęciu. Ogłoszenie zostało odrzucone.";
-                        return RedirectToAction("MyAnnouncements", "Announcement");
-
+                        // Ogłoszenie odrzucone
+                        finalStatus = AnnouncementStatus.Rejected;
                     }
-                    else if (detectionScore >= 0.75f && detectionScore < 0.8f)
+                    else if (detectionScore >= 0.75f)
                     {
-                        model.Status = AnnouncementStatus.PendingApproval;
+                        // Tylko jeśli nie jest Rejected (Rejected ma "wyższy priorytet")
+                        if (finalStatus != AnnouncementStatus.Rejected)
+                        {
+                            finalStatus = AnnouncementStatus.PendingApproval;
+                        }
                     }
                 }
 
+                // 2. Niezależnie od statusu - zapisujemy zdjęcie
                 var fileName = Guid.NewGuid() + extension;
                 var filePath = Path.Combine(uploadPath, fileName);
 
@@ -159,9 +164,27 @@ namespace EstatePortal.Controllers
                 });
             }
 
+            // Po przejściu wszystkich zdjęć - ustawiamy finalny status ogłoszenia
+            model.Status = finalStatus;
+
+            // Zapisujemy ostateczny status + zdjęcia w bazie
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Ogłoszenie zostało dodane pomyślnie.";
+            if (finalStatus == AnnouncementStatus.Rejected)
+            {
+                TempData["ErrorMessage"] = "Wykryto niedozwolone treści. Ogłoszenie zostało odrzucone.";
+                // Możesz przekierować do "MyAnnouncements" lub innego widoku
+                return RedirectToAction("MyAnnouncements", "Announcement");
+            }
+            else if (finalStatus == AnnouncementStatus.PendingApproval)
+            {
+                TempData["WarningMessage"] = "Ogłoszenie oczekuje na weryfikację (Pending Approval).";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Ogłoszenie zostało dodane pomyślnie (Active).";
+            }
+
             return RedirectToAction("Index", "Home");
         }
 

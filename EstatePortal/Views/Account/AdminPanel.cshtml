@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Panel administratora</title>
-    <link href="~/css/AdminPanel.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/AnnouncementDetails.css" />
 </head>
 <body>
     <h1>Panel administratora</h1>
@@ -35,15 +35,14 @@
                     <td>@user.Role</td>
                     <td>@user.Status</td>
                     <td>
-                        <!-- Przyciski do edycji i zmiany statusu -->
                         <a href="@Url.Action("AdminPanel", new { editUserId = user.Id })">Edytuj</a>
                         |
                         <form asp-action="ChangeUserStatus" method="post" style="display:inline;">
                             <input type="hidden" name="id" value="@user.Id" />
                             <select name="status">
-                                <option value="Active" )>Aktywny</option>
-                                <option value="Inactive" )>Nieaktywny</option>
-                                <option value="Blocked" )>Zablokowany</option>
+                                <option value="Active">Aktywny</option>
+                                <option value="Inactive">Nieaktywny</option>
+                                <option value="Blocked">Zablokowany</option>
                             </select>
                             <button type="submit">Zmień status</button>
                         </form>
@@ -52,7 +51,7 @@
             }
         </tbody>
     </table>
-    <!-- Formularz do edycji użytkownika (jeśli przekazano editUserId) -->
+
     @if (Model.EditUser != null)
     {
         <h3>Edytuj użytkownika</h3>
@@ -94,7 +93,21 @@
             <button type="submit">Zaktualizuj użytkownika</button>
         </form>
     }
+
     <h3>Lista ogłoszeń</h3>
+    <form method="get" action="@Url.Action("AdminPanel")">
+        <label for="filterStatus">Filtruj ogłoszenia:</label>
+        <select name="filterStatus" id="filterStatus">
+            <option value="">Wszystkie</option>
+            <option value="Active">Aktywne</option>
+            <option value="Inactive">Nieaktywne</option>
+            <option value="PendingApproval">Do zatwierdzenia</option>
+            <option value="Rejected">Odrzucone</option>
+            <option value="Sold">Sprzedane</option>
+        </select>
+        <button type="submit">Filtruj</button>
+    </form>
+
     <table border="1">
         <thead>
             <tr>
@@ -103,6 +116,7 @@
                 <th>Typ</th>
                 <th>Status</th>
                 <th>Sprzedaż/Wynajem</th>
+                <th>Zdjęcia</th>
                 <th>Akcje</th>
             </tr>
         </thead>
@@ -112,11 +126,25 @@
                 <tr>
                     <td>@announcement.Id</td>
                     <td>@announcement.Title</td>
-                    <td>@announcement.PropertyType</td>
-                    <td>@announcement.Status</td>
-                    <td>@announcement.SellOrRent</td>
+                    <td>@announcement.PropertyTypeDisplay</td>
+                    <td>@announcement.AnnouncementStatusDisplay</td>
+                    <td>@announcement.SellOrRentDisplay</td>
                     <td>
-                        <!-- Przyciski do edycji i zmiany statusu -->
+                        @if (announcement.Photos != null && announcement.Photos.Any())
+                        {
+                            <div style="display: flex; gap: 10px;">
+                                @foreach (var photo in announcement.Photos)
+                                {
+                                    <img src="@photo.Url" alt="Zdjęcie ogłoszenia" width="200" style="margin: 10px;" />
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span>Brak zdjęć</span>
+                        }
+                    </td>
+                    <td>
                         <a href="@Url.Action("AdminPanel", new { editAnnouncementId = announcement.Id })">Edytuj</a>
                         |
                         <form asp-action="ChangeAnnouncementStatus" method="post" style="display:inline;">
@@ -136,7 +164,6 @@
         </tbody>
     </table>
 
-    <!-- Formularz do edycji ogłoszenia (jeśli przekazano editAnnouncementId) -->
     @if (Model.EditAnnouncement != null)
     {
         <h3>Edytuj ogłoszenie</h3>

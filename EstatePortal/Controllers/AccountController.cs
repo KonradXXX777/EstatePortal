@@ -827,27 +827,28 @@ namespace EstatePortal.Controllers
             ViewBag.Message = "Hasło zostało zmienione.";
             return View("UserPanel", model);
         }
-        //Admin Panel
+
+        // Admin Panel (GET)
         [HttpGet]
-        [Authorize(Roles = "Administrator, Moderator")] // Ograniczenie dostępu
-        public IActionResult AdminPanel(int? editUserId = null, int? editAnnouncementId = null)
+        [Authorize(Roles = "Administrator, Moderator")]
+        public IActionResult AdminPanel(int? editUserId = null, int? editAnnouncementId = null, AnnouncementStatus? filterStatus = null)
         {
-            // Pobranie roli zalogowanego użytkownika
             var currentUserRole = User.IsInRole("Administrator") ? "Administrator" : "Moderator";
 
-            // Pobranie wszystkich użytkowników
             var users = _context.Users.AsQueryable();
+            var announcements = _context.Announcements
+                .Include(a => a.Photos) // Ładuj zdjęcia razem z ogłoszeniami
+                .AsQueryable();
 
-            // Pobranie ogłoszeń
-            var announcements = _context.Announcements.AsQueryable();
-
-            // Jeśli rola to "Moderator", wykluczamy użytkowników o roli "Administrator" oraz "Moderator"
             if (currentUserRole == "Moderator")
             {
                 users = users.Where(u => u.Role != UserRole.Administrator && u.Role != UserRole.Moderator);
             }
+            if (filterStatus.HasValue)
+            {
+                announcements = announcements.Where(a => a.Status == filterStatus.Value);
+            }
 
-            // Znalezienie użytkownika do edycji (jeśli przekazano editUserId)
             User userToEdit = null;
             if (editUserId.HasValue)
             {
@@ -860,7 +861,6 @@ namespace EstatePortal.Controllers
                 announcementToEdit = _context.Announcements.FirstOrDefault(a => a.Id == editAnnouncementId.Value);
             }
 
-            // Model widoku
             var viewModel = new AdminPanelViewModel
             {
                 Users = users.ToList(),
@@ -872,6 +872,7 @@ namespace EstatePortal.Controllers
             return View(viewModel);
         }
 
+        // Update User (POST)
         [HttpPost]
         [Authorize(Roles = "Administrator, Moderator")]
         public IActionResult UpdateUser(User model)
@@ -893,6 +894,7 @@ namespace EstatePortal.Controllers
             return RedirectToAction("AdminPanel");
         }
 
+        // Change User Status (POST)
         [HttpPost]
         [Authorize(Roles = "Administrator, Moderator")]
         public IActionResult ChangeUserStatus(int id, UserStatus status)
@@ -905,6 +907,8 @@ namespace EstatePortal.Controllers
             _context.SaveChanges();
             return RedirectToAction("AdminPanel");
         }
+
+        // Update Announcement (POST)
         [HttpPost]
         [Authorize(Roles = "Administrator, Moderator")]
         public IActionResult UpdateAnnouncement(Announcement model)
@@ -919,11 +923,11 @@ namespace EstatePortal.Controllers
             announcement.PropertyType = model.PropertyType;
             announcement.SellOrRent = model.SellOrRent;
 
-
             _context.SaveChanges();
             return RedirectToAction("AdminPanel");
         }
 
+        // Change Announcement Status (POST)
         [HttpPost]
         [Authorize(Roles = "Administrator, Moderator")]
         public IActionResult ChangeAnnouncementStatus(int id, AnnouncementStatus status)
@@ -936,6 +940,5 @@ namespace EstatePortal.Controllers
             _context.SaveChanges();
             return RedirectToAction("AdminPanel");
         }
-
     }
 }
