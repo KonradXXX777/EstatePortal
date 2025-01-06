@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using EstatePortal.Models;
 using Microsoft.Extensions.Options;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using EstatePortal.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,9 @@ builder.Services.AddAuthentication("Cookies")
 
 // SignalR
 builder.Services.AddSignalR();
+
+// ML Model
+builder.Services.AddSingleton<ImageDetectionService>();
 
 var app = builder.Build();
 

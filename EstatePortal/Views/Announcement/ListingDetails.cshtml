@@ -3,9 +3,11 @@
 @{
     ViewData["Title"] = "Szczegóły ogłoszenia";
 }
-
+<head>
+    <link rel="stylesheet" href="~/css/AnnouncementDetails.css" />
+</head>
 <div class="details-container">
-    <h1>@Model.Title</h1>
+    <h2>@Model.Title</h2>
     <div>
         <p><strong>Miasto:</strong> @Model.Location</p>
         <p><strong>Ulica:</strong> @Model.Street</p>
@@ -16,6 +18,24 @@
         <p><strong>Status ogłoszenia:</strong> @Model.AnnouncementStatusDisplay</p>
         <p><strong>Data utworzenia ogłoszenia:</strong> @Model.DateCreated.ToString("dd-MM-yyyy")</p>
     </div>
+
+    @if (Model.Photos != null && Model.Photos.Any())
+    {
+        <h2>Zdjęcia</h2>
+        <div>
+            @foreach (var photo in Model.Photos)
+            {
+                <img src="@photo.Url" alt="Zdjęcie ogłoszenia" width="200" style="margin: 10px;" />
+            }
+        </div>
+    }
+    else
+    {
+        <p>Brak zdjęć dla tego ogłoszenia.</p>
+    }
+
+    <h2>Opis</h2>
+    <p>@Model.Description</p>
 
     @if (Model.Features != null)
     {
@@ -60,21 +80,4 @@
         </ul>
     }
 
-    <h2>Opis</h2>
-    <p>@Model.Description</p>
-
-    @if (Model.Photos != null && Model.Photos.Any())
-    {
-        <h2>Zdjęcia</h2>
-        <div>
-            @foreach (var photo in Model.Photos)
-            {
-                <img src="@photo.Url" alt="Zdjęcie ogłoszenia" width="200" style="margin: 10px;" />
-            }
-        </div>
-    }
-    else
-    {
-        <p>Brak zdjęć dla tego ogłoszenia.</p>
-    }
 </div>

@@ -69,7 +69,7 @@
   "TrainingOption": {
     "Version": 0,
     "Type": "ObjectDetectionTrainingOption",
-    "TrainingTime": 0,
+    "TrainingTime": 2147483647,
     "Epoch": 5,
     "ScoreThreshold": 0.35,
     "IOUThreshold": 0.5,

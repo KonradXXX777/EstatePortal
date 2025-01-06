@@ -1,6 +1,7 @@
 ﻿using EstatePortal.Models;
 using EstatePortal.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using EstatePortal.Services;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using EstatePortal.Services;
 
 namespace EstatePortal.Controllers
 {
@@ -20,11 +22,13 @@ namespace EstatePortal.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ImageDetectionService _imageDetectionService;
 
-        public AnnouncementController(ApplicationDbContext context, IConfiguration configuration)
+        public AnnouncementController(ApplicationDbContext context, IConfiguration configuration, ImageDetectionService detectionService)
         {
             _context = context;
             _configuration = configuration;
+            _imageDetectionService = detectionService;
         }
 
         // Error handling
@@ -63,17 +67,12 @@ namespace EstatePortal.Controllers
 
         // Adding Announcement
         [HttpPost]
-        public async Task<IActionResult> AddAnnouncement(Announcement model, AnnouncementFeature features, List<IFormFile> Photos)
+        public async Task<IActionResult> AddAnnouncement(
+            Announcement model,
+            AnnouncementFeature features,
+            List<IFormFile> Photos)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    Console.WriteLine("Model state is not valid");
-            //    ModelState.AddModelError("", "Nieprawidłowe dane formularza.");
-            //    return View(model);
-            //}
-
-            // Ustawienia użytkownika i czasu
-            var userId = User.FindFirst("UserId")?.Value; // Zakładam, że UserId jest przechowywane w sesji lub tokenie
+            var userId = User.FindFirst("UserId")?.Value;
             if (userId == null)
             {
                 ModelState.AddModelError("", "Błąd autoryzacji. Spróbuj ponownie.");
@@ -83,20 +82,26 @@ namespace EstatePortal.Controllers
             model.UserId = int.Parse(userId);
             model.DateCreated = DateTime.UtcNow;
 
-            // Dodanie ogłoszenia
             _context.Announcements.Add(model);
             await _context.SaveChangesAsync();
 
-            // Dodanie cech ogłoszenia
             features.AnnouncementId = model.Id;
             _context.AnnouncementFeatures.Add(features);
 
-            // Dodanie zdjęć
             var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
             if (!Directory.Exists(uploadPath))
             {
                 Directory.CreateDirectory(uploadPath);
             }
+
+            var currentUser = await _context.Users.FindAsync(model.UserId);
+            if (currentUser == null)
+            {
+                ModelState.AddModelError("", "Nie znaleziono użytkownika w bazie.");
+                return View(model);
+            }
+
+            model.Status = AnnouncementStatus.Active;
 
             foreach (var photo in Photos)
             {
@@ -108,19 +113,43 @@ namespace EstatePortal.Controllers
                     Console.WriteLine($"File {photo.FileName} rejected: Invalid format");
                     continue;
                 }
-
                 if (photo.Length > 10 * 1024 * 1024)
                 {
                     Console.WriteLine($"File {photo.FileName} rejected: File size exceeds 10 MB");
                     continue;
                 }
 
-                var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
+                using (var memoryStream = new MemoryStream())
+                {
+                    await photo.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0; // reset na początek
+
+                    // Wywołanie serwisu z modelem
+                    float detectionScore = _imageDetectionService.CheckForbiddenObjects(memoryStream);
+
+                    // Logika wyznaczania statusu zależnie od detectionScore
+                    if (detectionScore >= 0.8f)
+                    {
+                        model.Status = AnnouncementStatus.Rejected;
+                        await _context.SaveChangesAsync();
+                        TempData["ErrorMessage"] = "Wykryto niedozwolone treści w przesłanym zdjęciu. Ogłoszenie zostało odrzucone.";
+                        return RedirectToAction("MyAnnouncements", "Announcement");
+
+                    }
+                    else if (detectionScore >= 0.75f && detectionScore < 0.8f)
+                    {
+                        model.Status = AnnouncementStatus.PendingApproval;
+                    }
+                }
+
+                var fileName = Guid.NewGuid() + extension;
                 var filePath = Path.Combine(uploadPath, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    await photo.CopyToAsync(stream);
+                    using var readStream = photo.OpenReadStream();
+                    readStream.Position = 0;
+                    await readStream.CopyToAsync(fileStream);
                 }
 
                 _context.AnnouncementPhotos.Add(new AnnouncementPhoto
@@ -136,8 +165,8 @@ namespace EstatePortal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-// Wyświetlenie listy ogłoszeń użytkownika
-[HttpGet]
+        // Wyświetlenie listy ogłoszeń użytkownika
+        [HttpGet]
         public async Task<IActionResult> MyAnnouncements()
         {
             var userId = User.FindFirst("UserId")?.Value;
@@ -281,6 +310,7 @@ namespace EstatePortal.Controllers
             var query = _context.Announcements
                 .Include(a => a.User)
                 .Include(a => a.Photos)
+                .Where(a => a.Status == AnnouncementStatus.Active)
                 .AsQueryable();
 
             // Filtrowanie na podstawie wyszukiwanej frazy (tytuł lub opis)

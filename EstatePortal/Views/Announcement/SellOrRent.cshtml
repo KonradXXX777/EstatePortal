@@ -57,9 +57,9 @@
         function togglePropertyType() {
             const sellOptions = document.getElementById("sellOptions");
             const rentOptions = document.getElementById("rentOptions");
-            const transactionType = document.querySelector('input[name="transactionType"]:checked').value;
+            const SellOrRent = document.querySelector('input[name="SellOrRent"]:checked').value;
 
-            if (transactionType === "Sprzedam") {
+            if (SellOrRent === "Sell") {
                 sellOptions.classList.add("active");
                 rentOptions.classList.remove("active");
             } else {

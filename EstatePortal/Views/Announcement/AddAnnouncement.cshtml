@@ -12,177 +12,175 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAv_iuStXOtfssDcTMwz4YaMtGGiUXFeXY&libraries=places"></script>
 </head>
 <body>
-
+    <!-- Dom -->
     @if (sellOrRent == "Sell" && propertyType == "House")
     {
-    <div class="container">
-        <header>
-            <h1>Sprzedaż domu</h1>
-            <h1>Typ transakcji: @ViewData["SellOrRent"]</h1>
-            <h1> Sprzedajesz: @ViewData["PropertyType"]</h1>
-        </header>
+        <div class="container">
+            <header>
+                <h1>Sprzedaż domu</h1>
+            </header>
 
-        <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
-            <!-- Informacje podstawowe -->
-            <fieldset>
-                <legend>Informacje podstawowe</legend>
-                <label>
-                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
-                    <input type="hidden" name="PropertyType" value="@propertyType" />
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                        <input type="hidden" name="PropertyType" value="@propertyType" />
 
-                    Tytuł ogłoszenia <span class="required">*</span>
-                    <input type="text" name="Title" required>
-                </label>
-                <label>
-                    Powierzchnia użytkowa (m²) <span class="required">*</span>
-                    <input type="number" name="Area" step="0.1" required>
-                </label>
-                <label>
-                    Cena <span class="required">*</span>
-                    <input type="number" name="Price" step="0.01" required>
-                </label>
-                <label>
-                    Miejscowość <span class="required">*</span>
-                    <input type="text" id="searchInput" name="Location" required>
-                </label>
-                <label>
-                    Ulica <span class="required">*</span>
-                    <input type="text" name="Street" required>
-                </label>
-                <label>
-                    Opis <span class="required">*</span>
-                    <textarea name="Description" rows="4" required></textarea>
-                </label>
-                <div id="map"></div>
-            </fieldset>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
 
-            <!-- Parametry domu -->
-            <fieldset>
-                <legend>Parametry domu</legend>
-                <label>
-                    Liczba pokoi
-                    <input type="number" name="Features.Rooms">
-                </label>
-                <label>
-                    Piętro
-                    <input type="number" name="Features.Floor">
-                </label>
-                <label>
-                    Liczba pięter w budynku
-                    <input type="number" name="Features.TotalFloors">
-                </label>
-                <label>
-                    Winda
-                    <select name="Features.Elevator">
-                        <option value="">Wybierz</option>
-                        <option value="true">Tak</option>
-                        <option value="false">Nie</option>
-                    </select>
-                </label>
-                <label>
-                    Rok budowy
-                    <input type="number" name="Features.YearBuilt">
-                </label>
-                <label>
-                    Stan nieruchomości
-                    <input type="text" name="Features.PropertyCondition">
-                </label>
-                <label>
-                    Miejsce parkingowe
-                    <input type="text" name="Features.Parking">
-                </label>
+                <!-- Parametry domu -->
+                <fieldset>
+                    <legend>Parametry domu</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
                 </fieldset>
                 <fieldset>
                     <legend>Bezpieczeństwo i okolica</legend>
-                <label>
-                    Bezpieczeństwo
-                    <select name="Features.Security">
-                        <option value="">Wybierz</option>
-                        @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
-                        {
-                            <option value="@(option.Value)">
-                                @option.Text
-                            </option>
-                        }
-                    </select>
-                </label>
-                <label>
-                    Dostosowane dla osób niepełnosprawnych
-                    <select name="Features.IsAccessible">
-                        <option value="false">Nie</option>
-                        <option value="true">Tak</option>
-                    </select>
-                </label>
-                <label>
-                    Zabudowa w okolicy
-                    <select name="Features.Neighborhood">
-                        <option value="">Wybierz</option>
-                        @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
-                        {
-                            <option value="@(option.Value)">
-                                @option.Text
-                            </option>
-                        }
-                    </select>
-                </label>
-                <label>
-                    Balkon
-                    <select name="Features.Garden">
-                        <option value="false">Nie</option>
-                        <option value="true">Tak</option>
-                    </select>
-                </label>
-                <label>
-                    Wyposażenie AGD
-                    <select name="Features.KitchenAppliances">
-                        <option value="false">Nie</option>
-                        <option value="true">Tak</option>
-                    </select>
-                </label>
-                <label>
-                    Umeblowane
-                    <select name="Features.Furnished">
-                        <option value="false">Nie</option>
-                        <option value="true">Tak</option>
-                    </select>
-                </label>
-            </fieldset>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Balkon
+                        <select name="Features.Garden">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Wyposażenie AGD
+                        <select name="Features.KitchenAppliances">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Umeblowane
+                        <select name="Features.Furnished">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                </fieldset>
 
-            <fieldset>
-                <legend>Przyroda w okolicy</legend>
-                <div class="checkbox-group-grid">
-                <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
-                <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
-                <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
-                <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
-                <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
-                </div>
-            </fieldset>
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
 
-            <fieldset>
-                <legend>Dodatkowe informacje</legend>
-                <div class="checkbox-group">
-                <label><input type="checkbox" name="Features.HasGarden" value="true"> Ogród</label>
-                <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
-                <label><input type="checkbox" name="Features.HasAttic" value="true"> Strych</label>
-                <label><input type="checkbox" name="Features.HasGarage" value="true"> Garaż</label>
-                <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
-                <label><input type="checkbox" name="Features.HasPool" value="true"> Basen</label>
-                </div>
-            </fieldset>
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasGarden" value="true"> Ogród</label>
+                        <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                        <label><input type="checkbox" name="Features.HasAttic" value="true"> Strych</label>
+                        <label><input type="checkbox" name="Features.HasGarage" value="true"> Garaż</label>
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                        <label><input type="checkbox" name="Features.HasPool" value="true"> Basen</label>
+                    </div>
+                </fieldset>
 
-            <fieldset>
-                <legend>Media</legend>
-                <div class="checkbox-group">
-                <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
-                <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
-                <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
-                <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
-                <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
-                </div>
-            </fieldset>
+                <fieldset>
+                    <legend>Media</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
 
-            <!-- Zdjęcia -->
+                <!-- Zdjęcia -->
                 <fieldset>
                     <legend>Dodaj zdjęcia</legend>
                     <div class="image-upload-grid">
@@ -235,18 +233,16 @@
                     <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
                 </fieldset>
 
-            <button type="submit">Zatwierdź ogłoszenie</button>
-        </form>
-    </div>
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
     }
 
     @if (sellOrRent == "Rent" && propertyType == "House")
     {
         <div class="container">
             <header>
-                <h1>Sprzedaż domu</h1>
-                <h1>Typ transakcji: @ViewData["SellOrRent"]</h1>
-                <h1> Sprzedajesz: @ViewData["PropertyType"]</h1>
+                <h1>Wynajem domu</h1>
             </header>
 
             <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
@@ -283,15 +279,2353 @@
                     <div id="map"></div>
                 </fieldset>
 
+                <!-- Parametry domu -->
+                <fieldset>
+                    <legend>Parametry domu</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Balkon
+                        <select name="Features.Garden">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Wyposażenie AGD
+                        <select name="Features.KitchenAppliances">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Umeblowane
+                        <select name="Features.Furnished">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasGarden" value="true"> Ogród</label>
+                        <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                        <label><input type="checkbox" name="Features.HasAttic" value="true"> Strych</label>
+                        <label><input type="checkbox" name="Features.HasGarage" value="true"> Garaż</label>
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                        <label><input type="checkbox" name="Features.HasPool" value="true"> Basen</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Media</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+
                 <!-- Zdjęcia -->
                 <fieldset>
-                    <legend>Zdjęcia</legend>
+                    <legend>Dodaj zdjęcia</legend>
                     <div class="image-upload-grid">
-                        <label class="upload-box">
-                            <input type="file" name="Photos" multiple>
-                            <span>Dodaj zdjęcie</span>
-                        </label>
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
                     </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+
+
+
+
+    <!-- Działka -->
+    @if (sellOrRent == "Sell" && propertyType == "Plot")
+    {
+        <div class="container">
+            <header>
+                <h1>Sprzedaż działki</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                        <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry działki -->
+                <fieldset>
+                    <legend>Parametry działki</legend>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+    @if (sellOrRent == "Rent" && propertyType == "Plot")
+    {
+        <div class="container">
+            <header>
+                <h1>Wynajem działki</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry działki -->
+                <fieldset>
+                    <legend>Parametry działki</legend>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+
+
+
+    <!-- Mieszkanie -->
+    @if (sellOrRent == "Sell" && propertyType == "Flat")
+    {
+        <div class="container">
+            <header>
+                <h1>Sprzedaż mieszkania</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                        <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry mieszkania -->
+                <fieldset>
+                    <legend>Parametry mieszkania</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Balkon
+                        <select name="Features.Garden">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Wyposażenie AGD
+                        <select name="Features.KitchenAppliances">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Umeblowane
+                        <select name="Features.Furnished">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Media</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+    @if (sellOrRent == "Rent" && propertyType == "Flat")
+    {
+        <div class="container">
+            <header>
+                <h1>Wynajem mieszkania</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry mieszkania -->
+                <fieldset>
+                    <legend>Parametry mieszkaania</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Balkon
+                        <select name="Features.Garden">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Wyposażenie AGD
+                        <select name="Features.KitchenAppliances">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Umeblowane
+                        <select name="Features.Furnished">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Media</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+
+
+
+
+    <!-- Garaż -->
+    @if (sellOrRent == "Sell" && propertyType == "Garage")
+    {
+        <div class="container">
+            <header>
+                <h1>Sprzedaż garażu</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                        <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry garażu -->
+                <fieldset>
+                    <legend>Parametry garażu</legend>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                    </div>
+                </fieldset>
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+    @if (sellOrRent == "Rent" && propertyType == "Garage")
+    {
+        <div class="container">
+            <header>
+                <h1>Wynajem garażu</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry garażu -->
+                <fieldset>
+                    <legend>Parametry garażu</legend>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                    </div>
+                </fieldset>
+
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+
+
+
+
+
+    <!-- Lokal użytkowy -->
+    @if (sellOrRent == "Sell" && propertyType == "CommercialPremises")
+    {
+        <div class="container">
+            <header>
+                <h1>Sprzedaż lokalu użytkowego</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                        <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry domu -->
+                <fieldset>
+                    <legend>Parametry lokalu</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Balkon
+                        <select name="Features.Garden">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Wyposażenie AGD
+                        <select name="Features.KitchenAppliances">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Umeblowane
+                        <select name="Features.Furnished">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                        <label><input type="checkbox" name="Features.HasAttic" value="true"> Strych</label>
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Media</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+    @if (sellOrRent == "Rent" && propertyType == "CommercialPremises")
+    {
+        <div class="container">
+            <header>
+                <h1>Wynajem lokalu użytkowego</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry domu -->
+                <fieldset>
+                    <legend>Parametry domu</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                    <label>
+                        Miejsce parkingowe
+                        <input type="text" name="Features.Parking">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Balkon
+                        <select name="Features.Garden">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Wyposażenie AGD
+                        <select name="Features.KitchenAppliances">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Umeblowane
+                        <select name="Features.Furnished">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasBasement" value="true"> Piwnica</label>
+                        <label><input type="checkbox" name="Features.HasAttic" value="true"> Strych</label>
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Media</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+
+
+
+    <!-- Hale i magazyny -->
+    @if (sellOrRent == "Sell" && propertyType == "Warehouse")
+    {
+        <div class="container">
+            <header>
+                <h1>Sprzedaż Hali lub magazynu</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                        <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry hali lub magazynu -->
+                <fieldset>
+                    <legend>Parametry hali lub magazynu</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+    @if (sellOrRent == "Rent" && propertyType == "Warehouse")
+    {
+        <div class="container">
+            <header>
+                <h1>Wynajem hali lub magazynu</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry hali lub magazynu -->
+                <fieldset>
+                    <legend>Parametry hali lub magazynu</legend>
+                    <label>
+                        Liczba pokoi
+                        <input type="number" name="Features.Rooms">
+                    </label>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan nieruchomości
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
+                </fieldset>
+
+                <button type="submit">Zatwierdź ogłoszenie</button>
+            </form>
+        </div>
+    }
+
+    @if (sellOrRent == "Rent" && propertyType == "Room")
+    {
+        <div class="container">
+            <header>
+                <h1>Wynajem pokoju</h1>
+            </header>
+
+            <form id="sellForm" class="form-container" oninput="updateProgress()" method="post" action="AddAnnouncement" enctype="multipart/form-data">
+                <!-- Informacje podstawowe -->
+                <fieldset>
+                    <input type="hidden" name="SellOrRent" value="@sellOrRent" />
+                    <input type="hidden" name="PropertyType" value="@propertyType" />
+
+                    <legend>Informacje podstawowe</legend>
+                    <label>
+                        Tytuł ogłoszenia <span class="required">*</span>
+                        <input type="text" name="Title" required>
+                    </label>
+                    <label>
+                        Powierzchnia użytkowa (m²) <span class="required">*</span>
+                        <input type="number" name="Area" step="0.1" required>
+                    </label>
+                    <label>
+                        Cena <span class="required">*</span>
+                        <input type="number" name="Price" step="0.01" required>
+                    </label>
+                    <label>
+                        Miejscowość <span class="required">*</span>
+                        <input type="text" id="searchInput" name="Location" required>
+                    </label>
+                    <label>
+                        Ulica <span class="required">*</span>
+                        <input type="text" name="Street" required>
+                    </label>
+                    <label>
+                        Opis <span class="required">*</span>
+                        <textarea name="Description" rows="4" required></textarea>
+                    </label>
+                    <div id="map"></div>
+                </fieldset>
+
+                <!-- Parametry domu -->
+                <fieldset>
+                    <legend>Parametry pokoju</legend>
+                    <label>
+                        Piętro
+                        <input type="number" name="Features.Floor">
+                    </label>
+                    <label>
+                        Liczba pięter w budynku
+                        <input type="number" name="Features.TotalFloors">
+                    </label>
+                    <label>
+                        Winda
+                        <select name="Features.Elevator">
+                            <option value="">Wybierz</option>
+                            <option value="true">Tak</option>
+                            <option value="false">Nie</option>
+                        </select>
+                    </label>
+                    <label>
+                        Rok budowy
+                        <input type="number" name="Features.YearBuilt">
+                    </label>
+                    <label>
+                        Stan pokoju
+                        <input type="text" name="Features.PropertyCondition">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>Bezpieczeństwo i okolica</legend>
+                    <label>
+                        Bezpieczeństwo
+                        <select name="Features.Security">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.SecurityType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Dostosowane dla osób niepełnosprawnych
+                        <select name="Features.IsAccessible">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Zabudowa w okolicy
+                        <select name="Features.Neighborhood">
+                            <option value="">Wybierz</option>
+                            @foreach (var option in Html.GetEnumSelectList<EstatePortal.Models.NeighborhoodType>())
+                            {
+                                <option value="@(option.Value)">
+                                    @option.Text
+                                </option>
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        Balkon
+                        <select name="Features.Garden">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Wyposażenie AGD
+                        <select name="Features.KitchenAppliances">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                    <label>
+                        Umeblowane
+                        <select name="Features.Furnished">
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                        </select>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Przyroda w okolicy</legend>
+                    <div class="checkbox-group-grid">
+                        <label><input type="checkbox" name="Features.HasPark" value="true"> Park</label>
+                        <label><input type="checkbox" name="Features.HasForest" value="true"> Las</label>
+                        <label><input type="checkbox" name="Features.HasLake" value="true"> Jezioro</label>
+                        <label><input type="checkbox" name="Features.HasMountains" value="true"> Góry</label>
+                        <label><input type="checkbox" name="Features.HasSea" value="true"> Morze</label>
+                    </div>
+                </fieldset>
+
+
+                <fieldset>
+                    <legend>Dodatkowe informacje</legend>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="Features.HasAirConditioning" value="true"> Klimatyzacja</label>
+                        <label><input type="checkbox" name="Features.HasWater" value="true"> Woda</label>
+                        <label><input type="checkbox" name="Features.HasElectricity" value="true"> Prąd</label>
+                        <label><input type="checkbox" name="Features.HasGas" value="true"> Gaz</label>
+                        <label><input type="checkbox" name="Features.HasSewerage" value="true"> Kanalizacja</label>
+                        <label><input type="checkbox" name="Features.HasInternet" value="true"> Internet</label>
+                    </div>
+                </fieldset>
+
+
+                <!-- Zdjęcia -->
+                <fieldset>
+                    <legend>Dodaj zdjęcia</legend>
+                    <div class="image-upload-grid">
+                        <!-- Statyczne pola do przesyłania zdjęć -->
+                        <label for="photo1"></label>
+                        <input type="file" id="photo1" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo2"></label>
+                        <input type="file" id="photo2" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo3"></label>
+                        <input type="file" id="photo3" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo4"></label>
+                        <input type="file" id="photo4" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo5"></label>
+                        <input type="file" id="photo5" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo6"></label>
+                        <input type="file" id="photo6" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo7"></label>
+                        <input type="file" id="photo7" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo8"></label>
+                        <input type="file" id="photo8" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo9"></label>
+                        <input type="file" id="photo9" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo10"></label>
+                        <input type="file" id="photo10" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo11"></label>
+                        <input type="file" id="photo11" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo12"></label>
+                        <input type="file" id="photo12" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo13"></label>
+                        <input type="file" id="photo13" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo14"></label>
+                        <input type="file" id="photo14" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+
+                        <label for="photo15"></label>
+                        <input type="file" id="photo15" name="Photos" accept=".jpg,.jpeg,.png,.heic, .heif">
+                    </div>
+                    <small>Dozwolone formaty: JPG, JPEG, PNG, HEIC, HEIF. Maksymalny rozmiar pliku: 10 MB.</small>
                 </fieldset>
 
                 <button type="submit">Zatwierdź ogłoszenie</button>

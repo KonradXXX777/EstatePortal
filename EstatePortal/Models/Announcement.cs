@@ -33,7 +33,7 @@ namespace EstatePortal.Models
 		public PropertyType PropertyType { get; set; } 
 
 		[Required]
-		public AnnouncementStatus Status { get; set; } = AnnouncementStatus.PendingApproval; 
+		public AnnouncementStatus Status { get; set; } = AnnouncementStatus.Active;
 
 		public DateTime DateCreated { get; set; } = DateTime.UtcNow; 
 		public DateTime? DateUpdated { get; set; } 

@@ -81,6 +81,7 @@
 <table>
     <thead>
         <tr>
+            <th></th>
             <th>Tytuł</th>
             <th>Cena</th>
             <th>Lokalizacja</th>
@@ -93,6 +94,9 @@
         @foreach (var announcement in Model.Announcements)
         {
             <tr>
+                <td>
+                    <img src="@(announcement.MainPhotoUrl ?? "/img/default-placeholder.*")" alt="Zdjęcie" width="100" />
+                </td>
                 <td>@announcement.Title</td>
                 <td>@announcement.Price</td>
                 <td>@announcement.Location</td>

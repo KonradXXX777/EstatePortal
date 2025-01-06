@@ -13,9 +13,10 @@ else
         {
             <li>
                 <img src="@(announcement.MainPhotoUrl ?? "/img/default-placeholder.png")" alt="Zdjęcie" width="100" />
-                <strong>@announcement.Title</strong> - @announcement.Price zł
+                <strong>@announcement.Title</strong> - @announcement.Price zł | Status: @announcement.Status 
                 <a href="@Url.Action("AnnouncementDetails", "Announcement", new { id = announcement.Id })">Szczegóły</a>
             </li>
+            <br />
         }
     </ul>
 }
