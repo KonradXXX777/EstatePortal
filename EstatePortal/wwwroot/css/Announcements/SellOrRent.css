@@ -61,6 +61,40 @@ header {
                 color: #ff84ff;
             }
 
+.notification-dot {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.notification-button:hover + .notification-list,
+.notification-list:hover {
+    display: block;
+    color: #000000;
+    text-shadow: 0px 0px 3px #000;
+    transition: all ease-in-out .3s;
+}
+
+.notification-list {
+    display: none;
+    width: 250px;
+    text-shadow: 0px 0px 3px #000;
+    transition: all ease-in-out .3s;
+    position: absolute;
+    background-color: #2b2b2b;
+    padding: 10px;
+    right: 0;
+    z-index: 1000;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 
 #rightNavlist {
     margin-left: 3rem;
@@ -93,6 +127,26 @@ header {
         margin-right: 5px;
         font-size: 20px;
         line-height: 1;
+    }
+
+#WstawOgloszenie {
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 3px solid #ff84ff;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px;
+    width: auto;
+    padding: 20px 20px;
+    white-space: nowrap;
+    transition: all ease .5s;
+}
+
+    #WstawOgloszenie:hover {
+        background-color: #ff84ff;
+        color: #000;
     }
 
 .container {

@@ -1,96 +1,65 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rejestracja - Portal Nieruchomościowy</title>
-    <style>
-        /* Stylizacja menu nawigacyjnego z logo */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #f1f1f1;
-        }
-
-            nav ul {
-                display: flex;
-                list-style: none;
-                padding: 0;
-            }
-
-                nav ul li {
-                    margin-left: 20px;
-                }
-
-                    nav ul li a {
-                        text-decoration: none;
-                        color: #185ee0;
-                        font-weight: bold;
-                    }
-
-    </style>
+    <link rel="stylesheet" href="~/css/Register.css" />
 </head>
 <body>
-    <!-- Dodanie menu nawigacyjnego z logo i linkami -->
-    <nav>
-        <div class="logo"><a href="#">Logo</a></div>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Kontakt</a></li>
-        </ul>
-    </nav>
+    <div id="container">
+        <div id="form-wrapper">
+            <header>
+                <a href="@Url.Action("Index", "Home")" class="logo">Logo</a>
+            </header>
 
-    <!-- Formularz -->
-    <form action="/Account/EstateAgencyRegister" method="POST">
-        <!-- Sprawdzanie walidacji formularza -->
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="validation-summary-errors">
-                <ul>
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                </ul>
-            </div>
-        }
-        <div id="estateAgencyFields" class="form-section">
-            <input type="hidden" name="Role"  value="EstateAgency"/>
-            <div class="input">
-                <label> <input type="text" placeholder="Nazwa firmy" name="CompanyName" required></label>
-            </div>
-            <div class="input">
-                <label> <input type="text" placeholder="NIP" name="NIP" required></label>
-            </div>
-            <div class="input">
-                <label> <input type="text" placeholder="Adres" name="Address" required></label>
-            </div>
-            <div class="input">
-                <label> <input type="text" placeholder="Numer telefonu" name="PhoneNumber" required></label>
-            </div>
-            <div class="input">
-                <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
-            </div>
-            <div class="input">
-                <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" required></label>
-            </div>
-            <div class="input">
-                <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
-            </div>
-            <div class="input">
-                <label>
-                    <input type="hidden" name="AcceptTerms" value="false" />
-                    <input type="checkbox" name="AcceptTerms" value="true" required />
-                    Akceptuję regulamin i politykę prywatności
-                </label>
+            <div id="form-content">
+                <h2>Utwórz swoje konto</h2>
+
+                <div class="role-selection">
+                    <a href="@Url.Action("Register", "Home")" class="tab">Osoba fizyczna</a>
+                    <a href="@Url.Action("EstateAgencyRegister", "Home")" class="tab active">Biuro nieruchomości</a>
+                    <a href="@Url.Action("DeveloperRegister", "Home")" class="tab">Deweloper</a>
+                </div>
+
+                <div id="content-placeholder">
+                    <form action="/Account/EstateAgencyRegister" method="POST">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="validation-summary-errors">
+                                <ul>
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <div class="form-section">
+                            <input type="hidden" name="Role" value="EstateAgency" />
+                            <input type="text" placeholder="Nazwa firmy" name="CompanyName" required />
+                            <input type="text" placeholder="NIP" name="NIP" required />
+                            <input type="text" placeholder="Adres" name="Address" required />
+                            <input type="tel" placeholder="Numer telefonu" name="PhoneNumber" required />
+                            <input type="email" placeholder="E-mail" name="Email" required />
+                            <input type="password" placeholder="Hasło" name="PasswordHash" required />
+                            <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required />
+
+                            <div class="input accept-terms">
+                                <label>
+                                    <input type="checkbox" name="AcceptTerms" value="true" required />
+                                    <span>Akceptuję regulamin i politykę prywatności</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-button">Zarejestruj się</button>
+                    </form>
+                </div>
             </div>
         </div>
-        <input type="submit" value="Zarejestruj się">
-    </form>
-
+    </div>
 </body>
 </html>

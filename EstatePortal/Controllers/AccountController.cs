@@ -457,15 +457,14 @@ namespace EstatePortal.Controllers
                 return NotFound("Nie znaleziono użytkownika z podanym tokenem.");
             }
 
-            user.VerifiedAt = DateTime.Now; // Set date
-            user.VerificationToken = null; // Token removal after verification
+            user.VerifiedAt = DateTime.Now;
+            user.VerificationToken = null;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
             return View("~/Views/Home/VerificationSuccess.cshtml");
         }
 
-        // GET displays the form, POST saves new password
         [HttpGet]
         public IActionResult ResetPassword(string token)
         {
@@ -474,7 +473,7 @@ namespace EstatePortal.Controllers
                 return BadRequest("Token resetujący jest wymagany.");
             }
 
-            ViewData["Token"] = token; // Przechowujemy token w ViewData
+            ViewData["Token"] = token;
             return View("~/Views/Home/ResetPassword.cshtml");
         }
 
@@ -627,6 +626,18 @@ namespace EstatePortal.Controllers
                 ModelState.AddModelError("", "Nieprawidłowy e-mail lub hasło.");
                 return View("~/Views/Home/Login.cshtml", model);
             }
+            // Sprawdzanie statusu użytkownika
+            if (user.Status == UserStatus.Blocked)
+            {
+                ModelState.AddModelError("", "Twoje konto zostało zablokowane. Skontaktuj się z administratorem.");
+                return View("~/Views/Home/Login.cshtml", model);
+            }
+
+            if (user.Status == UserStatus.Inactive)
+            {
+                ModelState.AddModelError("", "Twoje konto jest nieaktywne.");
+                return View("~/Views/Home/Login.cshtml", model);
+            }
 
             // Tworzenie tożsamości użytkownika
             var claims = new List<Claim>
@@ -643,7 +654,7 @@ namespace EstatePortal.Controllers
 
             await HttpContext.SignInAsync("Cookies", claimsPrincipal);
             //return View("UserPanel");
-            return View("TestWidok");
+            return RedirectToAction("Index", "Home");
         }
 
         // Logout user
@@ -656,36 +667,10 @@ namespace EstatePortal.Controllers
             return RedirectToAction("Login");
         }
 
-        // Widok testowy do USUNIECIA
-        [Authorize]
-        public IActionResult TestWidok()
-        {
-            var userId = User.FindFirst("UserId")?.Value; // Pobranie UserId z roszczenia
-            if (string.IsNullOrEmpty(userId))
-            {
-                return RedirectToAction("Login");
-            }
-            // Kontynuuj obsługę użytkownika zgodnie z potrzebą...
-            return View("TestWidok");
-        }
-
-        [Authorize]
-        public IActionResult TestWidok2()
-        {
-            var userId = User.FindFirst("UserId")?.Value; // Pobranie UserId z roszczenia
-            if (string.IsNullOrEmpty(userId))
-            {
-                return RedirectToAction("Login");
-            }
-            // Kontynuuj obsługę użytkownika zgodnie z potrzebą...
-            return View("TestWidok2");
-        }
-
         [HttpGet]
         public async Task<IActionResult> UserPanel()
         {
             var userId = User.FindFirst("UserId")?.Value;
-
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login");
@@ -697,31 +682,35 @@ namespace EstatePortal.Controllers
                 return RedirectToAction("Login");
             }
 
+            // Ustawienie ViewBag dla roli i statusu użytkownika
+            ViewBag.UserRole = user.Role;
+            ViewBag.UserStatus = user.Status;
+
+            var notifications = _context.Notifications
+            .Where(n => n.UserId == user.Id && !n.IsRead)   // np. nieprzeczytane
+            .OrderByDescending(n => n.CreatedAt)
+            .ToList();
+
+            ViewBag.Notifications = notifications;
+
             var model = new UserUpdate
             {
-				Role = user.Role,
-				FirstName = user.FirstName,
-				LastName = user.LastName,
-				Email = user.Email,
-				PhoneNumber = user.PhoneNumber,
-				CompanyName = user.CompanyName,
-				NIP = user.NIP,
-				Address = user.Address
-			};
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                CompanyName = user.CompanyName,
+                NIP = user.NIP,
+                Address = user.Address
+            };
 
             return View(model);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> UserPanel(UserUpdate model)
         {
-            // Do naprawy - sprawdzic dlaczego dane nie sa prawidlowo walidowane
-            //if (!ModelState.IsValid)
-            //{
-            //    //return View("UserPanel", model);
-            //    return View("TestWidok2");
-            //}
-
             var userId = User.FindFirst("UserId")?.Value;
             if (string.IsNullOrEmpty(userId))
             {
@@ -734,69 +723,30 @@ namespace EstatePortal.Controllers
                 return RedirectToAction("Login");
             }
 
-			// Aktualizacja danych
-			switch (user.Role)
-			{
-				case UserRole.PrivatePerson:
-					if (!string.IsNullOrEmpty(model.FirstName))
-						user.FirstName = model.FirstName;
-
-					if (!string.IsNullOrEmpty(model.LastName))
-						user.LastName = model.LastName;
-
-					if (!string.IsNullOrEmpty(model.Email))
-						user.Email = model.Email;
-					if (!string.IsNullOrEmpty(model.PhoneNumber))
-						user.PhoneNumber = model.PhoneNumber;
-					break;
-
-				case UserRole.EstateAgency:
-				case UserRole.Developer:
-					if (!string.IsNullOrEmpty(model.CompanyName))
-						user.CompanyName = model.CompanyName;
-					if (!string.IsNullOrEmpty(model.NIP))
-						user.NIP = model.NIP;
-					if (!string.IsNullOrEmpty(model.Address))
-						user.Address = model.Address;
-					if (!string.IsNullOrEmpty(model.Email))
-						user.Email = model.Email;
-					if (!string.IsNullOrEmpty(model.PhoneNumber))
-						user.PhoneNumber = model.PhoneNumber;
-					break;
-
-				case UserRole.Employee:
-					if (!string.IsNullOrEmpty(model.Email))
-						user.Email = model.Email;
-					if (!string.IsNullOrEmpty(model.PhoneNumber))
-						user.PhoneNumber = model.PhoneNumber;
-					if (!string.IsNullOrEmpty(model.FirstName))
-						user.FirstName = model.FirstName;
-					if (!string.IsNullOrEmpty(model.LastName))
-						user.LastName = model.LastName;
-					break;
-
-				default:
-					ModelState.AddModelError("", "Brak uprawnień do edycji.");
-					return View("UserPanel", model);
-			}
+            // Aktualizacja danych użytkownika
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.CompanyName = model.CompanyName;
+            user.NIP = model.NIP;
+            user.Address = model.Address;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
+            // Ustawienie ViewBag dla roli i statusu użytkownika
+            ViewBag.UserRole = user.Role;
+            ViewBag.UserStatus = user.Status;
+
             ViewBag.Message = "Dane zostały zaktualizowane.";
-                return RedirectToAction("UserPanel");
+            return RedirectToAction("UserPanel");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(UserUpdate model)
         {
-            // Do naprawy - sprawdzic dlaczego dane nie sa prawidlowo walidowane
-            //if (!ModelState.IsValid || string.IsNullOrEmpty(model.CurrentPassword) || string.IsNullOrEmpty(model.NewPassword))
-            //{
-            //    ModelState.AddModelError("", "Wszystkie pola muszą być wypełnione.");
-            //    return View("TestWidok2");
-            //}
-
             var userId = User.FindFirst("UserId")?.Value;
             if (string.IsNullOrEmpty(userId))
             {
@@ -826,6 +776,35 @@ namespace EstatePortal.Controllers
 
             ViewBag.Message = "Hasło zostało zmienione.";
             return View("UserPanel", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Zmiana statusu na Inactive
+            user.Status = UserStatus.Inactive;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            // Opcjonalnie: Wylogowanie użytkownika po dezaktywacji
+            await HttpContext.SignOutAsync();
+
+            // Po usunięciu konta, przekierowanie na stronę logowania
+            return RedirectToAction("Login");
         }
 
         // Admin Panel (GET)
@@ -881,7 +860,6 @@ namespace EstatePortal.Controllers
             if (user == null)
                 return NotFound();
 
-            // Aktualizacja danych użytkownika
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.PhoneNumber = model.PhoneNumber;

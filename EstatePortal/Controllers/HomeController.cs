@@ -18,22 +18,18 @@ namespace EstatePortal.Controllers
 
         public IActionResult Index()
         {
-            // Pobierz email z ClaimsIdentity
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             Console.WriteLine("Email z claims: " + email);
 
             if (!string.IsNullOrEmpty(email))
             {
-                // Pobierz u¿ytkownika z bazy danych na podstawie adresu e-mail
                 var user = _context.Users.FirstOrDefault(u => u.Email == email);
 
                 if (user != null)
                 {
-                    // Przeka¿ status u¿ytkownika do widoku
                     ViewBag.UserStatus = user.Status;
                     ViewBag.UserRole = user.Role;
 
-                    // Przeka¿ komunikat zale¿nie od statusu
                     switch (user.Status)
                     {
                         case UserStatus.Blocked:
@@ -49,22 +45,51 @@ namespace EstatePortal.Controllers
                             ViewBag.StatusMessage = "Nieznany status konta.";
                             break;
                     }
+
+                    ViewBag.LoginStatusMessage = "Jesteœ zalogowany.";
+
+                    // Pobieramy powiadomienia
+                    var notifications = _context.Notifications
+                        .Where(n => n.UserId == user.Id && !n.IsRead)
+                        .OrderByDescending(n => n.CreatedAt)
+                        .ToList();
+
+                    // Dodajemy e-mail nadawcy do powiadomienia
+                    foreach (var notif in notifications)
+                    {
+                        // Znajdujemy u¿ytkownika, który wys³a³ wiadomoœæ
+                        var message = _context.Messages.FirstOrDefault(m => m.ChatId == notif.ChatId && m.SenderId != user.Id);
+                        if (message != null)
+                        {
+                            // Przypisujemy e-mail nadawcy do powiadomienia
+                            var senderEmail = _context.Users.FirstOrDefault(u => u.Id == message.SenderId)?.Email;
+                            if (senderEmail != null)
+                            {
+                                notif.Message = $"Dosta³eœ wiadomoœæ od {senderEmail}";
+                            }
+                        }
+                    }
+
+                    ViewBag.Notifications = notifications;
                 }
                 else
                 {
-                    // Jeœli u¿ytkownik nie istnieje w bazie, wyœwietl komunikat
                     ViewBag.StatusMessage = "Nie znaleziono u¿ytkownika.";
+                    ViewBag.LoginStatusMessage = "Jesteœ zalogowany, ale konto nie istnieje w bazie.";
                 }
             }
             else
             {
-                // Jeœli u¿ytkownik nie jest zalogowany
                 ViewBag.StatusMessage = "Nie jesteœ zalogowany.";
+                ViewBag.LoginStatusMessage = "Nie jesteœ zalogowany.";
             }
 
-            // Zawsze zwróæ widok
             return View();
         }
+
+
+
+
 
 
         public IActionResult Privacy()

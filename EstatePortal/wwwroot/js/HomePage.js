@@ -1,4 +1,4 @@
-﻿let text = "Welcome to Manufacture";
+﻿let text = "Witaj w nowym domu";
 let index = 0;
 let typingText = document.getElementById('typingText');
 
@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
         inputs.forEach(input => {
             if (!input.value) {
                 if (input.name === "location") {
-                    input.value = "Warszawa";
+                    input.value = "";
                 } else if (input.name === "priceMin") {
                     input.value = "1000";
                 } else if (input.name === "priceMax") {
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
         developerInputs.forEach(input => {
             if (!input.value) {
                 if (input.name === "location") {
-                    input.value = "Warszawa";
+                    input.value = "";
                 } else if (input.name === "priceMin") {
                     input.value = "1000";
                 } else if (input.name === "priceMax") {
@@ -242,6 +242,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
         rentGrid.style.display = "grid";
         sellGrid.style.display = "none";
+    });
+});
+//Powiadomienia
+document.addEventListener("DOMContentLoaded", () => {
+    const notificationButton = document.querySelector(".notification-button");
+    const notificationList = document.querySelector(".notification-list");
+
+    notificationButton.addEventListener("click", () => {
+        if (notificationList.style.display === "block") {
+            notificationList.style.display = "none";
+        } else {
+            notificationList.style.display = "block";
+        }
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!notificationButton.contains(event.target) && !notificationList.contains(event.target)) {
+            notificationList.style.display = "none";
+        }
     });
 });
 

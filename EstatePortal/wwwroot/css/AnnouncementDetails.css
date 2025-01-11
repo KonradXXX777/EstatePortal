@@ -90,6 +90,36 @@ a {
         color: #ffffff;
     }
 
+.custom-button {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #1976d2; /* Niebieski kolor */
+    color: #ffffff;
+    padding: 10px 20px;
+    margin: 10px 5px; /* Dopasowanie odstępów */
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none; /* Usuń obramowanie */
+    cursor: pointer; /* Dodaj kursor wskazujący */
+}
+
+.custom-button:hover {
+    background-color: #42a5f5; /* Jaśniejszy niebieski */
+    color: #ffffff;
+}
+
+.custom-button:disabled,
+.disabled-button {
+    background-color: #b0bec5; /* Szary kolor dla wyłączonych */
+    color: #ffffff;
+    cursor: not-allowed; /* Zmiana kursora dla wyłączonych */
+    pointer-events: none; /* Wyłączenie kliknięcia */
+}
+
+
+
 /* Responsywność */
 @media (max-width: 768px) {
     .container {

@@ -4,121 +4,139 @@
     //Layout = "~/Views/Shared/_FrontLayout.cshtml";
     ViewData["Title"] = "Ogłoszenia";
 }
+<link rel="stylesheet" href="~/css/Listing.css" asp-append-version="true"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" asp-append-version="true">
+
+<header>
+    <a href="@Url.Action("Index", "Home")" class="logo">Logo</a>
+    <ul class="navlist">
+        <li><a href="@Url.Action("Index", "Home")" class="active">Strona główna</a></li>
+        <li><a href="@Url.Action("Listing", "Announcement")">Ogłoszenia</a></li>
+        @if (ViewBag.UserRole == EstatePortal.Models.UserRole.EstateAgency ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.PrivatePerson ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Employee ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Developer ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+        {
+            <li><a href="@Url.Action("MyAnnouncements", "Announcement")">Moje ogłoszenia</a></li>
+        }
+        else
+        {
+            <li><a href="@Url.Action("Login", "Home")">Moje ogłoszenia</a></li>
+        }
+        @if (ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+        {
+            <li><a href="@Url.Action("AdminPanel", "Account")">AdminPanel</a></li>
+        }
+    </ul>
+    <div id="rightNavlist">
+        <!-- Powiadomienia -->
+        <div class="notification-dropdown" style="position: relative; display: inline-block;">
+            <button type="button" class="notification-button" style="background: none; border: none; position: relative;">
+                <i class="fa fa-bell" style="font-size: 1.5em;"></i>
+                @if ((ViewBag.Notifications as List<EstatePortal.Models.Notification>)?.Any() ?? false)
+                {
+                    <span class="notification-dot"></span>
+                }
+            </button>
+            <div class="notification-list">
+                @if (ViewBag.Notifications != null)
+                {
+                    var notifs = (List<EstatePortal.Models.Notification>)ViewBag.Notifications;
+                    if (!notifs.Any())
+                    {
+                        <p>Brak nowych powiadomień</p>
+                    }
+                    else
+                    {
+                        foreach (var notif in notifs)
+                        {
+                            <div class="notification-item" style="border-bottom: 1px solid #ccc; padding: 5px 0;">
+                                <a asp-controller="Chat" asp-action="ChatRoom" asp-route-chatId="@notif.ChatId">
+                                    @notif.Message
+                                </a>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+        <!-- Moje konto -->
+        @if (ViewBag.UserRole == EstatePortal.Models.UserRole.EstateAgency ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.PrivatePerson ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Employee ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Developer ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+        ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+        {
+            <div id="mojeKonto"><a href="@Url.Action("UserPanel", "Account")"><i class="icon-user"></i>Moje konto</a></div>
+            <div id="mojeKonto"><a href="@Url.Action("Logout", "Account")">Wyloguj</a></div>
+            <div id="WstawOgloszenie"><a href="@Url.Action("AddAnnouncement", "Announcement")">Dodaj ogłoszenie</a></div>
+        }
+        else
+        {
+            <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
+            <div id="mojeKonto"><a href="@Url.Action("Register", "Home")">Zarejestruj się</a></div>
+            <div id="WstawOgloszenie"><a href="@Url.Action("Login", "Home")">Dodaj ogłoszenie</a></div>
+        }
+    </div>
+</header>
 
 <h1>Ogłoszenia</h1>
 
 <form method="get" asp-action="Listing" asp-controller="Announcement" id="searchForm">
-    <div id="search-section" class="content-section active">
-        <div>
-            <label for="search">Wyszukaj (tytuł / opis):</label>
-            <input asp-for="Search" id="search" />
-        </div>
-
-        <div>
-            <label for="location">Lokalizacja:</label>
-            <input asp-for="Location" id="location" />
-        </div>
-
-        <div>
-            <label for="minPrice">Minimalna cena:</label>
-            <input asp-for="MinPrice" id="minPrice" type="number" class="input-price" /> zł
-        </div>
-
-        <div>
-            <label for="maxPrice">Maksymalna cena:</label>
-            <input asp-for="MaxPrice" id="maxPrice" type="number" class="input-price" /> zł
-        </div>
-
-        <div>
-            <label for="minArea">Minimalna powierzchnia:</label>
-            <input asp-for="MinArea" id="minArea" type="number" /> 
-        </div>
-
-        <div>
-            <label for="maxArea">Maksymalna powierzchnia:</label>
-            <input asp-for="MaxArea" id="maxArea" type="number" />
-        </div>
-
-        <div>
-            <label for="propertyType">Rodzaj nieruchomości:</label>
-            <select asp-for="PropertyType">
-                <option value="">Wybierz</option>
-                <option value="Flat">Mieszkania</option>
-                <option value="House">Domy</option>
-                <option value="Plot">Działki</option>
-                <option value="CommercialPremises">Lokale użytkowe</option>
-                <option value="Garage">Garaże</option>
-                <option value="Room">Pokoje</option>
-                <option value="Warehouse">Hale i magazyny</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="sellOrRent">Rodzaj oferty:</label>
-            <select asp-for="SellOrRent">
-                <option value="">Wybierz</option>
-                <option value="Sell">Sprzedaż</option>
-                <option value="Rent">Wynajem</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="userRole">Typ użytkownika:</label>
-            <select asp-for="UserRole">
-                <option value="">Wybierz</option>
-                <option value="PrivatePerson">Osoba Prywatna</option>
-                <option value="EstateAgency">Agencja</option>
-                <option value="Developer">Deweloper</option>
-            </select>
-        </div>
-
-        <!-- itd. analogicznie z pozostałymi polami -->
-        <button type="submit" class="search-button">Filtruj</button>
-    </div>
+    <input asp-for="Search" placeholder="Wyszukaj (tytuł / opis)" />
+    <input asp-for="Location" placeholder="Lokalizacja" />
+    <input asp-for="MinPrice" placeholder="Minimalna cena" type="number" />
+    <input asp-for="MaxPrice" placeholder="Maksymalna cena" type="number" />
+    <input asp-for="MinArea" placeholder="Min. powierzchnia (m²)" type="number" />
+    <input asp-for="MaxArea" placeholder="Maks. powierzchnia (m²)" type="number" />
+    <select asp-for="PropertyType">
+        <option value="">Rodzaj nieruchomości</option>
+        <option value="Flat">Mieszkania</option>
+        <option value="House">Domy</option>
+        <option value="Plot">Działki</option>
+        <option value="CommercialPremises">Lokale użytkowe</option>
+        <option value="Garage">Garaże</option>
+        <option value="Room">Pokoje</option>
+        <option value="Warehouse">Hale i magazyny</option>
+    </select>
+    <select asp-for="SellOrRent">
+        <option value="">Rodzaj oferty</option>
+        <option value="Sell">Sprzedaż</option>
+        <option value="Rent">Wynajem</option>
+    </select>
+    <select asp-for="UserRole">
+        <option value="">Typ użytkownika</option>
+        <option value="PrivatePerson">Osoba Prywatna</option>
+        <option value="EstateAgency">Agencja</option>
+        <option value="Developer">Deweloper</option>
+    </select>
+    <button type="submit" class="search-button">Filtruj</button>
 </form>
+
 
 <!-- Tabela z wynikami -->
 <table>
-    <thead>
-        <tr>
-            <th></th>
-            <th>Tytuł</th>
-            <th>Cena</th>
-            <th>Lokalizacja</th>
-            <th>Rodzaj oferty</th>
-            <th>Szczegóły</th>
-            <th>Napisz</th>
-        </tr>
-    </thead>
     <tbody>
-        @foreach (var announcement in Model.Announcements)
-        {
-            <tr>
-                <td>
-                    <img src="@(announcement.MainPhotoUrl ?? "/img/default-placeholder.*")" alt="Zdjęcie" width="100" />
-                </td>
-                <td>@announcement.Title</td>
-                <td>@announcement.Price</td>
-                <td>@announcement.Location</td>
-                <td>@announcement.SellOrRent</td>
-                <td>
-                    <a asp-controller="Announcement"
-                       asp-action="ListingDetails"
-                       asp-route-id="@announcement.Id"
-                       class="btn btn-info">
-                        Szczegóły ogłoszenia
-                    </a>
-                </td>
-                <td>
-                    <a asp-controller="Chat"
-                       asp-action="GoToChatRoom"
-                       asp-route-announcementId="@announcement.Id"
-                       asp-route-receiverId="@announcement.UserId"
-                       class="btn btn-primary">
-                        Przejdź do chatu
-                    </a>
-                </td>
-            </tr>
-        }
+<div class="listing-container">
+    @foreach (var announcement in Model.Announcements)
+    {
+        <div class="listing-card">
+            <img src="@(announcement.MainPhotoUrl ?? "/img/default-placeholder.jpg")" alt="Zdjęcie nieruchomości" />
+            <div class="card-body">
+                <h3>@announcement.Title</h3>
+                <p>@announcement.Location</p>
+                <p>@announcement.Area m² </p>
+                <p class="price">@string.Format("{0:C0}", announcement.Price)</p>
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Announcement" asp-action="ListingDetails" asp-route-id="@announcement.Id">Zobacz szczegóły</a>
+            </div>
+        </div>
+    }
+</div>
     </tbody>
 </table>

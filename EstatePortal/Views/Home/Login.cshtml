@@ -5,37 +5,105 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal Nieruchomściowy</title>
-    <link rel="stylesheet" href="~/css/Login.css" />
-    <link rel="stylesheet" href="fontello/css/fontello.css" />
-    <link rel="stylesheet" href="~/css/font/css/fontello.css" />
+    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="fontello/css/fontello.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/font/css/fontello.css" asp-append-version="true"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" asp-append-version="true">
 
 </head>
 <body>
     <div id="container">
         <div id="tlo">
             <header>
-                <a href="#" class="logo">Logo</a>
+                <a href="@Url.Action("Index", "Home")" class="logo">Logo</a>
                 <ul class="navlist">
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
+                    <li><a href="@Url.Action("Index", "Home")" class="active">Strona główna</a></li>
+                    <li><a href="@Url.Action("Listing", "Announcement")">Ogłoszenia</a></li>
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.EstateAgency ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.PrivatePerson ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Employee ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Developer ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+                    {
+                        <li><a href="@Url.Action("MyAnnouncements", "Announcement")">Moje ogłoszenia</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Login", "Home")">Moje ogłoszenia</a></li>
+                    }
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+                    {
+                        <li><a href="@Url.Action("AdminPanel", "Account")">AdminPanel</a></li>
+                    }
                 </ul>
                 <div id="rightNavlist">
-                    <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
-                    <div id="WstawOgloszenie"><a href="#">Dodaj ogłoszenie</a></div>
+                    <!-- Powiadomienia -->
+                    <div class="notification-dropdown" style="position: relative; display: inline-block;">
+                        <button type="button" class="notification-button" style="background: none; border: none; position: relative;">
+                            <i class="fa fa-bell" style="font-size: 1.5em;"></i>
+                            @if ((ViewBag.Notifications as List<EstatePortal.Models.Notification>)?.Any() ?? false)
+                            {
+                                <span class="notification-dot"></span>
+                            }
+                        </button>
+                        <div class="notification-list">
+                            @if (ViewBag.Notifications != null)
+                            {
+                                var notifs = (List<EstatePortal.Models.Notification>)ViewBag.Notifications;
+                                if (!notifs.Any())
+                                {
+                                    <p>Brak nowych powiadomień</p>
+                                }
+                                else
+                                {
+                                    foreach (var notif in notifs)
+                                    {
+                                        <div class="notification-item" style="border-bottom: 1px solid #ccc; padding: 5px 0;">
+                                            <a asp-controller="Chat" asp-action="ChatRoom" asp-route-chatId="@notif.ChatId">
+                                                @notif.Message
+                                            </a>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                    <!-- Moje konto -->
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.EstateAgency ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.PrivatePerson ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Employee ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Developer ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+                    {
+                        <div id="mojeKonto"><a href="@Url.Action("UserPanel", "Account")"><i class="icon-user"></i>Moje konto</a></div>
+                        <div id="mojeKonto"><a href="@Url.Action("Logout", "Account")">Wyloguj</a></div>
+                        <div id="WstawOgloszenie"><a href="@Url.Action("AddAnnouncement", "Announcement")">Dodaj ogłoszenie</a></div>
+                    }
+                    else
+                    {
+                        <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
+                        <div id="mojeKonto"><a href="@Url.Action("Register", "Home")">Zarejestruj się</a></div>
+                        <div id="WstawOgloszenie"><a href="@Url.Action("Login", "Home")">Dodaj ogłoszenie</a></div>
+                    }
                 </div>
             </header>
 
             <div id="Menu">
-                <h2>Zaloguj się</h2>
+                <div id="NavMenu">
+                    <button class="tab active">Zaloguj się</button>
+                    <button class="tab" onclick="window.location.href='/Home/Register'">Zarejestruj</button>
+                </div>
+
                 <form action="/Account/Login" method="post">
+                    <!-- Backend: walidacja błędów -->
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <div class="validation-summary-errors">
                             <ul>
                                 @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-
                                 {
                                     <li>@error.ErrorMessage</li>
                                 }
@@ -43,19 +111,28 @@
                         </div>
                     }
 
+                    <!-- Pola formularza logowania -->
                     <div class="input">
                         <i class="icon-mail-alt"></i>
-                        <label> <input type="text" placeholder="Podaj email" name="Email"></label>
+                        <input type="email" placeholder="Podaj email" name="Email" required />
                     </div>
 
                     <div class="input">
                         <i class="icon-lock"></i>
-                        <label> <input type="password" placeholder="Podaj hasło" name="Password"></label>
+                        <input type="password" placeholder="Podaj hasło" name="Password" required />
                     </div>
 
-                    <input type="submit" value="zaloguj sie"> <br><br><br><br><br><br><br>
-                    <p>Nie masz jeszcze konta? <a href="@Url.Action("Register", "Home")">Zaejestruj się!</a></p> <br />
-                    <p><a href="@Url.Action("ForgotPassword", "Home")">Nie pamiętam hasła </a></p>
+                    <!-- Dodatkowe elementy logowania -->
+                    <p class="bez-hasla">
+                        <a href="@Url.Action("ForgotPassword", "Home")">Nie pamiętasz hasła?</a>
+                    </p>
+
+                    <input type="submit" value="Zaloguj się">
+
+                    <p class="register-link">
+                        Nie masz jeszcze konta?
+                        <a href="@Url.Action("Register", "Home")">Zarejestruj się!</a>
+                    </p>
                 </form>
             </div>
         </div>

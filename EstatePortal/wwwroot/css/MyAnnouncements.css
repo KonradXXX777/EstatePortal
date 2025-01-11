@@ -1,0 +1,237 @@
+﻿/* Ogólne */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /*dokladniej jak dziala*/
+    list-style: none;
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    color: #fff;
+}
+
+body {
+    background: #1d1d1d;
+    overflow-x: hidden;
+}
+
+#container {
+    position: absolute;
+    display: block;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+}
+
+header {
+    position: relative;
+    width: 90vw;
+    display: flex;
+    gap: 140px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 100px;
+    margin-bottom: 20px;
+}
+
+    header .logo {
+        font-size: 26px;
+        font-weight: 700;
+        color: #ff84ff;
+    }
+
+    header .navlist {
+        display: flex;
+        gap: 15px;
+    }
+
+    header ul li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        header ul li a {
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 10px;
+            transition: all .3s ease;
+        }
+
+            header ul li a:hover {
+                color: #ff84ff;
+            }
+
+.notification-dot {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.notification-button:hover + .notification-list,
+.notification-list:hover {
+    display: block;
+    color: #000000;
+    text-shadow: 0px 0px 3px #000;
+    transition: all ease-in-out .3s;
+}
+
+.notification-list {
+    display: none;
+    width: 250px;
+    text-shadow: 0px 0px 3px #000;
+    transition: all ease-in-out .3s;
+    position: absolute;
+    background-color: #2b2b2b;
+    padding: 10px;
+    right: 0;
+    z-index: 1000;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#rightNavlist {
+    font-weight: 600;
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    max-width: 400px;
+}
+
+#mojeKonto {
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+    #mojeKonto:hover a, #mojeKonto:hover i {
+        color: #ff84ff;
+        text-shadow: 0px 0px 3px #ff84ff;
+        transition: all ease-in-out .3s
+    }
+
+    #mojeKonto a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    #mojeKonto i {
+        margin-right: 5px;
+        font-size: 20px;
+        line-height: 1;
+    }
+
+#WstawOgloszenie {
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 3px solid #ff84ff;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px;
+    width: auto;
+    padding: 20px 20px;
+    white-space: nowrap;
+    transition: all ease .5s;
+}
+
+    #WstawOgloszenie:hover {
+        background-color: #ff84ff;
+        color: #000;
+    }
+
+/* Nagłówek */
+h2 {
+    color: #e5c4ff;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 2em;
+}
+
+/* Sekcja ogłoszeń */
+.my-announcements-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    padding: 20px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.announcement-card {
+    background-color: #252525;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+    .announcement-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .announcement-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .announcement-card .card-body {
+        padding: 15px;
+        color: #fff;
+    }
+
+        .announcement-card .card-body h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #e5c4ff;
+        }
+
+        .announcement-card .card-body p {
+            font-size: 0.9em;
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        .announcement-card .card-body .price {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ff80df;
+            margin-top: 10px;
+        }
+
+    .announcement-card .card-footer {
+        text-align: center;
+        padding: 10px;
+        background-color: #333;
+    }
+
+        .announcement-card .card-footer a {
+            text-decoration: none;
+            color: #e5c4ff;
+            font-weight: bold;
+        }
+
+            .announcement-card .card-footer a:hover {
+                color: #d4a6ff;
+            }
+
+/* Brak ogłoszeń */
+.no-announcements {
+    text-align: center;
+    font-size: 1.2em;
+    color: #ccc;
+    margin: 20px 0;
+}

@@ -14,6 +14,153 @@ select:-webkit-autofill:focus {
     transition: background-color 5000s ease-in-out 0s; /* Usunięcie migania */
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /*dokladniej jak dziala*/
+    list-style: none;
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    color: #fff;
+}
+
+body {
+    background: #000000;
+    overflow-x: hidden;
+}
+
+#container {
+    position: absolute;
+    display: block;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+}
+
+header {
+    position: relative;
+    width: 90vw;
+    display: flex;
+    gap: 140px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 100px;
+    margin-bottom: 20px;
+}
+
+    header .logo {
+        font-size: 26px;
+        font-weight: 700;
+        color: #ff84ff;
+    }
+
+    header .navlist {
+        display: flex;
+        gap: 15px;
+    }
+
+    header ul li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        header ul li a {
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 10px;
+            transition: all .3s ease;
+        }
+
+            header ul li a:hover {
+                color: #ff84ff;
+            }
+.notification-dot {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.notification-button:hover + .notification-list,
+.notification-list:hover {
+    display: block;
+    color: #000000;
+    text-shadow: 0px 0px 3px #000;
+    transition: all ease-in-out .3s;
+}
+
+.notification-list {
+    display: none;
+    width: 250px;
+    text-shadow: 0px 0px 3px #000;
+    transition: all ease-in-out .3s;
+    position: absolute;
+    background-color: #2b2b2b;
+    padding: 10px;
+    right: 0;
+    z-index: 1000;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+#rightNavlist {
+    font-weight: 600;
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    max-width: 400px;
+}
+
+#mojeKonto {
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+    #mojeKonto:hover a, #mojeKonto:hover i {
+        color: #ff84ff;
+        text-shadow: 0px 0px 3px #ff84ff;
+        transition: all ease-in-out .3s
+    }
+
+    #mojeKonto a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    #mojeKonto i {
+        margin-right: 5px;
+        font-size: 20px;
+        line-height: 1;
+    }
+
+#WstawOgloszenie {
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 3px solid #ff84ff;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px;
+    width: auto;
+    padding: 20px 20px;
+    white-space: nowrap;
+    transition: all ease .5s;
+}
+
+    #WstawOgloszenie:hover {
+        background-color: #ff84ff;
+        color: #000;
+    }
+
 /* Wyśrodkowanie formularza */
 form {
     background-color: #2a2a2a; /* Ciemne tło formularza */

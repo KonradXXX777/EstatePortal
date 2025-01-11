@@ -57,7 +57,7 @@ namespace EstatePortal.Models
                 return SellOrRent switch
                 {
                     SellOrRent.Sell => "Na sprzedaż",
-                    SellOrRent.Rent => "Wynajem",
+                    SellOrRent.Rent => "Na wynajem",
                     _ => "Nieznany"
                 };
             }

@@ -4,21 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dodaj ogłoszenie</title>
-    <link rel="stylesheet" href="~/css/Announcements/SellOrRent.css">
+    <link rel="stylesheet" href="~/css/Announcements/SellOrRent.css" asp-append-version="true">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" asp-append-version="true">
 </head>
 <body>
-    <header>
-        <a href="#" class="logo">Logo</a>
-        <ul class="navlist">
-            <li><a href="@Url.Action("Index", "Home")" class="active">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-        </ul>
-        <div id="rightNavlist">
-            <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
-        </div>
-    </header>
+    <div id="container">
+        <div id="tlo">
+            <header>
+                <a href="@Url.Action("Index", "Home")" class="logo">Logo</a>
+                <ul class="navlist">
+                    <li><a href="@Url.Action("Index", "Home")" class="active">Strona główna</a></li>
+                    <li><a href="@Url.Action("Listing", "Announcement")">Ogłoszenia</a></li>
+                    <li><a href="@Url.Action("Login", "Home")">Moje ogłoszenia</a></li>
+                </ul>
+                <div id="rightNavlist">
+                    <!-- Powiadomienia -->
+                    <div class="notification-dropdown" style="position: relative; display: inline-block;">
+                        <button type="button" class="notification-button" style="background: none; border: none; position: relative;">
+                            <i class="fa fa-bell" style="font-size: 1.5em;"></i>
+                            @if ((ViewBag.Notifications as List<EstatePortal.Models.Notification>)?.Any() ?? false)
+                            {
+                                <span class="notification-dot"></span>
+                            }
+                        </button>
+                        <div class="notification-list">
+                            @if (ViewBag.Notifications != null)
+                            {
+                                var notifs = (List<EstatePortal.Models.Notification>)ViewBag.Notifications;
+                                if (!notifs.Any())
+                                {
+                                    <p>Brak nowych powiadomień</p>
+                                }
+                                else
+                                {
+                                    foreach (var notif in notifs)
+                                    {
+                                        <div class="notification-item" style="border-bottom: 1px solid #ccc; padding: 5px 0;">
+                                            <a asp-controller="Chat" asp-action="ChatRoom" asp-route-chatId="@notif.ChatId">
+                                                @notif.Message
+                                            </a>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div id="mojeKonto"><a href="@Url.Action("UserPanel", "Account")"><i class="icon-user"></i>Moje konto</a></div>
+                    <div id="mojeKonto"><a href="@Url.Action("Logout", "Account")">Wyloguj</a></div>
+                    <div id="WstawOgloszenie"><a href="@Url.Action("AddAnnouncement", "Announcement")">Dodaj ogłoszenie</a></div>
+                </div>
+            </header>
     <div class="container">
         <h1>Dodaj ogłoszenie</h1>
         <div class="options">

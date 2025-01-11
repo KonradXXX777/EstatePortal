@@ -1,87 +1,66 @@
 ﻿<!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rejestracja - Portal Nieruchomościowy</title>
-	<style>
-		/* Stylizacja menu nawigacyjnego z logo */
-		nav {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 10px;
-			background-color: #f1f1f1;
-			}
-
-			nav ul {
-				display: flex;
-				list-style: none;
-				padding: 0;
-			}
-
-				nav ul li {
-					margin-left: 20px;
-				}
-
-					nav ul li a {
-						text-decoration: none;
-						color: #185ee0;
-						font-weight: bold;
-					}
-	</style>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Rejestracja - Portal Nieruchomościowy</title>
+	<link rel="stylesheet" href="~/css/Register.css" />
 </head>
 <body>
-    <!-- Dodanie menu nawigacyjnego z logo i linkami -->
-    <nav>
-        <div class="logo"><a href="#">Logo</a></div>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Kontakt</a></li>
-        </ul>
-    </nav>
+	<div id="container">
+		<div id="form-wrapper">
+			<header>
+				<a href="@Url.Action("Index", "Home")" class="logo">Logo</a>
+			</header>
 
-	<a href="/signin-google">Zaloguj się za pomocą Google</a>
+			<div id="form-content">
+				<h2>Utwórz swoje konto</h2>
 
-	<!-- Formularz -->
-	<form action="/Account/Register" method="POST">
-		<!-- Sprawdzanie walidacji formularza -->
-		@if (!ViewData.ModelState.IsValid)
-		{
-			<div class="validation-summary-errors">
-				<ul>
-					@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-					{
-						<li>@error.ErrorMessage</li>
-					}
-				</ul>
+				<div class="role-selection">
+					<a href="@Url.Action("Register", "Home")" class="tab active">Osoba fizyczna</a>
+					<a href="@Url.Action("EstateAgencyRegister", "Home")" class="tab">Biuro nieruchomości</a>
+					<a href="@Url.Action("DeveloperRegister", "Home")" class="tab">Deweloper</a>
+				</div>
+
+				<div id="content-placeholder">
+					<div id="form-content">
+						<form action="/Account/Register" method="POST">
+							<!-- Sprawdzanie walidacji formularza -->
+							@if (!ViewData.ModelState.IsValid)
+							{
+								<div class="validation-summary-errors">
+									<ul>
+										@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+										{
+											<li>@error.ErrorMessage</li>
+										}
+									</ul>
+								</div>
+							}
+							<!-- Pola dla osób fizycznych -->
+							<div id="privateFields" class="form-section">
+								<div class="input">
+									<label> <input type="text" placeholder="Podaj email" name="Email" required></label>
+								</div>
+								<div class="input">
+									<label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" required></label>
+								</div>
+								<div class="input">
+									<label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
+								</div>
+								<div class="input accept-terms">
+									<label>
+										<input type="checkbox" name="AcceptTerms" value="true" required />
+										<span>Akceptuję regulamin i politykę prywatności</span>
+									</label>
+								</div>
+								<button type="submit" class="submit-button">Zarejestruj się</button>
+						</form>
+					</div>
+				</div>
 			</div>
-		}
-            <!-- Pola dla osób fizycznych -->
-            <div id="privateFields" class="form-section active">
-                <div class="input">
-                    <label> <input type="text" placeholder="Podaj email" name="Email" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Podaj hasło" name="PasswordHash" required></label>
-                </div>
-                <div class="input">
-                    <label> <input type="password" placeholder="Powtórz hasło" name="ConfirmPassword" required></label>
-                </div>
-			<div class="input">
-				<label>
-					<input type="checkbox" name="AcceptTerms" value="true" required />
-					Akceptuję regulamin i politykę prywatności
-				</label>
-			</div>
-            </div>
-        <input type="submit" value="Zarejestruj się">
-
-        <p>Biura nieruchomości <a href="@Url.Action("EstateAgencyRegister", "Home")">Zarejestruj sie!</a> </p>
-        <p>Deweloperzy <a href="@Url.Action("DeveloperRegister", "Home")">Zarejestruj sie!</a> </p>
-        </form>
-    
+		</div>
+	</div>
 </body>
 </html>

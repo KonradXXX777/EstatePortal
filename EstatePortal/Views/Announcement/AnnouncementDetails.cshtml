@@ -23,6 +23,34 @@
             <a href="@Url.Action("AnnouncementDetailsEdit", "Announcement", new { id = Model.Id })" class="btn btn-primary">Edytuj ogłoszenie</a>
         </div>
     </div>
+    @if (Model.Status != AnnouncementStatus.Rejected && Model.Status != AnnouncementStatus.PendingApproval)
+    {
+        <h4>Zmień status ogłoszenia</h4>
+        <form asp-action="ChangeStatus" asp-controller="Announcement" method="post" style="display: inline;">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit"
+                    name="status"
+                    value="Active"
+                    class="custom-button @(Model.Status == AnnouncementStatus.Active ? "disabled-button" : "")"
+            @(Model.Status == AnnouncementStatus.Active ? "disabled" : "")>
+                Aktywuj
+            </button>
+            <button type="submit"
+                    name="status"
+                    value="Sold"
+                    class="custom-button @(Model.Status == AnnouncementStatus.Sold ? "disabled-button" : "")"
+            @(Model.Status == AnnouncementStatus.Sold ? "disabled" : "")>
+                Sprzedane
+            </button>
+            <button type="submit"
+                    name="status"
+                    value="Inactive"
+                    class="custom-button @(Model.Status == AnnouncementStatus.Inactive ? "disabled-button" : "")"
+            @(Model.Status == AnnouncementStatus.Inactive ? "disabled" : "")>
+                Dezaktywuj
+            </button>
+        </form>
+    }
 
 
     @if (Model.Features != null)

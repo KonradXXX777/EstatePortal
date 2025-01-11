@@ -76,11 +76,24 @@ namespace EstatePortal.Controllers
             if (userId == null)
             {
                 ModelState.AddModelError("", "Błąd autoryzacji. Spróbuj ponownie.");
-                return View(model);
+                return RedirectToAction("Index", "Home");
             }
 
             model.UserId = int.Parse(userId);
-            model.DateCreated = DateTime.UtcNow;
+            model.DateCreated = DateTime.UtcNow.AddHours(1);
+
+            var currentUser = await _context.Users.FindAsync(model.UserId);
+            if (currentUser == null)
+            {
+                ModelState.AddModelError("", "Nie znaleziono użytkownika w bazie.");
+                return View(model);
+            }
+
+            if (currentUser.Status == UserStatus.Blocked || currentUser.Status == UserStatus.Inactive)
+            {
+                ModelState.AddModelError("", "Twoje konto jest zablokowane lub nieaktywne. Nie możesz dodawać ogłoszeń.");
+                return RedirectToAction("Index", "Home");
+            }
 
             // Domyślnie dodajemy ogłoszenie do kontekstu i zapisujemy
             _context.Announcements.Add(model);
@@ -94,13 +107,6 @@ namespace EstatePortal.Controllers
             if (!Directory.Exists(uploadPath))
             {
                 Directory.CreateDirectory(uploadPath);
-            }
-
-            var currentUser = await _context.Users.FindAsync(model.UserId);
-            if (currentUser == null)
-            {
-                ModelState.AddModelError("", "Nie znaleziono użytkownika w bazie.");
-                return View(model);
             }
 
             AnnouncementStatus finalStatus = AnnouncementStatus.Active;
@@ -185,10 +191,9 @@ namespace EstatePortal.Controllers
                 TempData["SuccessMessage"] = "Ogłoszenie zostało dodane pomyślnie (Active).";
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("MyAnnouncements", "Announcement");
         }
 
-        // Wyświetlenie listy ogłoszeń użytkownika
         [HttpGet]
         public async Task<IActionResult> MyAnnouncements()
         {
@@ -198,6 +203,20 @@ namespace EstatePortal.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user != null)
+            {
+                ViewBag.UserRole = user.Role;
+                ViewBag.UserStatus = user.Status;
+
+                var notifications = _context.Notifications
+            .Where(n => n.UserId == user.Id && !n.IsRead)   // np. nieprzeczytane
+            .OrderByDescending(n => n.CreatedAt)
+            .ToList();
+
+                ViewBag.Notifications = notifications;
+            }
+
             var announcements = await _context.Announcements
                 .Where(a => a.UserId == int.Parse(userId))
                 .Include(a => a.Photos)
@@ -205,6 +224,7 @@ namespace EstatePortal.Controllers
 
             return View(announcements);
         }
+
 
         // Szczegóły ogłoszenia
         [HttpGet]
@@ -330,26 +350,41 @@ namespace EstatePortal.Controllers
         [HttpGet]
         public async Task<IActionResult> Listing(ListingFilterViewModel model)
         {
+            var userId = User.FindFirst("UserId")?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var user = await _context.Users.FindAsync(int.Parse(userId));
+                if (user != null)
+                {
+                    ViewBag.UserRole = user.Role;
+                    ViewBag.UserStatus = user.Status;
+                }
+                var notifications = _context.Notifications
+                .Where(n => n.UserId == user.Id && !n.IsRead)   // np. nieprzeczytane
+                .OrderByDescending(n => n.CreatedAt)
+                .ToList();
+
+                ViewBag.Notifications = notifications;
+            }
+
             var query = _context.Announcements
                 .Include(a => a.User)
                 .Include(a => a.Photos)
                 .Where(a => a.Status == AnnouncementStatus.Active)
                 .AsQueryable();
 
-            // Filtrowanie na podstawie wyszukiwanej frazy (tytuł lub opis)
             if (!string.IsNullOrEmpty(model.Search))
             {
                 query = query.Where(a => a.Title.Contains(model.Search)
                                       || a.Description.Contains(model.Search));
             }
 
-            // Filtrowanie na podstawie lokalizacji
             if (!string.IsNullOrEmpty(model.Location))
             {
                 query = query.Where(a => a.Location.Contains(model.Location));
             }
 
-            // Filtrowanie ceny
             if (model.MinPrice.HasValue)
             {
                 query = query.Where(a => a.Price >= model.MinPrice.Value);
@@ -359,7 +394,6 @@ namespace EstatePortal.Controllers
                 query = query.Where(a => a.Price <= model.MaxPrice.Value);
             }
 
-            // Filtrowanie powierzchni
             if (model.MinArea.HasValue)
             {
                 query = query.Where(a => a.Area >= model.MinArea.Value);
@@ -369,24 +403,22 @@ namespace EstatePortal.Controllers
                 query = query.Where(a => a.Area <= model.MaxArea.Value);
             }
 
-            // Filtrowanie rodzaju nieruchomości
             if (model.PropertyType.HasValue)
             {
                 query = query.Where(a => a.PropertyType == model.PropertyType.Value);
             }
 
-            // Filtrowanie typu użytkownika
             if (model.UserRole.HasValue)
             {
                 query = query.Where(a => a.User.Role == model.UserRole.Value);
             }
 
-            // Filtrowanie rodzaju oferty (Sprzedaż/Wynajem)
             if (model.SellOrRent.HasValue)
             {
                 query = query.Where(a => a.SellOrRent == model.SellOrRent.Value);
             }
 
+            query = query.OrderByDescending(a => a.DateCreated);
             // Ściągamy wyniki do listy
             model.Announcements = await query.ToListAsync();
 
@@ -396,9 +428,11 @@ namespace EstatePortal.Controllers
 
         public async Task<IActionResult> ListingDetails(int id)
         {
+
             var announcement = await _context.Announcements
                 .Include(a => a.Features) // Wczytanie powiązanych cech
                 .Include(a => a.Photos)   // Wczytanie powiązanych zdjęć
+                .Include(a => a.User)     // Wczytanie danych użytkownika
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (announcement == null)
@@ -408,6 +442,54 @@ namespace EstatePortal.Controllers
 
             return View(announcement); // Przekazanie pojedynczego ogłoszenia do widoku
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeStatus(int id, string status)
+        {
+            var userId = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var announcement = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id && a.UserId == int.Parse(userId));
+            if (announcement == null)
+            {
+                TempData["ErrorMessage"] = "Nie znaleziono ogłoszenia lub nie masz uprawnień do zmiany statusu.";
+                return RedirectToAction(nameof(AnnouncementDetails), new { id = announcement.Id });
+            }
+
+            // Sprawdzenie statusu
+            if (announcement.Status == AnnouncementStatus.Rejected || announcement.Status == AnnouncementStatus.PendingApproval)
+            {
+                TempData["ErrorMessage"] = "Nie możesz zmienić statusu tego ogłoszenia.";
+                return RedirectToAction(nameof(AnnouncementDetails), new { id = announcement.Id });
+            }
+
+            // Obsługa zmian statusu
+            if (!Enum.TryParse<AnnouncementStatus>(status, out var newStatus) ||
+                (newStatus != AnnouncementStatus.Active && newStatus != AnnouncementStatus.Sold && newStatus != AnnouncementStatus.Inactive))
+            {
+                TempData["ErrorMessage"] = "Nieprawidłowy status.";
+                return RedirectToAction(nameof(AnnouncementDetails), new { id = announcement.Id });
+            }
+
+            announcement.Status = newStatus;
+            try
+            {
+                _context.Update(announcement);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Status ogłoszenia został zmieniony na {newStatus}.";
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Wystąpił błąd podczas zmiany statusu. Spróbuj ponownie.";
+            }
+
+            return RedirectToAction(nameof(AnnouncementDetails), new { id = announcement.Id });
+        }
+
+
 
     }
 }

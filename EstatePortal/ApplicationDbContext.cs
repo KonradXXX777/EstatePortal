@@ -40,7 +40,8 @@ namespace EstatePortal
 		public DbSet<AnnouncementFeature> AnnouncementFeatures { get; set; } = default!;
 		public DbSet<AnnouncementPhoto> AnnouncementPhotos { get; set; } = default!;
         public DbSet<Chat> Chats { get; set; } = default!;
-        public DbSet<Message> Messages { get; set; } = default!;
+		public DbSet<Message> Messages { get; set; } = default!;
+        public DbSet<Notification> Notifications { get; set; }
 
     }
 }

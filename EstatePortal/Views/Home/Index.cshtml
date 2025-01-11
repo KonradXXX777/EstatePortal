@@ -7,34 +7,94 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal Nieruchomściowy</title>
-    <link rel="stylesheet" href="~/css/HomePage.css" />
-    <link rel="stylesheet" href="~/css/font/css/fontello.css" />
+    <link rel="stylesheet" href="~/css/HomePage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/font/css/fontello.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" asp-append-version="true">
+
 </head>
 
 <body>
     <div id="container">
         <div id="tlo">
             <header>
-                <a href="#" class="logo">Logo</a>
+                <a href="@Url.Action("Index", "Home")" class="logo">Logo</a>
                 <ul class="navlist">
-                    <li><a href="@Url.Action("Index", "Home")" class="active">Home</a></li>
-                    <li><a href="@Url.Action("Privacy", "Home")">Privacy</a></li>
-                    <li><a href="@Url.Action("MyAnnouncements", "Announcement")">Moje ogłoszenia</a></li>
-                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator)
+                    <li><a href="@Url.Action("Index", "Home")" class="active">Strona główna</a></li>
+                    <li><a href="@Url.Action("Listing", "Announcement")">Ogłoszenia</a></li>
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.EstateAgency ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.PrivatePerson ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Employee ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Developer ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
                     {
-                        <li><a href="@Url.Action("AdminPanel", "Account")">AdminPanel</a></li>
+                        <li><a href="@Url.Action("MyAnnouncements", "Announcement")">Moje ogłoszenia</a></li>
                     }
-                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+                    else
+                    {
+                        <li><a href="@Url.Action("Login", "Home")">Moje ogłoszenia</a></li>
+                    }
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
                     {
                         <li><a href="@Url.Action("AdminPanel", "Account")">AdminPanel</a></li>
                     }
                 </ul>
                 <div id="rightNavlist">
-                    <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
-                    <div id="mojeKonto"><a href="@Url.Action("Register", "Home")">Zarejestruj się</a></div>
-                    <div id="WstawOgloszenie"><a href="@Url.Action("AddAnnouncement", "Announcement")">Dodaj ogłoszenie</a></div>
+                    <!-- Powiadomienia -->
+                    <div class="notification-dropdown" style="position: relative; display: inline-block;">
+                        <button type="button" class="notification-button" style="background: none; border: none; position: relative;">
+                            <i class="fa fa-bell" style="font-size: 1.5em;"></i>
+                            @if ((ViewBag.Notifications as List<EstatePortal.Models.Notification>)?.Any() ?? false)
+                            {
+                                <span class="notification-dot"></span>
+                            }
+                        </button>
+                        <div class="notification-list">
+                            @if (ViewBag.Notifications != null)
+                            {
+                                var notifs = (List<EstatePortal.Models.Notification>)ViewBag.Notifications;
+                                if (!notifs.Any())
+                                {
+                                    <p>Brak nowych powiadomień</p>
+                                }
+                                else
+                                {
+                                    foreach (var notif in notifs)
+                                    {
+                                        <div class="notification-item" style="border-bottom: 1px solid #ccc; padding: 5px 0;">
+                                            <a asp-controller="Chat" asp-action="ChatRoom" asp-route-chatId="@notif.ChatId">
+                                                @notif.Message
+                                            </a>
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Moje konto -->
+                    @if (ViewBag.UserRole == EstatePortal.Models.UserRole.EstateAgency ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.PrivatePerson ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Employee ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Developer ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Administrator ||
+                    ViewBag.UserRole == EstatePortal.Models.UserRole.Moderator)
+                    {
+                        <div id="mojeKonto"><a href="@Url.Action("UserPanel", "Account")"><i class="icon-user"></i>Moje konto</a></div>
+                        <div id="mojeKonto"><a href="@Url.Action("Logout", "Account")">Wyloguj</a></div>
+                        <div id="WstawOgloszenie"><a href="@Url.Action("AddAnnouncement", "Announcement")">Dodaj ogłoszenie</a></div>
+                    }
+                    else
+                    {
+                        <div id="mojeKonto"><a href="@Url.Action("Login", "Home")"><i class="icon-user"></i>Moje konto</a></div>
+                        <div id="mojeKonto"><a href="@Url.Action("Register", "Home")">Zarejestruj się</a></div>
+                        <div id="WstawOgloszenie"><a href="@Url.Action("Login", "Home")">Dodaj ogłoszenie</a></div>
+                    }
                 </div>
             </header>
+
+
 
             <div id="welcomeText">
                 @if (ViewBag.UserStatus == EstatePortal.Models.UserStatus.Blocked)
@@ -60,113 +120,172 @@
                     <button id="searchTab" class="tab active">Szukaj</button>
                     <button id="developerTab" class="tab">Oferty deweloperów</button>
                 </div>
-
-                <form method="GET" action="@Url.Action("SearchResults", "Home")" id="searchForm">
+                <form method="get" asp-action="Listing" asp-controller="Announcement" id="searchForm">
                     <div id="search-section" class="content-section active">
                         <div class="form-row">
                             <div class="dropdown">
-                                <button type="button" class="dropdown-button">Mieszkania</button>
+                                <button type="button" class="dropdown-button">Rodzaj nieruchomości</button>
                                 <ul class="dropdown-menu">
-                                    <li>Mieszkania</li>
-                                    <li>Kawalerki</li>
-                                    <li>Domy</li>
-                                    <li>Inwestycje</li>
-                                    <li>Pokoje</li>
-                                    <li>Działki</li>
-                                    <li>Lokale użytkowe</li>
-                                    <li>Hale i magazyny</li>
-                                    <li>Garaże</li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Flat"> Mieszkania
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="House"> Domy
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Plot"> Działki
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="CommercialPremises"> Lokale użytkowe
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Garage"> Garaże
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Room"> Pokoje
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Warehouse"> Hale i magazyny
+                                        </label>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="dropdown">
-                                <button type="button" class="dropdown-button">Sprzedaż</button>
+                                <button type="button" class="dropdown-button">Rodzaj oferty</button>
                                 <ul class="dropdown-menu">
-                                    <li>Sprzedaż</li>
-                                    <li>Wynajem</li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="SellOrRent" value="Sell"> Sprzedaż
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="SellOrRent" value="Rent"> Wynajem
+                                        </label>
+                                    </li>
                                 </ul>
                             </div>
-                            <input type="text" name="location" class="input-text" placeholder="Wpisz lokalizację">
-                            <div class="dropdown">
-                                <button type="button" class="dropdown-button">+ 0km</button>
-                                <ul class="dropdown-menu">
-                                    <li>+ 5km</li>
-                                    <li>+ 10km</li>
-                                    <li>+ 15km</li>
-                                    <li>+ 20km</li>
-                                    <li>+ 30km</li>
-                                    <li>+ 40km</li>
-                                    <li>+ 50km</li>
-                                </ul>
+                            <div>
+                                <input type="text" name="location" class="input-text" placeholder="Wpisz lokalizację">
+                            </div>
+                            <div>
+                                <input type="text" name="Search" id="search" class="input-text" placeholder="Wyszukaj (tytuł/opis)" />
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="price">
                                 <span>Cena</span>
-                                <input type="text" name="priceMin" placeholder="od" class="input-price"> zł
-                                <input type="text" name="priceMax" placeholder="do" class="input-price"> zł
+                                <input type="number" name="MinPrice" placeholder="od" class="input-price"> zł
+                                <input type="number" name="MaxPrice" placeholder="do" class="input-price"> zł
                             </div>
                             <div class="surface">
                                 <span>Powierzchnia</span>
-                                <input type="text" name="surfaceMin" placeholder="od" class="input-surface"> m²
-                                <input type="text" name="surfaceMax" placeholder="do" class="input-surface"> m²
+                                <input type="number" name="MinArea" placeholder="od" class="input-surface"> m²
+                                <input type="number" name="MaxArea" placeholder="do" class="input-surface"> m²
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <button type="submit" class="search-button">Wyszukaj</button>
                         </div>
                     </div>
                 </form>
 
-                <form method="GET" action="@Url.Action("SearchResults", "Home")" id="developerForm">
+                <form method="get" asp-action="Listing" asp-controller="Announcement" id="developerForm">
                     <div id="developer-section" class="content-section">
+                        <input type="hidden" name="AllowedRoles" value="EstateAgency,Developer,Employee" />
                         <div class="form-row">
                             <div class="dropdown">
-                                <button type="button" class="dropdown-button">Inwestycje</button>
+                                <button type="button" class="dropdown-button">Rodzaj nieruchomości</button>
                                 <ul class="dropdown-menu">
-                                    <li>Mieszkania</li>
-                                    <li>Kawalerki</li>
-                                    <li>Domy</li>
-                                    <li>Inwestycje</li>
-                                    <li>Pokoje</li>
-                                    <li>Działki</li>
-                                    <li>Lokale użytkowe</li>
-                                    <li>Hale i magazyny</li>
-                                    <li>Garaże</li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Flat"> Mieszkania
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="House"> Domy
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Plot"> Działki
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="CommercialPremises"> Lokale użytkowe
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Garage"> Garaże
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Room"> Pokoje
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="PropertyType" value="Warehouse"> Hale i magazyny
+                                        </label>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="dropdown">
-                                <button type="button" class="dropdown-button">Dowolny</button>
+                                <button type="button" class="dropdown-button">Rodzaj oferty</button>
                                 <ul class="dropdown-menu">
-                                    <li>Mieszkania</li>
-                                    <li>Domy</li>
-                                    <li>Lokale użytkowe</li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="SellOrRent" value="Sell"> Sprzedaż
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input type="radio" name="SellOrRent" value="Rent"> Wynajem
+                                        </label>
+                                    </li>
                                 </ul>
                             </div>
-                            <input type="text" name="location" class="input-text" placeholder="Wpisz lokalizację">
-                            <div class="dropdown">
-                                <button type="button" class="dropdown-button">+ 0km</button>
-                                <ul class="dropdown-menu">
-                                    <li>+ 5km</li>
-                                    <li>+ 10km</li>
-                                    <li>+ 15km</li>
-                                    <li>+ 20km</li>
-                                    <li>+ 30km</li>
-                                    <li>+ 40km</li>
-                                    <li>+ 50km</li>
-                                </ul>
+                            <div>
+                                <input type="text" name="location" class="input-text" placeholder="Wpisz lokalizację">
+                            </div>
+                            <div>
+                                <input type="text" name="Search" id="search" class="input-text" placeholder="Wyszukaj (tytuł/opis)" />
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="price">
                                 <span>Cena</span>
-                                <input type="text" name="priceMin" placeholder="od" class="input-price"> zł
-                                <input type="text" name="priceMax" placeholder="do" class="input-price"> zł
+                                <input type="number" name="MinPrice" placeholder="od" class="input-price"> zł
+                                <input type="number" name="MaxPrice" placeholder="do" class="input-price"> zł
                             </div>
                             <div class="surface">
                                 <span>Powierzchnia</span>
-                                <input type="text" name="surfaceMin" placeholder="od" class="input-surface"> m²
-                                <input type="text" name="surfaceMax" placeholder="do" class="input-surface"> m²
+                                <input type="number" name="MinArea" placeholder="od" class="input-surface"> m²
+                                <input type="number" name="MaxArea" placeholder="do" class="input-surface"> m²
                             </div>
+                        </div>
+
+                        <div class="form-row">
                             <button type="submit" class="search-button">Wyszukaj</button>
                         </div>
                     </div>
@@ -392,8 +511,8 @@
                 </div>
                 <div class="footer-links">
                     <a href="#">O nas</a>
-                    <a href="#">Polityka prywatności</a>
-                    <a href="#">Kontakt</a>
+                    <a href="@Url.Action("Privacy", "Home")">Polityka prywatności</a>
+                    <a href="@Url.Action("Privacy", "Home")">Kontakt</a>
                 </div>
                 <p class="footer-copy">© 2024 Projekt Inżynierski. Wszystkie prawa zastrzeżone.</p>
             </div>
