@@ -1,17 +1,16 @@
-﻿/* Przykład: ~/css/ChatRoom.css */
-
+﻿
 body {
-    background-color: #1A1A1A; /* ciemne tło całej strony (opcjonalnie) */
+    background-color: #1A1A1A;
     color: #FFFFFF;
     font-family: 'Open Sans', sans-serif;
-    margin: 0; /* zero marginesów */
+    margin: 0;
     padding: 0;
 }
 
 .chat-container {
-    background-color: #2A2A2A; /* ciemniejsze tło chatu */
+    background-color: #2A2A2A;
     width: 60%;
-    margin: 50px auto; /* centrowanie na stronie */
+    margin: 50px auto;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -38,7 +37,7 @@ body {
 /* Pojedyncza wiadomość */
 .message-item {
     display: inline-block;
-    max-width: 70%; /* ograniczenie szerokości */
+    max-width: 70%;
     border-radius: 8px;
     padding: 10px 15px;
     margin: 6px 0;
@@ -68,7 +67,7 @@ body {
 
 /* Stopka z input i przyciskiem */
 .chat-input {
-    background-color: #2A2A2A; /* tło, to samo co kontener */
+    background-color: #2A2A2A;
     padding: 10px;
     border-top: 1px solid #444;
     display: flex;
@@ -106,16 +105,16 @@ body {
 
 /* Styl wiadomości wysłanej przez aktualnego użytkownika */
 .my-message {
-    align-self: flex-end; /* wyrównanie do prawej w kontenerze flex */
-    margin-left: auto; /* dodatkowo pcha "dymek" na prawo */
-    background-color: #4A4A4A; /* np. inny kolor tła dla mojej wiadomości */
-    text-align: right; /* tekst też do prawej (opcjonalnie) */
+    align-self: flex-end;
+    margin-left: auto; 
+    background-color: #4A4A4A; 
+    text-align: right; 
 }
 
 /* Styl wiadomości wysłanej przez innego użytkownika */
 .other-message {
-    align-self: flex-start; /* wyrównanie do lewej */
-    margin-right: auto; /* pcha "dymek" na lewo */
-    background-color: #3A3A3A; /* ciemniejsze tło */
-    text-align: left; /* tekst do lewej (opcjonalnie) */
+    align-self: flex-start; 
+    margin-right: auto;
+    background-color: #3A3A3A; 
+    text-align: left; 
 }

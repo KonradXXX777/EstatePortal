@@ -1,0 +1,132 @@
+"Id","Rooms","Floor","TotalFloors","Elevator","YearBuilt","PropertyCondition","Parking","EnergyCertificate","Garden","KitchenAppliances","Furnished","HasWater","HasElectricity","HasGas","HasSewerage","HasInternet","SafetyFeatures","IsAccessible","Surroundings","Nature","HasBasement","HasAttic","HasGarage","HasAirConditioning","HasPool","AnnouncementId","HasForest","HasGarden","HasLake","HasMountains","HasPark","HasSea","Neighborhood","Security"
+"2",NULL,NULL,NULL,"1",NULL,NULL,NULL,NULL,"1","1","1","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","2","0","0","0","0","0","0",NULL,NULL
+"3","5","0","1","1","1939","Nowy","Garaz podziemny","A","1","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","3","0","0","0","0","0","0",NULL,NULL
+"5","5","0","1","1","1939","Nowy","Garaz podziemny","A","1","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","4","0","0","0","0","0","0",NULL,NULL
+"6","9",NULL,NULL,"1","2016","Nowy","Pod plotem","Tak, chyba","1","0","1","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","5","0","0","0","0","0","0",NULL,NULL
+"7","9",NULL,NULL,"1","2016","Nowy","Pod plotem","Tak, chyba","1","0","1","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","6","0","0","0","0","0","0",NULL,NULL
+"8","9",NULL,NULL,"1","2016","Nowy","Pod plotem","Tak, chyba","1","0","1","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","7","0","0","0","0","0","0",NULL,NULL
+"9","9",NULL,NULL,"1","2016","Nowy","Pod plotem","Tak, chyba","1","0","1","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","8","0","0","0","0","0","0",NULL,NULL
+"11","9",NULL,NULL,"1","2016","Nowy","Pod plotem","Tak, chyba","1","0","1","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","9","0","0","0","0","0","0",NULL,NULL
+"13","5",NULL,"1","1","1980",NULL,"Pod plotem",NULL,"1","1","1","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","10","0","0","0","0","0","0",NULL,NULL
+"15",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","11","0","0","0","0","0","0",NULL,NULL
+"17",NULL,NULL,NULL,"1",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","12","0","0","0","0","1","0",NULL,NULL
+"19","48","1","21","1","2010","Taki ≈õredni","Garaz podziemny",NULL,"1","1","1","1","1","1","1","1",NULL,"1",NULL,NULL,"1","1","1","1","1","13","1","1","1","1","1","1","2","1"
+"21",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","14","0","0","0","0","0","0",NULL,NULL
+"23",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","1","0",NULL,"0",NULL,NULL,"0","1","0","0","0","15","0","0","0","0","0","0",NULL,NULL
+"25",NULL,NULL,NULL,"1",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"1","0","1","0","0","16","0","1","0","0","0","0",NULL,NULL
+"26",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","17","0","0","0","0","0","0",NULL,NULL
+"27",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","18","0","0","0","0","0","0",NULL,NULL
+"28",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","19","0","0","0","0","0","0",NULL,NULL
+"29",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","20","0","0","0","0","0","0",NULL,NULL
+"31",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","21","0","0","0","0","0","0",NULL,NULL
+"33",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","22","0","0","0","0","0","0",NULL,NULL
+"35",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","23","0","0","0","0","0","0",NULL,NULL
+"37",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","24","0","0","0","0","0","0",NULL,NULL
+"39",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","25","0","0","0","0","0","0",NULL,NULL
+"41",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","26","0","0","0","0","0","0",NULL,NULL
+"43",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","27","0","0","0","0","0","0",NULL,NULL
+"45",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","28","0","0","0","0","0","0",NULL,NULL
+"47",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","29","0","0","0","0","0","0",NULL,NULL
+"49",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","30","0","0","0","0","0","0",NULL,NULL
+"51",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","31","0","0","0","0","0","0",NULL,NULL
+"53",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","32","0","0","0","0","0","0",NULL,NULL
+"55",NULL,NULL,NULL,"0",NULL,NULL,NULL,NULL,"0","0","0","0","0","0","0","0",NULL,"0",NULL,NULL,"0","0","0","0","0","33","0","0","0","0","0","0",NULL,NULL
+"Id","Url","AnnouncementId"
+"1","/uploads/c7f833e9-62c5-42e4-93a3-8bdf4463a2af.jpg","9"
+"2","/uploads/c07b61b1-f110-4a16-9bf3-f030da87af3b.jpg","10"
+"3","/uploads/472d1696-b9ed-44fa-91d8-7c27b7005357.jpg","14"
+"4","/uploads/b2e63b42-88f4-4ff2-95b7-a6cdc5c9a75e.jpg","16"
+"5","/uploads/4768626e-d5a9-4ae3-89e0-75b9f585435c.jpg","23"
+"6","/uploads/8657c159-d6d5-4a72-b70c-bfd5c45591e7.jpg","27"
+"7","/uploads/441d42ac-17ab-4f5b-ba27-633a7728948e.jpg","28"
+"8","/uploads/b69ccc11-d626-4821-ad8b-92f40a77578f.jpg","29"
+"9","/uploads/79e7fe27-650d-4192-bf2b-57eaac089c22.png","29"
+"Id","Title","Area","Price","Location","Description","SellOrRent","PropertyType","Status","DateCreated","DateUpdated","VideoUrls","UserId","Street"
+"1","Domek pod Poznaniem","9.00","240000.00","Pozna≈Ñ","Opis testowy, domek.","0","1","1","2024-12-07 01:31:48.000000",NULL,NULL,"4",
+"2","Tytul","22.00","200000.00","Pozna≈Ñ","opis","0","0","2","2024-12-07 21:16:30.175726",NULL,NULL,"3","Jakas"
+"3","Domek","100.00","800000.00","Zakopane","Domek. Fajny taki.","0","0","2","2024-12-07 21:33:03.537964",NULL,NULL,"3","Zakopianska"
+"4","Domek","100.00","800000.00","Zakopane","Domek. Fajny taki.","0","0","2","2024-12-07 21:34:17.887108",NULL,NULL,"3","Zakopianska"
+"5","Luksusowa Willa","250.00","150000000.00","Pozna≈Ñ","Fajny opis","0","0","2","2024-12-07 22:25:01.758701",NULL,NULL,"3","Jakas"
+"6","Luksusowa Willa","250.00","150000000.00","Pozna≈Ñ","Fajny opis","0","0","2","2024-12-07 22:29:09.919291",NULL,NULL,"3","Jakas"
+"7","Luksusowa Willa 2","250.00","150000000.00","Pozna≈Ñ","Fajny opis","0","0","2","2024-12-07 22:29:37.306002",NULL,NULL,"3","Jakas"
+"8","Luksusowa Willa 3","250.00","150000000.00","Pozna≈Ñ","Fajny opis","0","0","2","2024-12-07 22:31:06.636943",NULL,NULL,"3","Jakas"
+"9","Luksusowa Willa 3","250.00","150000000.00","Pozna≈Ñ","Fajny opis","0","0","2","2024-12-07 22:32:22.128279",NULL,NULL,"3","Jakas"
+"10","Domek w gorach","150.00","600000.00","Karpacz","Domek w gorach","1","0","2","2024-12-07 22:33:41.537614",NULL,NULL,"3","Karpacka"
+"11","Testowe 12","55.00","500000.00","Krak√≥w","Opis","0","0","2","2024-12-12 02:21:26.703069",NULL,NULL,"3","Polna"
+"12","Testowe 12 v2","28.00","600000.00","Warszawa","Opis opis","0","0","2","2024-12-12 02:23:19.071835",NULL,NULL,"3","Jakas"
+"13","Testowy","77.00","777000.00","Opole","Opis","0","0","2","2024-12-12 02:27:54.467260",NULL,NULL,"3","polna"
+"14","Testowy rent house","44.00","440000.00","Gda≈Ñsk","REnt, house","1","1","0","2024-12-16 02:17:43.863948",NULL,NULL,"3","polna"
+"15","Sell House","666.00","666000.00","Krak√≥w","Sell House opis","0","1","2","2024-12-16 02:36:09.594808",NULL,NULL,"3","Jakas"
+"16","Testowy tytul !promocja! -10%","100.00","500000.00","Krak√≥w","Przykladowy opis","0","1","2","2024-12-18 14:53:45.663899",NULL,NULL,"8","jakas"
+"17","ML test","40.00","123.00","Pozna≈Ñ","ML test","0","1","2","2025-01-05 20:58:34.828706",NULL,NULL,"8","Jakas"
+"18","ML test2","50.00","222.00","Pozna≈Ñ","ML test 2","0","1","2","2025-01-05 21:06:25.656876",NULL,NULL,"8","Jakas"
+"19","ML test 3","40.00","333.00","Pozna≈Ñ","ML test 3","0","1","2","2025-01-05 21:15:08.219808",NULL,NULL,"8","Jakas"
+"20","ML test 4","44.00","444.00","Pozna≈Ñ","ML test 4","1","6","2","2025-01-05 22:56:56.493391",NULL,NULL,"8","Jakas"
+"21","ML test 5","55.00","555.00","Pozna≈Ñ","ML test 5","0","0","2","2025-01-06 00:04:52.040109",NULL,NULL,"8","Jakas"
+"22","ML test 6","66.00","666.00","Pozna≈Ñ","ML test 6","0","0","2","2025-01-06 00:09:35.016730",NULL,NULL,"8","Jakas"
+"23","ML test 7","77.00","777.00","Pozna≈Ñ","ML test 7","0","0","0","2025-01-06 00:11:56.399624",NULL,NULL,"8","Jakas"
+"24","ML test 8","88.00","888.00","Pozna≈Ñ","ML test 8","0","0","3","2025-01-06 02:15:17.768110",NULL,NULL,"8","Jakas"
+"25","ML test 9","99.00","999.00","Pozna≈Ñ","ML test 9","0","0","3","2025-01-06 02:17:32.289757",NULL,NULL,"8","Jakas"
+"26","ML test 10","100.00","1010.00","Pozna≈Ñ","ML test 10","0","0","3","2025-01-06 02:18:20.319744",NULL,NULL,"8","Jakas"
+"27","ML test 11","110.00","1111.00","Pozna≈Ñ","ML test 11","0","0","0","2025-01-06 02:19:27.976965",NULL,NULL,"8","Jakas"
+"28","ML test 12","120.00","1212.00","Pozna≈Ñ","ML test 12","0","5","0","2025-01-06 02:20:52.036334",NULL,NULL,"8","Jakas"
+"29","ML test new","11.00","111.00","Pozna≈Ñ","ML test new","0","4","3","2025-01-06 15:25:08.288992",NULL,NULL,"8","Jakas"
+"30","111","111.00","111.00","Pozna≈Ñ","111","0","0","0","2025-01-09 01:16:03.227688",NULL,NULL,"6","111"
+"31","222","222.00","222.00","Pozna≈Ñ","222","0","0","0","2025-01-09 01:17:06.584608",NULL,NULL,"6","222"
+"32","333","333.00","333.00","Pozna≈Ñ","333","0","0","0","2025-01-09 01:22:10.864123",NULL,NULL,"8","333"
+"33","444","444.00","444.00","Pozna≈Ñ","444","0","1","0","2025-01-09 02:26:14.737939",NULL,NULL,"8","444"
+"Id","SenderId","ReceiverId","AnnouncementId","LastMessageTime"
+"2","1","3","3","2025-01-03 21:43:28.545181"
+"3","7","4","1","2025-01-03 03:18:10.063407"
+"4","1","3","11","2025-01-03 03:12:52.861883"
+"5","1","8","16","2025-01-04 04:04:12.614065"
+"6","1","3","4","2025-01-03 20:16:37.396610"
+"7","1","4","1","2025-01-04 03:10:29.428885"
+"8","7","3","14","2025-01-07 00:59:44.565285"
+"9","7","8","28","2025-01-07 00:59:52.948803"
+"10","3","8","27","2025-01-07 01:11:07.477494"
+"11","3","8","23","2025-01-07 01:11:24.577041"
+"Id","Email","Token","EmployerId","CreatedAt","ExpiryDate"
+"3","pracownik3@mail.com","8aeac78d-5f64-42eb-8712-c8c16d2deb0f","3","2024-12-18 15:20:08.857777","2024-12-25 15:20:08.858013"
+"4","pracownik3@mail.com","27652576-d220-4db2-84c5-3fa87b9643a4","3","2024-12-18 15:29:23.291714","2024-12-25 15:29:23.292096"
+"5","soczek@soczek.com","398937cc-30fb-4723-92b2-69dd57833e4f","3","2024-12-18 15:48:54.919992","2024-12-25 15:48:54.920312"
+"6","soczek@soczek.com","fef74c02-9106-4412-a227-b09f442074cb","3","2024-12-18 15:50:51.743054","2024-12-25 15:50:51.743290"
+"7","soczek@soczek.com","ca7ee1d0-73c2-4220-af70-965c99649b1a","3","2024-12-18 15:53:00.307106","2024-12-25 15:53:00.307345"
+"Id","ChatId","SenderId","Content","SentAt","ReceiverId"
+"1","5","1","Testowa wiadomosc","2025-01-03 03:09:51.209792","8"
+"2","5","1","test","2025-01-03 03:09:57.289903","8"
+"3","4","1","test","2025-01-03 03:11:50.998215","3"
+"4","4","3","Za malo, wincyj dawaj","2025-01-03 03:12:52.856929","1"
+"5","3","1","witam","2025-01-03 03:18:10.060803","4"
+"6","5","1","TO jest polwe tego warte","2025-01-03 19:59:41.037278","8"
+"7","5","8","Nie zgadzam siƒô","2025-01-03 20:04:44.922511","1"
+"8","5","1","DAje polowe","2025-01-03 20:05:34.510275","8"
+"9","5","8","60% i oddaje","2025-01-03 20:05:48.492373","1"
+"10","5","1","Deal","2025-01-03 20:05:52.990126","8"
+"11","6","1","test","2025-01-03 20:16:37.393545","3"
+"12","2","1","Dzien dobry","2025-01-03 21:43:28.519600","3"
+"13","5","1","Halo, halo","2025-01-04 03:54:26.416652","8"
+"14","5","1","Testowa","2025-01-04 03:54:43.920187","8"
+"15","5","1","Czekam pod blokiem","2025-01-04 03:59:36.718532","8"
+"16","5","1","od godziny","2025-01-04 03:59:52.068967","8"
+"17","5","1","Na mrozie","2025-01-04 04:04:12.611049","8"
+"18","11","3","dobry","2025-01-07 01:11:24.554750","8"
+"Id","UserId","Message","IsRead","ChatId","CreatedAt"
+"Id","Email","PasswordHash","PasswordSalt","Role","AcceptTerms","FirstName","LastName","PhoneNumber","CompanyName","NIP","Address","DateRegistered","VerificationToken","VerifiedAt","PasswordResetToken","ResetTokenExpiry","PasswordLastReset","EmployerId","Status"
+"1","test@mail.com","kzMﬁ""ú&Ëºl|@w˜ £“KØ2bb®„*QÙó","¢MÉ!™(–üôr∆«(f8","0","0",NULL,NULL,NULL,NULL,NULL,NULL,"2024-11-28 14:21:42.731432",NULL,"2024-11-28 14:22:18.834971",NULL,NULL,"2024-12-04 00:44:23.246740",NULL,"0"
+"3","estate@mail.com","ÛC}@ƒO1«Ωîçí Öû>µ,¶ÏS¡XÙÀ>ïÚÀÏ","ÑÁåÚ¶qµâ∞9g¬-R","1","0","Jan","Kowalski","444000555","Mirex","12345678987","Jakis 21/37","2024-12-04 00:57:34.706178",NULL,"2024-12-04 00:58:07.371512",NULL,NULL,"2024-12-04 01:01:34.926565",NULL,"0"
+"4","developer@mail.com","8f∞ê""!º˘–°ë˙ Qâ¿¢Z8Â9Zp	gPføü","”ﬂéÂºnz[™%:'","2","0",NULL,NULL,"123456789","BudujPol","98765432123","kwiatowa 37/21","2024-12-04 00:59:31.341720",NULL,"2024-12-04 00:59:57.861637",NULL,NULL,"2024-12-04 01:03:58.541745",NULL,"0"
+"5","pracownik@mail.com","»˘¨Gı.u—Úú˙SI¡uÓY¶""_dÓ9á«2^∞*","cRs’YC–ÄÓ¸÷√K","3","0","Miros≈Çaw","Nowak","123123123",NULL,NULL,NULL,"2024-12-04 23:51:54.777478",NULL,NULL,NULL,NULL,"2024-12-05 01:15:35.764228","3","0"
+"6","pracownik2@mail.com","ï>≈Ÿø!fÑá?ÒLïöd<ÏÊ;°ÿ†r£ö$∏÷","Wcµªykﬂà´…Ïo∞dz_","3","0","Wies≈Çaw","Paleta","321321321",NULL,NULL,NULL,"2024-12-05 01:09:37.382738",NULL,"2024-12-05 01:09:37.382813",NULL,NULL,NULL,"4","2"
+"7","admin@admin.pl","∏#ÆèCÊTÄ™—]ÿ‡_Qá‡ï™Fµﬂò†""¬Qˇ´e©","v∂¯qŸ∫jk@6(∫™s","5","1",NULL,NULL,NULL,NULL,NULL,NULL,"2024-12-18 05:09:41.258939",NULL,"2024-12-18 05:09:53.477461",NULL,NULL,NULL,NULL,"0"
+"8","example@mail.com","¯ƒr>|9Ë≤î§$.ñΩ…3ñµﬂS/,zíæ“ﬁ","94M≥wzú˛}‘˙ÿç","0","1","Maciej","Kowalski",NULL,NULL,NULL,NULL,"2024-12-18 15:50:52.478990",NULL,"2024-12-18 15:51:21.338943",NULL,NULL,"2024-12-18 16:00:21.223712",NULL,"0"
+"9","pracownik3@mail.com","lL˚˚P¬Â≤=JCmä»‰Î¿S7h¡SZ¸","ïÑù:%”W•£’5à","3","0","pracownik","pracownicze","888222000",NULL,NULL,NULL,"2024-12-18 16:58:57.793064",NULL,"2024-12-18 16:58:57.793169",NULL,NULL,NULL,"3","0"
+"10","testowy@mail.com","∑\©Æi„öEµEcpÙ2áˇElêp©/7]ˆ‘{°£","¢Ö""˚ÜË6ﬂ‘~7j#","0","1",NULL,NULL,NULL,NULL,NULL,NULL,"2025-01-08 13:22:44.877293",NULL,"2025-01-08 13:25:44.333953",NULL,NULL,NULL,NULL,"0"
+"MigrationId","ProductVersion"
+"20241215013635_userupdate","8.0.8"
+"20241215030826_userstatus","8.0.8"
+"20241218012826_fix_chat","8.0.8"
+"20241218025817_fix_message","8.0.8"
+"20241228171524_edit_chat","8.0.8"
+"20250110202717_Notification","8.0.8"
+"20250111004918_init","8.0.8"

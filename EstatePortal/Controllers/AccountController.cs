@@ -391,7 +391,7 @@ namespace EstatePortal.Controllers
                     Email = email,
                     VerificationToken = token,
                     EmployerId = employerId,
-                    Role = UserRole.Employee // Zakładamy, że nowy użytkownik to pracownik
+                    Role = UserRole.Employee 
                 };
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();

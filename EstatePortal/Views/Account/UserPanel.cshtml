@@ -36,7 +36,7 @@
                 }
             </ul>
             <div id="rightNavlist">
-                <!-- Powiadomienia -->
+                <!-- Notifications -->
                 <div class="notification-dropdown" style="position: relative; display: inline-block;">
                     <button type="button" class="notification-button" style="background: none; border: none; position: relative;">
                         <i class="fa fa-bell" style="font-size: 1.5em;"></i>
@@ -67,7 +67,7 @@
                         }
                     </div>
                 </div>
-                <!-- Moje konto -->
+                <!-- My Account -->
                 @if (ViewBag.UserRole == EstatePortal.Models.UserRole.EstateAgency ||
                 ViewBag.UserRole == EstatePortal.Models.UserRole.PrivatePerson ||
                 ViewBag.UserRole == EstatePortal.Models.UserRole.Employee ||
@@ -87,6 +87,7 @@
                 }
             </div>
         </header>
+
     <h2>Panel użytkownika</h2>
 
     <h3>Aktualizacja danych osobowych</h3>
@@ -104,7 +105,7 @@
             </div>
         } *@
 
-        @* Dla PrivatePerson *@
+        @* For PrivatePerson *@
         @if (Model?.Role == EstatePortal.Models.UserRole.PrivatePerson)
         {
             <div>
@@ -125,7 +126,7 @@
             </div>
         }
 
-        @* Dla EstateAgency i Developer *@
+        @* For EstateAgency i Developer *@
         @if (Model?.Role == EstatePortal.Models.UserRole.EstateAgency || Model?.Role == EstatePortal.Models.UserRole.Developer)
         {
             <div>
@@ -150,7 +151,7 @@
             </div>
         }
 
-        @* Dla Employee *@
+        @* For Employee *@
         @if (Model?.Role == EstatePortal.Models.UserRole.Employee)
         {
             <div>
@@ -166,7 +167,8 @@
                 <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
             </div>
         }
-        @* Dla Moderatora *@
+
+        @* For Moderator *@
         @if (Model?.Role == EstatePortal.Models.UserRole.Moderator)
         {
             <div>
@@ -186,7 +188,8 @@
                 <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" />
             </div>
         }
-        @* Dla Administratora *@
+
+        @* For Administratora *@
         @if (Model?.Role == EstatePortal.Models.UserRole.Administrator)
         {
             <div>
@@ -228,6 +231,7 @@
 
         <button type="submit">Zmień hasło</button>
     </form>
+
     @if (Model?.Role == EstatePortal.Models.UserRole.EstateAgency || Model?.Role == EstatePortal.Models.UserRole.Developer)
     {
         <h3>Dodaj nowego pracownika</h3>
